@@ -1,0 +1,46 @@
+.login-form {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 24rem;
+
+  &__field {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  &__input {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+  }
+
+  &__error {
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+  }
+
+  &__submit {
+    min-height: 44px;
+    border: 0;
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-contrast);
+    background-color: var(--color-primary);
+
+    &:hover {
+      background-color: var(--color-primary-hover);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: progress;
+    }
+  }
+}
