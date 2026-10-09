@@ -1,0 +1,9 @@
+import { http } from '@/services/api/apiClient'
+
+export const wholesaleApi = {
+  getLevels: () => http.get('/wholesale/levels'),
+  getMyRequest: () => http.get('/wholesale/requests/me'),
+  submitRequest: (data) => http.post('/wholesale/requests', data),
+  // SOLO DEMO (backend simulado): simula la decisión del administrador.
+  simulateReview: (status) => http.post('/_dev/wholesale-review', { status }),
+}

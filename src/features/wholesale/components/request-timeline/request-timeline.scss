@@ -1,0 +1,63 @@
+.request-timeline {
+  display: grid;
+  gap: var(--space-4);
+  padding: 0;
+  list-style: none;
+
+  &__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    column-gap: var(--space-3);
+    color: var(--color-text-muted);
+
+    // Línea vertical entre pasos.
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      inset-block: 2rem calc(var(--space-4) * -1);
+      inset-inline-start: calc(1rem - 1px);
+      width: 2px;
+      background-color: var(--color-border);
+    }
+
+    &--done {
+      color: var(--color-text);
+    }
+  }
+
+  &__marker {
+    display: grid;
+    grid-row: span 2;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--color-border-strong);
+    border-radius: 50%;
+    background-color: var(--color-surface);
+  }
+
+  &__step--done &__marker {
+    border-color: var(--color-success);
+    color: var(--color-success);
+  }
+
+  &__step--current &__marker {
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+  }
+
+  &__step--failed &__marker {
+    border-color: var(--color-danger);
+    color: var(--color-danger);
+  }
+
+  &__label {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__detail {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+}

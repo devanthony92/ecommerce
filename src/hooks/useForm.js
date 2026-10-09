@@ -6,6 +6,13 @@ import { useState } from 'react'
  * - onSubmit(values) puede lanzar un ApiError; sus `details` se muestran por campo.
  * - Si hay errores, el foco va al primer campo inválido.
  */
+// namedItem devuelve una lista si varios campos comparten nombre (grupo de checkboxes).
+function focusField(form, name) {
+  const target = form.elements.namedItem(name)
+  const field = target instanceof RadioNodeList ? target[0] : target
+  field?.focus()
+}
+
 export function useForm({ initialValues, validate, onSubmit }) {
   const [values, setValues] = useState(initialValues)
   const [errors, setErrors] = useState({})
@@ -41,7 +48,7 @@ export function useForm({ initialValues, validate, onSubmit }) {
     const [firstInvalid] = Object.keys(clientErrors)
     if (firstInvalid) {
       // Por nombre: el DOM todavía no refleja aria-invalid en este punto.
-      form.elements.namedItem(firstInvalid)?.focus()
+      focusField(form, firstInvalid)
       return
     }
 
@@ -52,7 +59,7 @@ export function useForm({ initialValues, validate, onSubmit }) {
       if (error.details) {
         setErrors(error.details)
         const [firstServerError] = Object.keys(error.details)
-        form.elements.namedItem(firstServerError)?.focus()
+        focusField(form, firstServerError)
       } else {
         setFormError(error.message)
       }

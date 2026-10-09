@@ -21,6 +21,8 @@ const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPassword
 const BuyerDashboardPage = lazy(() => import('@/features/users/pages/BuyerDashboardPage'))
 const ProfilePage = lazy(() => import('@/features/users/pages/ProfilePage'))
 const AddressesPage = lazy(() => import('@/features/users/pages/AddressesPage'))
+const WholesaleLandingPage = lazy(() => import('@/features/wholesale/pages/WholesaleLandingPage'))
+const WholesaleRequestPage = lazy(() => import('@/features/wholesale/pages/WholesaleRequestPage'))
 const WholesaleDashboardPage = lazy(
   () => import('@/features/wholesale/pages/WholesaleDashboardPage'),
 )
@@ -45,7 +47,7 @@ export function AppRoutes() {
         <Route path={paths.product(':slug')} element={<ProductPage />} />
         <Route path={paths.search} element={<SearchPage />} />
         <Route path={paths.promotions} element={soon('Ofertas', 14)} />
-        <Route path={paths.wholesaleLanding} element={soon('Compra por mayor', 10)} />
+        <Route path={paths.wholesaleLanding} element={<WholesaleLandingPage />} />
         <Route path={paths.cart} element={<CartPage />} />
         <Route path={paths.login} element={<LoginPage />} />
         <Route path={paths.register} element={<RegisterPage />} />
@@ -66,7 +68,7 @@ export function AppRoutes() {
             <Route path={paths.list(':listId')} element={soon('Lista de compra', 13)} />
             <Route path={paths.addresses} element={<AddressesPage />} />
             <Route path={paths.profile} element={<ProfilePage />} />
-            <Route path={paths.wholesaleRequest} element={soon('Solicitud mayorista', 10)} />
+            <Route path={paths.wholesaleRequest} element={<WholesaleRequestPage />} />
           </Route>
 
           {/* Mayorista */}

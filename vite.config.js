@@ -15,6 +15,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.js'],
     css: false,
+    // Flujos completos (varias pantallas y peticiones al mock) superan los 5 s por defecto.
+    testTimeout: 15000,
     env: {
       VITE_USE_MOCKS: 'true',
       VITE_API_URL: '/api/v1',

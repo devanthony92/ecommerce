@@ -1,0 +1,65 @@
+@use '@/styles/abstracts' as *;
+
+.level-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+
+  @include mq(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mq(lg) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  &__item {
+    position: relative;
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+
+    &--current {
+      border-color: var(--color-wholesale);
+      box-shadow: inset 0 0 0 1px var(--color-wholesale);
+    }
+  }
+
+  &__discount {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    color: var(--color-wholesale);
+  }
+
+  &__range {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__benefits {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+  }
+
+  &__current-label {
+    position: absolute;
+    inset-block-start: var(--space-3);
+    inset-inline-end: var(--space-3);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-wholesale-hover);
+  }
+}

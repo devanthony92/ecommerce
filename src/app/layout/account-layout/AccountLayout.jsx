@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router'
 import { SectionNav } from '@/components/layout'
 import { Button } from '@/components/ui'
-import { useAuth, usePermission } from '@/features/auth'
-import { PERMISSIONS } from '@/constants/permissions'
+import { useAuth } from '@/features/auth'
+import { ROLES } from '@/constants/statuses'
 import { paths } from '@/constants/paths'
 import './account-layout.scss'
 
@@ -16,12 +16,13 @@ const BASE_ITEMS = [
 ]
 
 export function AccountLayout() {
-  const { logout } = useAuth()
-  const canRequestWholesale = usePermission(PERMISSIONS.WHOLESALE_REQUEST)
-
-  const items = canRequestWholesale
-    ? [...BASE_ITEMS, { to: paths.wholesaleRequest, label: 'Ser mayorista', icon: 'chevron-right' }]
-    : BASE_ITEMS
+  const { logout, user } = useAuth()
+  // Compradores: acceso a su solicitud (o a pedirla). El mayorista tiene su propio panel.
+  const requestLabel = user.wholesale?.requestStatus ? 'Solicitud mayorista' : 'Ser mayorista'
+  const items =
+    user.role === ROLES.WHOLESALE
+      ? BASE_ITEMS
+      : [...BASE_ITEMS, { to: paths.wholesaleRequest, label: requestLabel, icon: 'chevron-right' }]
 
   return (
     <div className="account-layout">

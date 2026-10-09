@@ -53,6 +53,13 @@ export function AuthProvider({ children }) {
     [queryClient, dropUserScopedQueries],
   )
 
+  // Tras un cambio de rol/permisos en el backend (p. ej. cuenta mayorista aprobada):
+  // se vuelve a pedir el usuario y se descartan precios, carrito y demás datos por usuario.
+  const refreshSession = useCallback(async () => {
+    dropUserScopedQueries()
+    await queryClient.invalidateQueries({ queryKey: authKeys.me() })
+  }, [queryClient, dropUserScopedQueries])
+
   const login = useCallback(
     async (credentials) => startSession(await authApi.login(credentials)),
     [startSession],
@@ -102,8 +109,9 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+      refreshSession,
     }),
-    [user, status, signedOutFrom, login, register, logout],
+    [user, status, signedOutFrom, login, register, logout, refreshSession],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

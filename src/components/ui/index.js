@@ -1,6 +1,7 @@
 export { Badge } from './badge/Badge'
 export { Button } from './button/Button'
 export { Checkbox } from './checkbox/Checkbox'
+export { CheckboxGroup } from './checkbox-group/CheckboxGroup'
 export { ChoiceCard } from './choice-card/ChoiceCard'
 export { Icon } from './icon/Icon'
 export { IconButton } from './icon-button/IconButton'

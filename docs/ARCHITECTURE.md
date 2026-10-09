@@ -645,6 +645,13 @@ Checkout (fase 7):
 
 `nextLevel: null` → nivel máximo alcanzado.
 
+Solicitud mayorista (fase 10):
+
+- Puede solicitar quien nunca lo hizo o fue rechazado (`requestStatus` `null` o `REJECTED`); el backend responde 409 en otro caso. Suspendido debe contactar a la tienda.
+- Al enviar, `requestStatus` pasa a `PENDING` y el usuario pierde `wholesale.request`. Al aprobarse cambian `role`, `permissions` y `levelCode`: el frontend llama `refreshSession()` (vuelve a pedir `/users/me` y descarta precios y carrito cacheados).
+- Campos: `tradeName`, `legalName`, `nit` (6–10 dígitos, `-dv` opcional), `phone`, `city`, `address`, `businessType` (`PHYSICAL_STORE | ONLINE_STORE | CATALOG | DISTRIBUTOR | OTHER`), `socialLinks?`, `estimatedMonthlyVolume` (`UNDER_1M | 1M_5M | 5M_10M | OVER_10M`), `categoriesOfInterest[]`.
+- **Solo en el mock**: `POST /_dev/wholesale-review { status }` simula la decisión del administrador para la demo (panel "Simulador de revisión", visible solo con `VITE_USE_MOCKS=true`). En producción la decisión llega desde el panel administrativo.
+
 ### Promociones
 
 | Método | Endpoint                                                                                   |

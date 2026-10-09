@@ -3,7 +3,7 @@
 import { storage } from '@/services/storage/storage'
 
 const DB_KEY = 'mock-db'
-const DB_VERSION = 4
+const DB_VERSION = 5
 
 // Usuarios semilla para probar cada perfil (solo existen en el mock).
 const seed = () => ({
@@ -51,6 +51,29 @@ const seed = () => ({
   orderSequence: 120,
   // Tokens de recuperación de contraseña: { [token]: { userId, expiresAt } }
   passwordResets: {},
+  // Solicitudes mayoristas: { [userId]: WholesaleRequest }
+  wholesaleRequests: {
+    'u-wholesale': {
+      id: 'wr-seed-1',
+      status: 'APPROVED',
+      submittedAt: '2026-03-02T14:00:00Z',
+      reviewedAt: '2026-03-04T10:00:00Z',
+      rejectionReason: null,
+      levelCode: 'GOLD',
+      data: {
+        tradeName: 'Moda Carlos',
+        legalName: 'Carlos Pérez',
+        nit: '900123456-7',
+        phone: '3004445566',
+        city: 'Medellín',
+        address: 'Carrera 52 # 45-20, local 3',
+        businessType: 'PHYSICAL_STORE',
+        socialLinks: '@modacarlos',
+        estimatedMonthlyVolume: '1M_5M',
+        categoriesOfInterest: ['c-camisetas', 'c-jeans'],
+      },
+    },
+  },
 })
 
 let db = load()
@@ -89,7 +112,8 @@ function permissionsFor(user) {
   if (user.role === 'ADMIN') {
     return [...BASE_PERMISSIONS, 'admin.access']
   }
-  const canRequest = !['PENDING', 'UNDER_REVIEW', 'APPROVED'].includes(user.wholesale.requestStatus)
+  // Puede solicitar si nunca lo hizo o si fue rechazado. Suspendido debe contactar a la tienda.
+  const canRequest = [null, 'REJECTED'].includes(user.wholesale.requestStatus)
   return canRequest ? [...BASE_PERMISSIONS, 'wholesale.request'] : BASE_PERMISSIONS
 }
 
