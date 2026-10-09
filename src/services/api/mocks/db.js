@@ -1,80 +1,93 @@
 // "Base de datos" del backend simulado. Persiste en localStorage para
 // sobrevivir recargas. Borrar la clave `trama.mock-db` reinicia los datos.
 import { storage } from '@/services/storage/storage'
+import { seedOrders } from './fixtures/orders'
 
 const DB_KEY = 'mock-db'
-const DB_VERSION = 5
+const DB_VERSION = 6
+
+// Compra acumulada del mayorista semilla en 2026: pedidos de ejemplo + compras previas.
+const SEED_ACCUMULATED = 3450000
 
 // Usuarios semilla para probar cada perfil (solo existen en el mock).
-const seed = () => ({
-  version: DB_VERSION,
-  users: [
-    {
-      id: 'u-buyer',
-      name: 'Laura Gómez',
-      email: 'comprador@trama.test',
-      password: 'Trama1234',
-      phone: '3001112233',
-      role: 'BUYER',
-      wholesale: { requestStatus: null, levelCode: null },
-    },
-    {
-      id: 'u-wholesale',
-      name: 'Carlos Pérez',
-      email: 'mayorista@trama.test',
-      password: 'Trama1234',
-      phone: '3004445566',
-      role: 'WHOLESALE',
-      wholesale: { requestStatus: 'APPROVED', levelCode: 'GOLD' },
-    },
-  ],
-  // Carritos de usuarios autenticados: { [userId]: [{ id, variantId, quantity }] }
-  carts: {},
-  // Direcciones por usuario. El mayorista ya tiene una; el comprador empieza sin ninguna.
-  addresses: {
-    'u-wholesale': [
+const seed = () => {
+  const orders = seedOrders()
+  const ordersTotal = orders.reduce((sum, order) => sum + order.summary.total, 0)
+  return {
+    version: DB_VERSION,
+    users: [
       {
-        id: 'a-seed-1',
-        label: 'Tienda',
-        recipient: 'Carlos Pérez',
+        id: 'u-buyer',
+        name: 'Laura Gómez',
+        email: 'comprador@trama.test',
+        password: 'Trama1234',
+        phone: '3001112233',
+        role: 'BUYER',
+        wholesale: { requestStatus: null, levelCode: null },
+      },
+      {
+        id: 'u-wholesale',
+        name: 'Carlos Pérez',
+        email: 'mayorista@trama.test',
+        password: 'Trama1234',
         phone: '3004445566',
-        department: 'Antioquia',
-        city: 'Medellín',
-        line1: 'Carrera 52 # 45-20, local 3',
-        line2: null,
-        notes: 'Horario de recibo: 8 a.m. a 5 p.m.',
-        isDefault: true,
+        role: 'WHOLESALE',
+        wholesale: {
+          requestStatus: 'APPROVED',
+          levelCode: 'GOLD',
+          accumulatedBase: SEED_ACCUMULATED - ordersTotal,
+          savingsBase: 180000,
+        },
       },
     ],
-  },
-  orders: [],
-  orderSequence: 120,
-  // Tokens de recuperación de contraseña: { [token]: { userId, expiresAt } }
-  passwordResets: {},
-  // Solicitudes mayoristas: { [userId]: WholesaleRequest }
-  wholesaleRequests: {
-    'u-wholesale': {
-      id: 'wr-seed-1',
-      status: 'APPROVED',
-      submittedAt: '2026-03-02T14:00:00Z',
-      reviewedAt: '2026-03-04T10:00:00Z',
-      rejectionReason: null,
-      levelCode: 'GOLD',
-      data: {
-        tradeName: 'Moda Carlos',
-        legalName: 'Carlos Pérez',
-        nit: '900123456-7',
-        phone: '3004445566',
-        city: 'Medellín',
-        address: 'Carrera 52 # 45-20, local 3',
-        businessType: 'PHYSICAL_STORE',
-        socialLinks: '@modacarlos',
-        estimatedMonthlyVolume: '1M_5M',
-        categoriesOfInterest: ['c-camisetas', 'c-jeans'],
+    // Carritos de usuarios autenticados: { [userId]: [{ id, variantId, quantity }] }
+    carts: {},
+    // Direcciones por usuario. El mayorista ya tiene una; el comprador empieza sin ninguna.
+    addresses: {
+      'u-wholesale': [
+        {
+          id: 'a-seed-1',
+          label: 'Tienda',
+          recipient: 'Carlos Pérez',
+          phone: '3004445566',
+          department: 'Antioquia',
+          city: 'Medellín',
+          line1: 'Carrera 52 # 45-20, local 3',
+          line2: null,
+          notes: 'Horario de recibo: 8 a.m. a 5 p.m.',
+          isDefault: true,
+        },
+      ],
+    },
+    orders,
+    orderSequence: 120,
+    // Tokens de recuperación de contraseña: { [token]: { userId, expiresAt } }
+    passwordResets: {},
+    // Solicitudes mayoristas: { [userId]: WholesaleRequest }
+    wholesaleRequests: {
+      'u-wholesale': {
+        id: 'wr-seed-1',
+        status: 'APPROVED',
+        submittedAt: '2026-03-02T14:00:00Z',
+        reviewedAt: '2026-03-04T10:00:00Z',
+        rejectionReason: null,
+        levelCode: 'GOLD',
+        data: {
+          tradeName: 'Moda Carlos',
+          legalName: 'Carlos Pérez',
+          nit: '900123456-7',
+          phone: '3004445566',
+          city: 'Medellín',
+          address: 'Carrera 52 # 45-20, local 3',
+          businessType: 'PHYSICAL_STORE',
+          socialLinks: '@modacarlos',
+          estimatedMonthlyVolume: '1M_5M',
+          categoriesOfInterest: ['c-camisetas', 'c-jeans'],
+        },
       },
     },
-  },
-})
+  }
+}
 
 let db = load()
 

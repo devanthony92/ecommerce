@@ -33,7 +33,9 @@ describe('Programa mayorista', () => {
     await fillRequestForm(user)
     await user.click(screen.getByRole('button', { name: 'Enviar solicitud' }))
 
-    expect(await screen.findByText('Solicitud enviada', { selector: '.toast__title' })).toBeInTheDocument()
+    expect(
+      await screen.findByText('Solicitud enviada', { selector: '.toast__title' }),
+    ).toBeInTheDocument()
     expect(within(statusCard()).getByText('Pendiente')).toBeInTheDocument()
     expect(screen.getByText('Tienda Laura · Laura Gómez')).toBeInTheDocument()
     // La navegación de la cuenta cambia a "Solicitud mayorista".

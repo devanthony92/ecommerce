@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router'
+import { Link, useLocation, useParams } from 'react-router'
 import { QueryBoundary, Skeleton } from '@/components/feedback'
 import { Button, Icon, Price } from '@/components/ui'
 import { variantLabel } from '@/features/cart'
@@ -9,9 +9,15 @@ import { OrderStatusBadge } from '../components/order-status-badge/OrderStatusBa
 import { useOrder } from '../hooks/useOrder'
 import './order-confirmation-page.scss'
 
-function Confirmation({ order }) {
+function Confirmation({ order, levelUp }) {
   return (
     <div className="order-confirmation">
+      {levelUp && (
+        <p className="order-confirmation__level-up" role="status">
+          ¡Subiste a nivel <strong>{levelUp.to}</strong>! Desde ahora tienes{' '}
+          {levelUp.discountPercent}% de descuento.
+        </p>
+      )}
       <header className="order-confirmation__header">
         <span className="order-confirmation__icon">
           <Icon name="check" size="xl" />
@@ -88,6 +94,7 @@ function Confirmation({ order }) {
 export default function OrderConfirmationPage() {
   const { orderId } = useParams()
   const query = useOrder(orderId)
+  const levelUp = useLocation().state?.levelUp
 
   return (
     <QueryBoundary
@@ -95,7 +102,7 @@ export default function OrderConfirmationPage() {
       loading={<Skeleton variant="rect" height="20rem" />}
       errorTitle="No encontramos este pedido"
     >
-      {(order) => <Confirmation order={order} />}
+      {(order) => <Confirmation order={order} levelUp={levelUp} />}
     </QueryBoundary>
   )
 }

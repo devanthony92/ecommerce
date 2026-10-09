@@ -2,6 +2,7 @@ import { categories } from '../fixtures/categories'
 import { findLevel, levels } from '../fixtures/levels'
 import { getDb, save } from '../db'
 import { fail, ok, requireUser } from '../router'
+import { profileFor } from '../wholesale'
 
 const NIT_RE = /^\d{6,10}(-\d)?$/
 const PHONE_RE = /^3\d{9}$/
@@ -35,6 +36,15 @@ const requestOf = (user) => getDb().wholesaleRequests[user.id] ?? null
 
 export const wholesaleHandlers = {
   'GET /wholesale/levels': () => ok(levels),
+
+  'GET /wholesale/profile': ({ user }) => {
+    const unauthorized = requireUser(user)
+    if (unauthorized) return unauthorized
+    if (user.role !== 'WHOLESALE') {
+      return fail(403, 'FORBIDDEN', 'Esta sección es solo para cuentas mayoristas.')
+    }
+    return ok(profileFor(getDb(), user))
+  },
 
   'GET /wholesale/requests/me': ({ user }) => requireUser(user) ?? ok(requestOf(user)),
 

@@ -645,6 +645,12 @@ Checkout (fase 7):
 
 `nextLevel: null` → nivel máximo alcanzado.
 
+Panel mayorista (fase 11):
+
+- `accumulatedPurchase` = compras del año (pedidos no cancelados). El nivel es el más alto cuyo `minPurchase` se alcanzó y **no baja durante el año**. `progressPercent` mide el avance entre el tope del nivel actual y el del siguiente.
+- `POST /orders` de un mayorista responde además `levelUp: { from, to, discountPercent } | null`. Si subió, el frontend llama `refreshSession()` (cambian sus precios) y la confirmación lo anuncia.
+- `GET /wholesale/profile` responde 403 si el usuario no es mayorista.
+
 Solicitud mayorista (fase 10):
 
 - Puede solicitar quien nunca lo hizo o fue rechazado (`requestStatus` `null` o `REJECTED`); el backend responde 409 en otro caso. Suspendido debe contactar a la tienda.

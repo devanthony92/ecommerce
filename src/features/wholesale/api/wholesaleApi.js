@@ -2,6 +2,7 @@ import { http } from '@/services/api/apiClient'
 
 export const wholesaleApi = {
   getLevels: () => http.get('/wholesale/levels'),
+  getProfile: () => http.get('/wholesale/profile'),
   getMyRequest: () => http.get('/wholesale/requests/me'),
   submitRequest: (data) => http.post('/wholesale/requests', data),
   // SOLO DEMO (backend simulado): simula la decisión del administrador.

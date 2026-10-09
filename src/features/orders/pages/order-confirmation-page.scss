@@ -4,6 +4,14 @@
   max-width: 40rem;
   margin-inline: auto;
 
+  &__level-up {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--color-wholesale-hover);
+    background-color: var(--color-wholesale-soft);
+  }
+
   &__header {
     display: grid;
     justify-items: center;

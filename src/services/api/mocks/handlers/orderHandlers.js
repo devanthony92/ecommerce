@@ -1,6 +1,7 @@
 import { buildCart, FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from '../cart'
 import { getDb, save } from '../db'
 import { fail, ok, requireUser } from '../router'
+import { updateLevel } from '../wholesale'
 import { addressesOf } from './addressHandlers'
 
 const EXPRESS_CITIES = ['Medellín', 'Bogotá', 'Bogotá D.C.', 'Cali', 'Barranquilla']
@@ -118,8 +119,10 @@ export const orderHandlers = {
 
     db.orders.push(order)
     db.carts[user.id] = []
+    // Mayorista: la compra suma al acumulado del año y puede subirlo de nivel.
+    const levelUp = user.role === 'WHOLESALE' ? updateLevel(db, user) : null
     save()
-    return ok({ order: toPublicOrder(order), payment: { redirectUrl: null } }, 201)
+    return ok({ order: toPublicOrder(order), payment: { redirectUrl: null }, levelUp }, 201)
   },
 
   'GET /orders': ({ user, query }) => {

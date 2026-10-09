@@ -11,6 +11,10 @@ export function useWholesaleLevels() {
   })
 }
 
+export function useWholesaleProfile() {
+  return useQuery({ queryKey: wholesaleKeys.profile(), queryFn: wholesaleApi.getProfile })
+}
+
 export function useWholesaleRequest() {
   return useQuery({ queryKey: wholesaleKeys.request(), queryFn: wholesaleApi.getMyRequest })
 }

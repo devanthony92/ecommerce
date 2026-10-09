@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import clsx from 'clsx'
 import { Badge, ResponsiveImage } from '@/components/ui'
-import { PriceTag } from '@/features/pricing'
+import { PriceTag, TierStrip } from '@/features/pricing'
 import { paths } from '@/constants/paths'
 import './product-card.scss'
 
@@ -12,7 +12,8 @@ const TAG_BADGES = {
 
 const MAX_SWATCHES = 4
 
-export function ProductCard({ product, priority = false }) {
+// `showTiers`: muestra todas las escalas (catálogo mayorista).
+export function ProductCard({ product, priority = false, showTiers = false }) {
   // Si la imagen es de otro color (catálogo filtrado), el detalle abre con ese color.
   const href =
     product.image.color && product.image.color !== product.colors[0]?.name
@@ -71,7 +72,12 @@ export function ProductCard({ product, priority = false }) {
           {extraColors > 0 && <li className="product-card__swatch-more">+{extraColors}</li>}
         </ul>
 
-        <PriceTag pricing={product.pricing} className="product-card__price" />
+        <PriceTag
+          pricing={product.pricing}
+          showVolumeHint={!showTiers}
+          className="product-card__price"
+        />
+        {showTiers && <TierStrip tiers={product.pricing.tiers} />}
       </div>
     </article>
   )

@@ -23,6 +23,8 @@ const ProfilePage = lazy(() => import('@/features/users/pages/ProfilePage'))
 const AddressesPage = lazy(() => import('@/features/users/pages/AddressesPage'))
 const WholesaleLandingPage = lazy(() => import('@/features/wholesale/pages/WholesaleLandingPage'))
 const WholesaleRequestPage = lazy(() => import('@/features/wholesale/pages/WholesaleRequestPage'))
+const WholesaleCatalogPage = lazy(() => import('@/features/wholesale/pages/WholesaleCatalogPage'))
+const BenefitsPage = lazy(() => import('@/features/wholesale/pages/BenefitsPage'))
 const WholesaleDashboardPage = lazy(
   () => import('@/features/wholesale/pages/WholesaleDashboardPage'),
 )
@@ -75,10 +77,10 @@ export function AppRoutes() {
           <Route element={<RequirePermission permission={PERMISSIONS.WHOLESALE_ACCESS} />}>
             <Route path={paths.wholesale} element={<WholesaleLayout />}>
               <Route index element={<WholesaleDashboardPage />} />
-              <Route path={paths.wholesaleCatalog} element={soon('Catálogo mayorista', 11)} />
+              <Route path={paths.wholesaleCatalog} element={<WholesaleCatalogPage />} />
               <Route path={paths.quickOrder} element={soon('Pedido rápido', 12)} />
               <Route path={paths.frequentProducts} element={soon('Productos frecuentes', 12)} />
-              <Route path={paths.benefits} element={soon('Beneficios', 11)} />
+              <Route path={paths.benefits} element={<BenefitsPage />} />
             </Route>
           </Route>
 

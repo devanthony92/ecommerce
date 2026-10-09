@@ -22,7 +22,7 @@ const resultsLabel = (total) => `${total} ${total === 1 ? 'producto' : 'producto
  * Listado de productos con filtros en la URL. Lo usan el catálogo,
  * las categorías y la búsqueda.
  */
-export function CatalogView({ title, description, categorySlug }) {
+export function CatalogView({ title, description, categorySlug, showTiers = false }) {
   const { filters, activeCount, update, toggleValue, reset, pageHref } = useCatalogFilters()
   const params = useMemo(() => toProductsQuery(filters, categorySlug), [filters, categorySlug])
   const query = useProducts(params)
@@ -119,7 +119,11 @@ export function CatalogView({ title, description, categorySlug }) {
           >
             {(result) => (
               <>
-                <ProductGrid products={result.items} isUpdating={query.isPlaceholderData} />
+                <ProductGrid
+                  products={result.items}
+                  isUpdating={query.isPlaceholderData}
+                  showTiers={showTiers}
+                />
                 <Pagination
                   page={result.page}
                   totalPages={result.totalPages}

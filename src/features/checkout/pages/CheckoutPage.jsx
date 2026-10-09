@@ -49,13 +49,13 @@ function Checkout({ cart }) {
   async function handleConfirm() {
     setSubmitError(null)
     try {
-      const { order } = await createOrder.mutateAsync({
+      const { order, levelUp } = await createOrder.mutateAsync({
         addressId,
         shippingOptionId: shippingOption.id,
         paymentMethod,
         notes,
       })
-      navigate(paths.orderConfirmation(order.id), { replace: true })
+      navigate(paths.orderConfirmation(order.id), { replace: true, state: { levelUp } })
     } catch (error) {
       setSubmitError(error.message)
     }

@@ -1,0 +1,53 @@
+@use '@/styles/abstracts' as *;
+
+.wholesale-level-card {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  border: 1px solid var(--color-wholesale);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-wholesale-soft);
+
+  @include mq(md) {
+    padding: var(--space-8);
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  &__greeting {
+    font-size: var(--font-size-2xl);
+  }
+
+  &__stats {
+    display: grid;
+    gap: var(--space-4);
+
+    @include mq(sm) {
+      grid-template-columns: auto 1fr;
+      gap: var(--space-10);
+    }
+  }
+
+  &__stat {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__value {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.1;
+    color: var(--color-wholesale-hover);
+  }
+}

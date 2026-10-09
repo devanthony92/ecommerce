@@ -7,10 +7,11 @@ import './price-tag.scss'
  * Precio compacto para tarjetas. Representa un PriceView del backend:
  * no calcula nada, solo decide qué mostrar y explica por qué.
  */
-export function PriceTag({ pricing, className }) {
+// `showVolumeHint=false` cuando la tarjeta ya muestra todas las escalas.
+export function PriceTag({ pricing, showVolumeHint = true, className }) {
   const isWholesale = pricing.audience === 'WHOLESALE' && pricing.unitPrice < pricing.listPrice
   const previous = isWholesale ? pricing.listPrice : pricing.compareAtPrice
-  const bestTier = pricing.tiers.find((tier) => tier.isBest)
+  const bestTier = showVolumeHint && pricing.tiers.find((tier) => tier.isBest)
 
   return (
     <div className={clsx('price-tag', isWholesale && 'price-tag--wholesale', className)}>

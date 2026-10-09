@@ -56,6 +56,6 @@ describe('App', () => {
     renderApp('/ingresar')
     await loginAs('mayorista@trama.test')
 
-    expect(await screen.findByRole('heading', { name: /Panel mayorista/ })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Hola, Carlos' })).toBeInTheDocument()
   })
 })
