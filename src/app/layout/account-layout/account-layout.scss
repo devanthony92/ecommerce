@@ -1,0 +1,32 @@
+@use '@/styles/abstracts' as *;
+
+.account-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+
+  @include mq(lg) {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-10);
+  }
+
+  &__sidebar {
+    @include mq(lg) {
+      position: sticky;
+      inset-block-start: 9rem;
+      display: grid;
+      gap: var(--space-4);
+    }
+  }
+
+  // En móvil la sesión se cierra desde el menú lateral.
+  &__logout {
+    display: none;
+
+    @include mq(lg) {
+      display: inline-flex;
+      justify-self: start;
+    }
+  }
+}

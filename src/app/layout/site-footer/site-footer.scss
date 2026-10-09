@@ -1,0 +1,88 @@
+@use '@/styles/abstracts' as *;
+
+.site-footer {
+  margin-block-start: var(--space-12);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  border-block-start: 1px solid var(--color-border);
+
+  &__inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8) var(--space-6);
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--space-10) var(--gutter);
+
+    @include mq(lg) {
+      grid-template-columns: 2fr repeat(3, 1fr);
+    }
+  }
+
+  &__brand {
+    display: grid;
+    grid-column: 1 / -1;
+    align-content: start;
+    gap: var(--space-3);
+    max-width: 22rem;
+
+    @include mq(lg) {
+      grid-column: auto;
+    }
+  }
+
+  &__logo {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    color: var(--color-primary);
+  }
+
+  &__tagline {
+    font-size: var(--font-size-sm);
+  }
+
+  &__column {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+  }
+
+  &__heading {
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+  }
+
+  &__list {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-text);
+      text-decoration: underline;
+    }
+  }
+
+  &__benefit {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 32px;
+    font-size: var(--font-size-sm);
+  }
+
+  &__copyright {
+    padding: var(--space-4) var(--gutter);
+    border-block-start: 1px solid var(--color-border);
+    font-size: var(--font-size-xs);
+    text-align: center;
+  }
+}

@@ -1,6 +1,6 @@
 import { Link, Navigate, useSearchParams } from 'react-router'
 import { PageHeader } from '@/components/layout'
-import { paths, safeRedirectPath } from '@/app/routes/paths'
+import { paths, safeRedirectPath } from '@/constants/paths'
 import { ROLES } from '@/constants/statuses'
 import { LoginForm } from '../components/LoginForm'
 import { useAuth } from '../hooks/useAuth'

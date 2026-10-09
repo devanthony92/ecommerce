@@ -1,2 +1,2 @@
-export { MainLayout } from './main-layout/MainLayout'
 export { PageHeader } from './page-header/PageHeader'
+export { SectionNav } from './section-nav/SectionNav'

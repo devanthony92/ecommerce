@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import { PageHeader } from '@/components/layout'
-import { paths } from './paths'
+import { paths } from '@/constants/paths'
 
 export default function NotFoundPage() {
   return (

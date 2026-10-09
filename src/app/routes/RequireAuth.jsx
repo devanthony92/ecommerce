@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router'
 import { useAuth } from '@/features/auth'
 import { SESSION_STATUS } from '@/constants/statuses'
 import { LoadingState } from '@/components/feedback'
-import { paths } from './paths'
+import { paths } from '@/constants/paths'
 
 export function RequireAuth() {
   const { status } = useAuth()

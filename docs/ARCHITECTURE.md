@@ -76,15 +76,20 @@ ecommerce/
 │   │   │   ├── AuthProvider.jsx
 │   │   │   ├── CartProvider.jsx
 │   │   │   └── UiProvider.jsx          # drawers/modales globales (carrito, menú móvil)
+│   │   ├── layout/                     # shell: compone varios features
+│   │   │   ├── MainLayout, SiteHeader, HeaderSearch, CategoryNav
+│   │   │   ├── MobileMenu, SiteFooter
+│   │   │   └── AccountLayout, WholesaleLayout
+│   │   ├── dev/                        # /_ds, solo en desarrollo
 │   │   └── routes/
 │   │       ├── AppRoutes.jsx
-│   │       ├── paths.js                # constantes de rutas
 │   │       ├── RequireAuth.jsx
-│   │       └── RequirePermission.jsx
+│   │       ├── RequirePermission.jsx
+│   │       └── ComingSoonPage.jsx      # marcador de rutas de fases futuras
 │   │
 │   ├── components/                     # genéricos, sin lógica de negocio
 │   │   ├── ui/                         # Button, Input, Price, ProgressBar, QuantityStepper...
-│   │   ├── layout/                     # Header, Footer, MainLayout, AccountLayout...
+│   │   ├── layout/                     # PageHeader, SectionNav (genéricos)
 │   │   ├── modal/
 │   │   ├── drawer/
 │   │   └── feedback/                   # LoadingState, EmptyState, ErrorState, Skeleton, Toast
@@ -132,7 +137,7 @@ Decisiones de la estructura:
 
 ## 4. Rutas
 
-Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Paths en español (cliente final colombiano), definidos en `paths.js`.
+Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Paths en español (cliente final colombiano), definidos en `constants/paths.js` (los usan features y app, por eso no viven en `app/`).
 
 ### Públicas (`MainLayout`)
 
@@ -206,9 +211,12 @@ Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Pat
 | `Spinner`         | `spinner`          |                                                                                                      |
 | `Tabs`            | `tabs`             | cuando aparezca un caso real                                                                         |
 
-### `components/layout`
+### Layout
 
-`Header`, `HeaderSearch`, `CategoryNav`, `MobileMenu` (usa Drawer), `Footer`, `MainLayout`, `AccountLayout` (sidebar en desktop / tabs en móvil), `WholesaleLayout`, `PageHeader`, `Container`.
+- `components/layout` (genéricos): `PageHeader`, `SectionNav` (pestañas en móvil; `orientation="auto"` pasa a sidebar desde lg).
+- `app/layout` (shell, compone features): `MainLayout` (skip link, foco y scroll al navegar, error boundary por ruta), `SiteHeader`, `HeaderSearch`, `CategoryNav`, `MobileMenu` (Drawer izquierdo), `SiteFooter`, `AccountLayout` (sidebar en desktop / pestañas en móvil), `WholesaleLayout` (banda cobre + pestañas).
+- `CartDrawer` vive en `features/cart` y lo monta `MainLayout`.
+- Las rutas de fases futuras ya existen y muestran `ComingSoonPage`, así la navegación completa funciona desde ahora.
 
 ### `components/modal`
 

@@ -1,0 +1,100 @@
+@use '@/styles/abstracts' as *;
+
+// Móvil: [menú] [marca] [acciones] y la búsqueda en una segunda fila.
+// Desde lg: [marca] [búsqueda] [acciones] y las categorías debajo.
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  border-block-end: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+
+  &__bar {
+    display: grid;
+    grid-template:
+      'menu brand actions' auto
+      'search search search' auto / auto 1fr auto;
+    align-items: center;
+    gap: var(--space-2) var(--space-2);
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--space-2) var(--gutter) var(--space-3);
+
+    @include mq(lg) {
+      grid-template: 'brand search actions' auto / auto minmax(0, 36rem) 1fr;
+      gap: var(--space-8);
+      padding-block: var(--space-3);
+    }
+  }
+
+  &__menu-button {
+    grid-area: menu;
+    margin-inline-start: calc(var(--space-2) * -1);
+
+    @include mq(lg) {
+      display: none;
+    }
+  }
+
+  &__brand {
+    grid-area: brand;
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--color-primary);
+  }
+
+  &__search {
+    grid-area: search;
+  }
+
+  &__actions {
+    display: flex;
+    grid-area: actions;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-1);
+    margin-inline-end: calc(var(--space-2) * -1);
+  }
+
+  &__wholesale {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    color: var(--color-wholesale-hover);
+  }
+
+  &__wholesale-label {
+    display: none;
+
+    @include mq(md) {
+      display: inline;
+    }
+  }
+
+  &__favorites {
+    display: none;
+
+    @include mq(md) {
+      display: inline-grid;
+    }
+  }
+
+  &__nav {
+    display: none;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    border-block-start: 1px solid var(--color-border);
+
+    @include mq(lg) {
+      display: block;
+    }
+  }
+}

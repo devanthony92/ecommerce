@@ -1,0 +1,42 @@
+@use '@/styles/abstracts' as *;
+
+.main-layout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+
+  // minmax(0, 1fr): el contenido con scroll horizontal (pestañas) no ensancha la página.
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100dvh;
+
+  &__skip-link {
+    @include visually-hidden;
+
+    &:focus-visible {
+      position: fixed;
+      inset-block-start: var(--space-2);
+      inset-inline-start: var(--space-2);
+      z-index: var(--z-toast);
+      width: auto;
+      height: auto;
+      padding: var(--space-2) var(--space-4);
+      clip-path: none;
+      border-radius: var(--radius-md);
+      background-color: var(--color-surface);
+    }
+  }
+
+  &__main {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--space-6) var(--gutter) 0;
+
+    &:focus {
+      outline: none;
+    }
+
+    @include mq(lg) {
+      padding-block-start: var(--space-10);
+    }
+  }
+}

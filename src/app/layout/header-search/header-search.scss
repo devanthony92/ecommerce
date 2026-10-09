@@ -1,0 +1,36 @@
+@use '@/styles/abstracts' as *;
+
+.header-search {
+  position: relative;
+  display: flex;
+  width: 100%;
+
+  &__label {
+    @include visually-hidden;
+  }
+
+  &__input {
+    @include field-control;
+
+    padding-inline-end: 48px;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-muted);
+  }
+
+  &__submit {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    color: var(--color-text-muted);
+    background: none;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+}
