@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import clsx from 'clsx'
 import { Badge, ResponsiveImage } from '@/components/ui'
+import { FavoriteButton } from '@/features/favorites'
 import { PriceTag, TierStrip } from '@/features/pricing'
 import { paths } from '@/constants/paths'
 import './product-card.scss'
@@ -38,6 +39,7 @@ export function ProductCard({ product, priority = false, showTiers = false }) {
           priority={priority}
           className="product-card__image"
         />
+        <FavoriteButton product={product} className="product-card__favorite" />
         <div className="product-card__badges">
           {!product.inStock && <Badge tone="danger">Agotado</Badge>}
           {product.inStock &&

@@ -6,6 +6,7 @@ import { useAuth } from '@/features/auth'
 import { useCart } from '@/features/cart'
 import { ProductGrid, ProductGridSkeleton, useProducts } from '@/features/catalog'
 import { RecentOrders } from '@/features/orders'
+import { useFavorites } from '@/features/favorites'
 import { WholesaleStatusCard } from '@/features/wholesale'
 import { paths } from '@/constants/paths'
 import { formatMoney } from '@/utils/formatMoney'
@@ -73,6 +74,21 @@ function AccountCard({ user }) {
   )
 }
 
+function FavoritesCard() {
+  const { data: favorites } = useFavorites()
+  const count = favorites?.length ?? 0
+
+  return (
+    <ContentCard title="Favoritos" action={{ to: paths.favorites, label: 'Ver favoritos' }}>
+      <p className="buyer-dashboard__muted">
+        {count > 0
+          ? `Tienes ${count} ${count === 1 ? 'producto guardado' : 'productos guardados'}.`
+          : 'Guarda productos para comprarlos después o armar tus listas de compra.'}
+      </p>
+    </ContentCard>
+  )
+}
+
 export default function BuyerDashboardPage() {
   const { user } = useAuth()
   const recommended = useProducts(RECOMMENDED)
@@ -94,11 +110,7 @@ export default function BuyerDashboardPage() {
         </ContentCard>
         <CartCard />
         <AccountCard user={user} />
-        <ContentCard title="Favoritos" action={{ to: paths.favorites, label: 'Ver favoritos' }}>
-          <p className="buyer-dashboard__muted">
-            Guarda productos para comprarlos después o armar tus listas de compra.
-          </p>
-        </ContentCard>
+        <FavoritesCard />
         <WholesaleStatusCard />
       </div>
 

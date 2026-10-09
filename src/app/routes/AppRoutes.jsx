@@ -13,6 +13,9 @@ const ProductPage = lazy(() => import('@/features/catalog/pages/ProductPage'))
 const SearchPage = lazy(() => import('@/features/catalog/pages/SearchPage'))
 const CartPage = lazy(() => import('@/features/cart/pages/CartPage'))
 const CheckoutPage = lazy(() => import('@/features/checkout/pages/CheckoutPage'))
+const FavoritesPage = lazy(() => import('@/features/favorites/pages/FavoritesPage'))
+const ListsPage = lazy(() => import('@/features/lists/pages/ListsPage'))
+const ListDetailPage = lazy(() => import('@/features/lists/pages/ListDetailPage'))
 const OrdersPage = lazy(() => import('@/features/orders/pages/OrdersPage'))
 const OrderDetailPage = lazy(() => import('@/features/orders/pages/OrderDetailPage'))
 const QuickOrderPage = lazy(() => import('@/features/wholesale/pages/QuickOrderPage'))
@@ -69,9 +72,9 @@ export function AppRoutes() {
             <Route index element={<BuyerDashboardPage />} />
             <Route path={paths.orders} element={<OrdersPage />} />
             <Route path={paths.order(':orderId')} element={<OrderDetailPage />} />
-            <Route path={paths.favorites} element={soon('Favoritos', 13)} />
-            <Route path={paths.lists} element={soon('Listas de compra', 13)} />
-            <Route path={paths.list(':listId')} element={soon('Lista de compra', 13)} />
+            <Route path={paths.favorites} element={<FavoritesPage />} />
+            <Route path={paths.lists} element={<ListsPage />} />
+            <Route path={paths.list(':listId')} element={<ListDetailPage />} />
             <Route path={paths.addresses} element={<AddressesPage />} />
             <Route path={paths.profile} element={<ProfilePage />} />
             <Route path={paths.wholesaleRequest} element={<WholesaleRequestPage />} />

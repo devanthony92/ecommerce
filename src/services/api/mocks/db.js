@@ -4,7 +4,7 @@ import { storage } from '@/services/storage/storage'
 import { seedOrders } from './fixtures/orders'
 
 const DB_KEY = 'mock-db'
-const DB_VERSION = 6
+const DB_VERSION = 7
 
 // Compra acumulada del mayorista semilla en 2026: pedidos de ejemplo + compras previas.
 const SEED_ACCUMULATED = 3450000
@@ -63,6 +63,24 @@ const seed = () => {
     orderSequence: 120,
     // Tokens de recuperación de contraseña: { [token]: { userId, expiresAt } }
     passwordResets: {},
+    // Favoritos: { [userId]: productId[] }
+    favorites: { 'u-wholesale': ['p-camiseta-basica', 'p-jean-slim', 'p-gorra-beisbol'] },
+    // Listas de compra: { [userId]: [{ id, name, updatedAt, items: [{ id, variantId, quantity }] }] }
+    lists: {
+      'u-wholesale': [
+        {
+          id: 'l-seed-1',
+          name: 'Pedido mensual',
+          updatedAt: '2026-10-01T12:00:00Z',
+          items: [
+            { id: 'li-1', variantId: 'camiseta-basica-negro-m', quantity: 12 },
+            { id: 'li-2', variantId: 'camiseta-basica-blanco-l', quantity: 12 },
+            { id: 'li-3', variantId: 'jean-slim-denim-30', quantity: 6 },
+            { id: 'li-4', variantId: 'gorra-beisbol-negro-única', quantity: 12 },
+          ],
+        },
+      ],
+    },
     // Solicitudes mayoristas: { [userId]: WholesaleRequest }
     wholesaleRequests: {
       'u-wholesale': {

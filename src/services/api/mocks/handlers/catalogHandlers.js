@@ -12,7 +12,7 @@ const toArray = (value) => (value === undefined ? [] : [].concat(value))
 const normalize = (text) => text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 
 // Con filtro de color, la imagen principal es la de ese color.
-function toSummary(product, user, colorFilter = []) {
+export function toSummary(product, user, colorFilter = []) {
   const category = categories.find((c) => c.id === product.categoryId)
   return {
     id: product.id,

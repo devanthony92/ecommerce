@@ -645,6 +645,13 @@ Checkout (fase 7):
 
 `nextLevel: null` → nivel máximo alcanzado.
 
+Favoritos y listas (fase 13):
+
+- `GET /favorites` → `ProductSummary[]` con precio actual; `PUT`/`DELETE /favorites/:productId` → 204. El frontend actualiza el corazón de forma optimista y revierte si falla. Sin sesión, `useRequireAuth` abre el login y luego guarda.
+- `ListSummary`: `{ id, name, updatedAt, itemsCount, unitsCount, previews[] }`. El detalle agrega `items[]` con `available`, `variant` y `pricing` a la cantidad habitual.
+- Nombre de lista: 1–40 caracteres, único por usuario (`details.name`). Agregar una variante que ya está suma cantidades.
+- `POST /lists/:id/add-to-cart` → `Cart`; lo agotado viene en `warnings` con `code: LIST_ITEM_UNAVAILABLE`.
+
 Pedidos y recompra (fase 12):
 
 - `GET /orders?group=active|delivered|cancelled&page=`: filtros del historial.

@@ -3,7 +3,10 @@ import { Link, useParams, useSearchParams } from 'react-router'
 import { EmptyState, ErrorState, Skeleton, useToast } from '@/components/feedback'
 import { Breadcrumbs } from '@/components/layout'
 import { Button, QuantityStepper } from '@/components/ui'
+import { useRequireAuth } from '@/features/auth'
 import { useCart } from '@/features/cart'
+import { FavoriteButton } from '@/features/favorites'
+import { AddToListModal } from '@/features/lists'
 import {
   PriceDisplay,
   PricingTiers,
@@ -27,6 +30,8 @@ function ProductDetail({ product, initialColor }) {
   const { variant } = selection
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
+  const [isSavingToList, setIsSavingToList] = useState(false)
+  const requireAuth = useRequireAuth()
 
   // El precio no depende de la talla: sin talla elegida se cotiza con cualquier variante.
   const { pricing, isUpdating } = usePriceQuote({
@@ -70,7 +75,10 @@ function ProductDetail({ product, initialColor }) {
           <Link className="product-page__category" to={paths.category(product.category.slug)}>
             {product.category.name}
           </Link>
-          <h1 className="product-page__title">{product.name}</h1>
+          <div className="product-page__title-row">
+            <h1 className="product-page__title">{product.name}</h1>
+            <FavoriteButton product={product} />
+          </div>
         </div>
 
         <PriceDisplay pricing={pricing} isUpdating={isUpdating} />
@@ -95,7 +103,27 @@ function ProductDetail({ product, initialColor }) {
           >
             {selection.size ? 'Agregar al carrito' : 'Elige una talla'}
           </Button>
+          <Button
+            variant="ghost"
+            iconStart="inbox"
+            disabled={!variant}
+            onClick={() => requireAuth(() => setIsSavingToList(true))}
+            className="product-page__save"
+          >
+            Guardar en lista
+          </Button>
         </div>
+        {variant && (
+          <AddToListModal
+            open={isSavingToList}
+            onClose={() => setIsSavingToList(false)}
+            item={{
+              variantId: variant.id,
+              quantity: effectiveQuantity,
+              label: `${product.name} · ${selection.color} / ${selection.size}`,
+            }}
+          />
+        )}
 
         {variant && !variant.available && (
           <p className="product-page__stock product-page__stock--out">

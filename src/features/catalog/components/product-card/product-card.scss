@@ -35,6 +35,14 @@
     position: relative;
   }
 
+  // Por encima del enlace que cubre la tarjeta.
+  &__favorite {
+    position: absolute;
+    inset-block-start: var(--space-2);
+    inset-inline-end: var(--space-2);
+    z-index: 1;
+  }
+
   &__badges {
     position: absolute;
     inset-block-start: var(--space-2);

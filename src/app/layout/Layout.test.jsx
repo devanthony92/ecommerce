@@ -71,8 +71,8 @@ describe('Shell de la tienda', () => {
   })
 
   it('las rutas pendientes muestran el aviso de construcción', async () => {
-    renderApp('/cuenta/favoritos', { as: 'buyer' })
-    expect(await screen.findByRole('heading', { name: 'Favoritos' })).toBeInTheDocument()
-    expect(screen.getByText('Esta página se implementa en la fase 13.')).toBeInTheDocument()
+    renderApp('/ofertas')
+    expect(await screen.findByRole('heading', { name: 'Ofertas' })).toBeInTheDocument()
+    expect(screen.getByText('Esta página se implementa en la fase 14.')).toBeInTheDocument()
   })
 })

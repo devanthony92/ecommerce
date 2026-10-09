@@ -43,6 +43,13 @@
     color: var(--color-text-muted);
   }
 
+  &__title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
   &__title {
     font-size: var(--font-size-2xl);
 
@@ -55,6 +62,11 @@
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--space-3);
+  }
+
+  &__save {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 
   &__stock {
