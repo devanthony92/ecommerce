@@ -1,19 +1,20 @@
 import { Link } from 'react-router'
 import { Drawer } from '@/components/drawer'
-import { EmptyState } from '@/components/feedback'
-import { Button } from '@/components/ui'
-import { PANELS, useUi } from '@/hooks/useUi'
+import { EmptyState, QueryBoundary, Skeleton } from '@/components/feedback'
+import { Button, Price } from '@/components/ui'
 import { paths } from '@/constants/paths'
+import { PANELS, useUi } from '@/hooks/useUi'
 import { useCart } from '../../hooks/useCart'
+import { CartIncentives } from '../cart-incentives/CartIncentives'
+import { CartItem } from '../cart-item/CartItem'
 import './cart-drawer.scss'
 
 export const CART_DRAWER_ID = 'cart-drawer'
 
-// Fase 3: estructura y estados. Ítems con precio, incentivos y subtotal llegan en la fase 6.
 export function CartDrawer() {
   const { isOpen, close } = useUi()
-  const { itemsCount } = useCart()
-  const isEmpty = itemsCount === 0
+  const { cart, query, itemsCount } = useCart()
+  const hasItems = itemsCount > 0 && cart?.items.length > 0
 
   return (
     <Drawer
@@ -23,29 +24,53 @@ export function CartDrawer() {
       onClose={close}
       title="Mi carrito"
       footer={
-        !isEmpty && (
-          <Button as={Link} to={paths.cart} block>
-            Ver carrito
-          </Button>
+        hasItems && (
+          <>
+            <p className="cart-drawer__total">
+              <span>Total</span>
+              <Price amount={cart.summary.total} size="lg" />
+            </p>
+            <Button as={Link} to={paths.checkout} block>
+              Finalizar compra
+            </Button>
+            <Button as={Link} to={paths.cart} variant="secondary" block>
+              Ver carrito
+            </Button>
+          </>
         )
       }
     >
-      {isEmpty ? (
-        <EmptyState
-          icon="bag"
-          title="Tu carrito está vacío"
-          description="Explora el catálogo y aprovecha los precios por volumen."
-          action={
-            <Button as={Link} to={paths.catalog} variant="secondary">
-              Ver catálogo
-            </Button>
-          }
-        />
-      ) : (
-        <p className="cart-drawer__summary">
-          Tienes {itemsCount} {itemsCount === 1 ? 'producto' : 'productos'} en el carrito.
-        </p>
-      )}
+      <QueryBoundary
+        query={query}
+        loading={<Skeleton lines={4} />}
+        isEmpty={(data) => data.items.length === 0}
+        empty={
+          <EmptyState
+            icon="bag"
+            title="Tu carrito está vacío"
+            description="Explora el catálogo y aprovecha los precios por volumen."
+            action={
+              <Button as={Link} to={paths.catalog} variant="secondary">
+                Ver catálogo
+              </Button>
+            }
+          />
+        }
+        errorTitle="No pudimos cargar tu carrito"
+      >
+        {(data) => (
+          <div className="cart-drawer__content">
+            <CartIncentives incentives={data.incentives} limit={1} />
+            <ul className="cart-drawer__list" role="list">
+              {data.items.map((item) => (
+                <li key={item.id}>
+                  <CartItem item={item} compact />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </QueryBoundary>
     </Drawer>
   )
 }

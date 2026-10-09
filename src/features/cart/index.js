@@ -1,3 +1,6 @@
+export { cartApi } from './api/cartApi'
+export { cartKeys } from './api/cartKeys'
 export { CartContext } from './CartContext'
 export { useCart } from './hooks/useCart'
+export { EMPTY_CART, variantLabel } from './utils'
 export { CART_DRAWER_ID, CartDrawer } from './components/cart-drawer/CartDrawer'

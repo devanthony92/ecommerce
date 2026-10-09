@@ -26,6 +26,7 @@ function ProductDetail({ product, initialColor }) {
   const selection = useVariantSelection(product, initialColor)
   const { variant } = selection
   const [quantity, setQuantity] = useState(1)
+  const [isAdding, setIsAdding] = useState(false)
 
   // El precio no depende de la talla: sin talla elegida se cotiza con cualquier variante.
   const { pricing, isUpdating } = usePriceQuote({
@@ -39,13 +40,20 @@ function ProductDetail({ product, initialColor }) {
   const colorHexes = Object.fromEntries(product.colors.map((color) => [color.name, color.hex]))
   const canAdd = Boolean(variant?.available)
 
-  function handleAddToCart() {
-    addItem(variant.id, effectiveQuantity)
-    toast.show({
-      tone: 'success',
-      title: 'Agregado al carrito',
-      description: `${product.name} · ${selection.color} / ${selection.size} × ${effectiveQuantity}`,
-    })
+  async function handleAddToCart() {
+    setIsAdding(true)
+    try {
+      await addItem(variant.id, effectiveQuantity)
+      toast.show({
+        tone: 'success',
+        title: 'Agregado al carrito',
+        description: `${product.name} · ${selection.color} / ${selection.size} × ${effectiveQuantity}`,
+      })
+    } catch (error) {
+      toast.show({ tone: 'danger', title: 'No pudimos agregarlo', description: error.message })
+    } finally {
+      setIsAdding(false)
+    }
   }
 
   return (
@@ -81,6 +89,7 @@ function ProductDetail({ product, initialColor }) {
             size="lg"
             iconStart="bag"
             disabled={!canAdd}
+            loading={isAdding}
             onClick={handleAddToCart}
             className="product-page__add"
           >

@@ -1,0 +1,23 @@
+.cart-incentives {
+  display: grid;
+  gap: var(--space-3);
+
+  &__item {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    background-color: var(--color-surface-muted);
+
+    &--done {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-success);
+      background-color: var(--color-success-soft);
+    }
+  }
+
+  &__strong {
+    font-weight: var(--font-weight-bold);
+  }
+}

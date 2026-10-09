@@ -460,8 +460,13 @@ Autenticado: carrito en servidor. Invitado: items en `localStorage`, precios ví
         "attributes": { "size": "M", "color": "Negro" },
         "stock": 120
       },
+      "available": true,
       "quantity": 5,
-      "pricing": {/* PriceView con quantity = 5 */}
+      "productQuantity": 5,
+      "pricing": {/* PriceView: lineTotal y savings de la línea; escala según productQuantity */},
+      "variantOptions": [
+        { "id": "v2", "attributes": { "size": "L", "color": "Negro" }, "available": true }
+      ]
     }
   ],
   "summary": {
@@ -475,15 +480,18 @@ Autenticado: carrito en servidor. Invitado: items en `localStorage`, precios ví
   "incentives": [
     {
       "type": "QUANTITY_TIER",
-      "cartItemId": "ci1",
+      "productId": "p1",
+      "productName": "Camiseta básica",
       "current": 5,
       "target": 6,
       "remaining": 1,
       "targetLabel": "Media docena",
+      "targetUnitPrice": 31200,
       "progressPercent": 83
     },
     {
       "type": "FREE_SHIPPING",
+      "achieved": false,
       "current": 175000,
       "target": 200000,
       "remaining": 25000,
@@ -493,6 +501,13 @@ Autenticado: carrito en servidor. Invitado: items en `localStorage`, precios ví
   "warnings": [{ "code": "STOCK_REDUCED", "cartItemId": "ci1", "message": "..." }]
 }
 ```
+
+Reglas del carrito (backend):
+
+- **La escala por cantidad se calcula por producto**, sumando todas sus variantes en el carrito (3 negras M + 3 blancas L = media docena). `productQuantity` indica esas unidades.
+- `subtotal` es a precio público; `discountTotal` = subtotal − total de líneas.
+- Variantes agotadas: `available: false`, aviso en `warnings` y fuera de los totales. Si se pide más que el stock, se ajusta y se avisa (`STOCK_REDUCED`).
+- Cambiar la variante a una que ya está en el carrito une las dos líneas.
 
 El backend manda **números**, no frases. El texto ("Agrega 1 unidad más y obtén precio de media docena") lo arma el componente. Así el copy se puede cambiar sin tocar el backend.
 

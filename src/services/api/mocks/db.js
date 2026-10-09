@@ -3,7 +3,7 @@
 import { storage } from '@/services/storage/storage'
 
 const DB_KEY = 'mock-db'
-const DB_VERSION = 1
+const DB_VERSION = 2
 
 // Usuarios semilla para probar cada perfil (solo existen en el mock).
 const seed = () => ({
@@ -28,6 +28,8 @@ const seed = () => ({
       wholesale: { requestStatus: 'APPROVED', levelCode: 'GOLD' },
     },
   ],
+  // Carritos de usuarios autenticados: { [userId]: [{ id, variantId, quantity }] }
+  carts: {},
 })
 
 let db = load()

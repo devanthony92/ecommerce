@@ -1,5 +1,13 @@
 .cart-drawer {
-  &__summary {
-    color: var(--color-text-muted);
+  &__content {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  &__total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-weight: var(--font-weight-semibold);
   }
 }

@@ -1,0 +1,116 @@
+@use '@/styles/abstracts' as *;
+
+// Móvil: [imagen] [info] y las acciones en una fila debajo.
+// Desde md (página de carrito): [imagen] [info] [acciones].
+.cart-item {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-block-end: 1px solid var(--color-border);
+  transition: opacity var(--duration-fast);
+
+  @include mq(md) {
+    grid-template-columns: 6rem minmax(0, 1fr) auto;
+    gap: var(--space-4);
+  }
+
+  &--saving {
+    opacity: 0.6;
+  }
+
+  &--unavailable &__image {
+    opacity: 0.5;
+  }
+
+  &__image {
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+  }
+
+  &__body {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+  }
+
+  &__name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__link {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__variant {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__variant-select {
+    max-width: 14rem;
+  }
+
+  &__unit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  &__unit-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__alert {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-danger);
+  }
+
+  &__actions {
+    display: flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+
+    @include mq(md) {
+      flex-direction: column;
+      grid-column: auto;
+      align-items: flex-end;
+      justify-content: flex-start;
+    }
+  }
+
+  &__total {
+    margin-inline-start: auto;
+
+    @include mq(md) {
+      margin-inline-start: 0;
+    }
+  }
+
+  // En el drawer siempre una columna compacta, sin importar el ancho.
+  &--compact {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+
+  &--compact &__actions {
+    flex-direction: row;
+    grid-column: 1 / -1;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &--compact &__total {
+    margin-inline-start: auto;
+  }
+}

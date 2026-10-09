@@ -1,0 +1,36 @@
+@use '@/styles/abstracts' as *;
+
+.cart-page {
+  &__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+
+    @include mq(lg) {
+      grid-template-columns: minmax(0, 1fr) 22rem;
+      align-items: start;
+    }
+  }
+
+  &__items {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  &__list {
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  &__continue {
+    justify-self: start;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__summary {
+    @include mq(lg) {
+      position: sticky;
+      inset-block-start: 9rem;
+    }
+  }
+}
