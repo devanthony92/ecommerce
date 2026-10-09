@@ -36,7 +36,7 @@ describe('Shell de la tienda', () => {
     await user.click(await within(menu).findByRole('link', { name: 'Jeans' }))
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-    expect(await screen.findByRole('heading', { name: 'Catálogo' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Jeans' })).toBeInTheDocument()
   })
 
   it('la búsqueda lleva a /buscar con la consulta', async () => {
@@ -46,7 +46,7 @@ describe('Shell de la tienda', () => {
     await user.type(search, 'camiseta negra{Enter}')
 
     expect(
-      await screen.findByRole('heading', { name: 'Resultados de búsqueda' }),
+      await screen.findByRole('heading', { name: 'Resultados para “camiseta negra”' }),
     ).toBeInTheDocument()
     expect(screen.getByRole('searchbox', { name: 'Buscar productos' })).toHaveValue(
       'camiseta negra',

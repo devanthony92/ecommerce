@@ -1,0 +1,123 @@
+@use '@/styles/abstracts' as *;
+
+.catalog-filters {
+  display: grid;
+  gap: var(--space-6);
+
+  &__group {
+    display: grid;
+    gap: var(--space-3);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  &__legend {
+    margin-block-end: var(--space-3);
+    padding: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  // El checkbox real queda oculto pero accesible; el chip muestra su estado.
+  &__input {
+    @include visually-hidden;
+  }
+
+  &__chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  &__chip-label {
+    display: inline-grid;
+    place-items: center;
+    min-width: 44px;
+    min-height: 40px;
+    padding-inline: var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    background-color: var(--color-surface);
+  }
+
+  &__input:checked + &__chip-label {
+    border-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+    background-color: var(--color-primary);
+  }
+
+  &__input:focus-visible + &__chip-label,
+  &__input:focus-visible + &__swatch {
+    @include focus-ring;
+  }
+
+  &__color {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    min-height: 36px;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+  }
+
+  &__swatch {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 50%;
+  }
+
+  &__input:checked + &__swatch {
+    box-shadow:
+      0 0 0 2px var(--color-surface),
+      0 0 0 4px var(--color-primary);
+  }
+
+  &__input:checked ~ &__color-name {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__count,
+  &__hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__hint {
+    margin-block-start: calc(var(--space-2) * -1);
+  }
+
+  &__price {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+
+  &__price-submit {
+    grid-column: 1 / -1;
+  }
+
+  &__price-field {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__price-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__price-input {
+    @include field-control;
+  }
+}

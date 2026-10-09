@@ -1,3 +1,6 @@
 export { catalogApi } from './api/catalogApi'
 export { catalogKeys } from './api/catalogKeys'
 export { useCategories } from './hooks/useCategories'
+export { useProducts } from './hooks/useProducts'
+export { ProductCard } from './components/product-card/ProductCard'
+export { ProductGrid, ProductGridSkeleton } from './components/product-grid/ProductGrid'

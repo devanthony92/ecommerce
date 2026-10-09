@@ -1,0 +1,66 @@
+@use '@/styles/abstracts' as *;
+
+.pagination {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    color: var(--color-text);
+
+    &:hover {
+      background-color: var(--color-surface-muted);
+    }
+
+    &--current {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary-contrast);
+      background-color: var(--color-primary);
+
+      &:hover {
+        background-color: var(--color-primary-hover);
+      }
+    }
+
+    &--disabled {
+      color: var(--color-text-subtle);
+      pointer-events: none;
+    }
+  }
+
+  // En móvil "Anterior/Siguiente" quedan solo con flecha.
+  &__nav-label {
+    @include visually-hidden;
+
+    @include mq(md) {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
+    }
+  }
+
+  &__gap {
+    min-width: 2rem;
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+}

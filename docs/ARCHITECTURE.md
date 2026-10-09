@@ -403,6 +403,7 @@ Lo devuelve el backend ya calculado **para el usuario que hace la request** y un
   "id": "p1", "slug": "camiseta-basica", "name": "Camiseta básica",
   "category": { "id": "c1", "slug": "camisetas", "name": "Camisetas" },
   "image": { "url": "...", "alt": "Camiseta básica negra", "width": 800, "height": 1000 },
+  "colors": [{ "name": "Negro", "hex": "#1a1a1a" }],
   "tags": ["featured"],
   "inStock": true,
   "pricing": { /* PriceView con quantity = 1 */ }
@@ -678,6 +679,14 @@ Constantes en `src/constants/statuses.js` con label y variante de badge por esta
 ## 10. Sistema de precios (frontend)
 
 Principio: **el front no calcula precios**. Solo los presenta.
+
+Cadena que aplica el backend (implementada así en el mock, `services/api/mocks/pricing.js`):
+
+```text
+precio base → promoción → escala por cantidad (todos los clientes) → % del nivel mayorista
+```
+
+Las escalas por cantidad aplican a cualquier cliente ("Compra más, paga menos"); el mayorista suma encima el descuento de su nivel. Si el catálogo se filtra por color, `image` corresponde a ese color.
 
 1. Cada producto llega con un `PriceView` ya calculado para el usuario actual.
 2. Si el usuario cambia la cantidad en el detalle de producto, `usePriceQuote(variantId, qty)` llama `/pricing/quote` (con debounce de 300 ms y `placeholderData` del valor anterior para no parpadear).

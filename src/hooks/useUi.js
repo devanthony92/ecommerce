@@ -3,6 +3,7 @@ import { createContext, useContext } from 'react'
 export const PANELS = Object.freeze({
   CART: 'cart',
   MOBILE_MENU: 'mobile-menu',
+  FILTERS: 'filters',
 })
 
 export const UiContext = createContext(null)

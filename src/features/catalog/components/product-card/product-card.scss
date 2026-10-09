@@ -1,0 +1,102 @@
+@use '@/styles/abstracts' as *;
+
+.product-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  transition:
+    box-shadow var(--duration-fast),
+    border-color var(--duration-fast);
+
+  &:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  // El foco del enlace se muestra en toda la tarjeta.
+  &:focus-within {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  &--wholesale {
+    border-block-start: 3px solid var(--color-wholesale);
+  }
+
+  &--out-of-stock &__image {
+    opacity: 0.55;
+  }
+
+  &__media {
+    position: relative;
+  }
+
+  &__badges {
+    position: absolute;
+    inset-block-start: var(--space-2);
+    inset-inline-start: var(--space-2);
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  &__body {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  &__category {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+  }
+
+  &__link {
+    text-decoration: none;
+    color: inherit;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  &__colors-label {
+    @include visually-hidden;
+  }
+
+  &__swatches {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0;
+    list-style: none;
+  }
+
+  &__swatch {
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 50%;
+  }
+
+  &__swatch-more {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+}

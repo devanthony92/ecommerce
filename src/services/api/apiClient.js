@@ -7,6 +7,8 @@ export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? '/api/v1',
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
+  // Arrays como parámetros repetidos: ?size=M&size=L (contrato §7).
+  paramsSerializer: { indexes: null },
   // Import dinámico: con VITE_USE_MOCKS=false los mocks no entran al bundle.
   ...(useMocks && {
     adapter: async (config) => (await import('./mocks/mockAdapter')).mockAdapter(config),

@@ -10,6 +10,7 @@ import { paths } from '@/constants/paths'
 const HomePage = lazy(() => import('@/features/home/pages/HomePage'))
 const CatalogPage = lazy(() => import('@/features/catalog/pages/CatalogPage'))
 const ProductPage = lazy(() => import('@/features/catalog/pages/ProductPage'))
+const SearchPage = lazy(() => import('@/features/catalog/pages/SearchPage'))
 const CartPage = lazy(() => import('@/features/cart/pages/CartPage'))
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
@@ -36,7 +37,7 @@ export function AppRoutes() {
         <Route path={paths.catalog} element={<CatalogPage />} />
         <Route path={paths.category(':categorySlug')} element={<CatalogPage />} />
         <Route path={paths.product(':slug')} element={<ProductPage />} />
-        <Route path={paths.search} element={soon('Resultados de búsqueda', 4)} />
+        <Route path={paths.search} element={<SearchPage />} />
         <Route path={paths.promotions} element={soon('Ofertas', 14)} />
         <Route path={paths.wholesaleLanding} element={soon('Compra por mayor', 10)} />
         <Route path={paths.cart} element={<CartPage />} />

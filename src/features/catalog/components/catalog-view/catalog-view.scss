@@ -1,0 +1,68 @@
+@use '@/styles/abstracts' as *;
+
+.catalog-view {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+
+  &__toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space-3);
+
+    @include mq(lg) {
+      grid-template-columns: 1fr 14rem;
+    }
+  }
+
+  &__count {
+    grid-column: 1 / -1;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+
+    @include mq(lg) {
+      grid-column: auto;
+    }
+  }
+
+  // En desktop los filtros están siempre visibles en la barra lateral.
+  &__filters-button {
+    justify-self: start;
+
+    @include mq(lg) {
+      display: none;
+    }
+  }
+
+  &__sort {
+    min-width: 11rem;
+  }
+
+  &__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+
+    @include mq(lg) {
+      grid-template-columns: 15rem minmax(0, 1fr);
+    }
+  }
+
+  &__sidebar {
+    display: none;
+
+    @include mq(lg) {
+      display: block;
+      align-self: start;
+      position: sticky;
+      inset-block-start: 9rem;
+    }
+  }
+
+  &__results {
+    display: grid;
+    gap: var(--space-8);
+    scroll-margin-block-start: 10rem;
+  }
+}

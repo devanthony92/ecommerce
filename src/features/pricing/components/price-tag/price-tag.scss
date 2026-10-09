@@ -1,0 +1,29 @@
+.price-tag {
+  display: grid;
+  gap: var(--space-1);
+
+  &__label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-wholesale-hover);
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  &__volume {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__volume-price {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+  }
+}
