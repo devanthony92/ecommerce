@@ -30,7 +30,7 @@ describe('Checkout', () => {
     await user.type(screen.getByLabelText(/^Nombre de la dirección/), 'Casa')
     await user.type(screen.getByLabelText(/^Quién recibe/), 'Laura Gómez')
     await user.type(screen.getByLabelText(/^Celular/), '3001112233')
-    await user.selectOptions(screen.getByLabelText('Departamento'), 'Antioquia')
+    await user.selectOptions(screen.getByLabelText(/^Departamento/), 'Antioquia')
     await user.type(screen.getByLabelText(/^Ciudad o municipio/), 'Medellín')
     await user.type(screen.getByLabelText(/^Dirección\s*\*?$/), 'Calle 10 # 20-30')
     await user.click(save)

@@ -126,7 +126,7 @@ export const orderHandlers = {
     const unauthorized = requireUser(user)
     if (unauthorized) return unauthorized
     const page = Math.max(1, Number(query.page) || 1)
-    const pageSize = 10
+    const pageSize = Math.min(20, Number(query.pageSize) || 10)
     const mine = getDb()
       .orders.filter((order) => order.userId === user.id)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))

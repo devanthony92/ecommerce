@@ -6,11 +6,18 @@ export function useAddresses() {
   return useQuery({ queryKey: usersKeys.addresses(), queryFn: usersApi.getAddresses })
 }
 
-export function useCreateAddress() {
+// Cambiar una dirección puede cambiar cuál es la predeterminada: se recarga la lista.
+function useAddressMutation(mutationFn) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: usersApi.createAddress,
-    // Crear una dirección puede cambiar cuál es la predeterminada: se recarga la lista.
+    mutationFn,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: usersKeys.addresses() }),
   })
 }
+
+export const useCreateAddress = () => useAddressMutation(usersApi.createAddress)
+
+export const useUpdateAddress = () =>
+  useAddressMutation(({ id, ...data }) => usersApi.updateAddress(id, data))
+
+export const useDeleteAddress = () => useAddressMutation(usersApi.deleteAddress)

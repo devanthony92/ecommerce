@@ -1,5 +1,6 @@
 export { EmptyState } from './empty-state/EmptyState'
 export { ErrorState } from './error-state/ErrorState'
+export { FormError } from './form-error/FormError'
 export { LoadingState } from './loading-state/LoadingState'
 export { QueryBoundary } from './query-boundary/QueryBoundary'
 export { RouteErrorBoundary } from './route-error-boundary/RouteErrorBoundary'

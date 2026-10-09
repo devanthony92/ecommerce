@@ -1,0 +1,8 @@
+.stacked-form {
+  display: grid;
+  gap: var(--space-4);
+
+  &__submit {
+    justify-self: start;
+  }
+}

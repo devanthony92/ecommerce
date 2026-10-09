@@ -1,0 +1,40 @@
+.content-card {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+
+  &--wholesale {
+    border-color: var(--color-wholesale);
+    background-color: var(--color-wholesale-soft);
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  &__title {
+    font-size: var(--font-size-lg);
+  }
+
+  &__action {
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+  }
+
+  &--wholesale &__action {
+    color: var(--color-wholesale-hover);
+  }
+
+  &__body {
+    display: grid;
+    gap: var(--space-3);
+  }
+}

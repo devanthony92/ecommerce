@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { FormError } from '@/components/feedback'
 import { Button, Checkbox, SelectField, TextField } from '@/components/ui'
 import { DEPARTMENTS } from '@/constants/colombia'
 import { useForm } from '@/hooks/useForm'
@@ -31,7 +32,13 @@ export function AddressForm({
   className,
 }) {
   const { field, checkbox, formError, isSubmitting, handleSubmit } = useForm({
-    initialValues: { ...EMPTY, ...initialValues },
+    // El backend usa null en campos opcionales; los inputs necesitan string.
+    initialValues: {
+      ...EMPTY,
+      ...Object.fromEntries(
+        Object.entries(initialValues ?? {}).map(([key, value]) => [key, value ?? EMPTY[key]]),
+      ),
+    },
     validate: validateAddress,
     onSubmit,
   })
@@ -85,11 +92,7 @@ export function AddressForm({
       <TextField label="Indicaciones para la entrega (opcional)" multiline {...field('notes')} />
       <Checkbox label="Usar como dirección predeterminada" {...checkbox('isDefault')} />
 
-      {formError && (
-        <p className="address-form__error" role="alert">
-          {formError}
-        </p>
-      )}
+      <FormError>{formError}</FormError>
 
       <div className="address-form__actions">
         {onCancel && (

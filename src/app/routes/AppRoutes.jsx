@@ -19,6 +19,8 @@ const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const ForgotPasswordPage = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPasswordPage'))
 const BuyerDashboardPage = lazy(() => import('@/features/users/pages/BuyerDashboardPage'))
+const ProfilePage = lazy(() => import('@/features/users/pages/ProfilePage'))
+const AddressesPage = lazy(() => import('@/features/users/pages/AddressesPage'))
 const WholesaleDashboardPage = lazy(
   () => import('@/features/wholesale/pages/WholesaleDashboardPage'),
 )
@@ -62,8 +64,8 @@ export function AppRoutes() {
             <Route path={paths.favorites} element={soon('Favoritos', 13)} />
             <Route path={paths.lists} element={soon('Listas de compra', 13)} />
             <Route path={paths.list(':listId')} element={soon('Lista de compra', 13)} />
-            <Route path={paths.addresses} element={soon('Direcciones', 9)} />
-            <Route path={paths.profile} element={soon('Perfil', 9)} />
+            <Route path={paths.addresses} element={<AddressesPage />} />
+            <Route path={paths.profile} element={<ProfilePage />} />
             <Route path={paths.wholesaleRequest} element={soon('Solicitud mayorista', 10)} />
           </Route>
 

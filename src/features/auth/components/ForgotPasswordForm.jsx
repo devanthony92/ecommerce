@@ -1,7 +1,6 @@
-import { TextField } from '@/components/ui'
+import { TextField, StackedForm } from '@/components/ui'
 import { useForm } from '@/hooks/useForm'
 import { emailError } from '../utils/authValidation'
-import { AuthForm } from './auth-form/AuthForm'
 
 export function ForgotPasswordForm({ onSubmit }) {
   const { field, formError, isSubmitting, handleSubmit } = useForm({
@@ -11,7 +10,8 @@ export function ForgotPasswordForm({ onSubmit }) {
   })
 
   return (
-    <AuthForm
+    <StackedForm
+      blockSubmit
       onSubmit={handleSubmit}
       formError={formError}
       isSubmitting={isSubmitting}
@@ -25,6 +25,6 @@ export function ForgotPasswordForm({ onSubmit }) {
         required
         {...field('email')}
       />
-    </AuthForm>
+    </StackedForm>
   )
 }

@@ -1,9 +1,8 @@
 import { Link } from 'react-router'
-import { PasswordField, TextField } from '@/components/ui'
+import { PasswordField, TextField, StackedForm } from '@/components/ui'
 import { paths } from '@/constants/paths'
 import { useForm } from '@/hooks/useForm'
 import { validateLogin } from '../utils/authValidation'
-import { AuthForm } from './auth-form/AuthForm'
 import './login-form.scss'
 
 // `onNavigate`: cierra el modal al ir a recuperar contraseña. `emailRef`: foco inicial del modal.
@@ -15,7 +14,8 @@ export function LoginForm({ onSubmit, onNavigate, emailRef }) {
   })
 
   return (
-    <AuthForm
+    <StackedForm
+      blockSubmit
       onSubmit={handleSubmit}
       formError={formError}
       isSubmitting={isSubmitting}
@@ -42,6 +42,6 @@ export function LoginForm({ onSubmit, onNavigate, emailRef }) {
           ¿Olvidaste tu contraseña?
         </Link>
       </div>
-    </AuthForm>
+    </StackedForm>
   )
 }

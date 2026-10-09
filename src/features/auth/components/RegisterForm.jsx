@@ -1,7 +1,6 @@
-import { Checkbox, PasswordField, TextField } from '@/components/ui'
+import { Checkbox, PasswordField, TextField, StackedForm } from '@/components/ui'
 import { useForm } from '@/hooks/useForm'
 import { PASSWORD_HINT, validateRegister } from '../utils/authValidation'
-import { AuthForm } from './auth-form/AuthForm'
 
 export function RegisterForm({ onSubmit }) {
   const { field, checkbox, formError, isSubmitting, handleSubmit } = useForm({
@@ -12,7 +11,8 @@ export function RegisterForm({ onSubmit }) {
   })
 
   return (
-    <AuthForm
+    <StackedForm
+      blockSubmit
       onSubmit={handleSubmit}
       formError={formError}
       isSubmitting={isSubmitting}
@@ -41,6 +41,6 @@ export function RegisterForm({ onSubmit }) {
         {...field('confirmPassword')}
       />
       <Checkbox label="Acepto los términos y la política de datos" {...checkbox('acceptTerms')} />
-    </AuthForm>
+    </StackedForm>
   )
 }

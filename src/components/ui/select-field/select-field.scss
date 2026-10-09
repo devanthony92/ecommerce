@@ -12,6 +12,10 @@
     }
   }
 
+  &__required {
+    color: var(--color-danger);
+  }
+
   &__wrapper {
     position: relative;
   }

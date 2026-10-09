@@ -349,17 +349,18 @@ Lo devuelve el backend ya calculado **para el usuario que hace la request** y un
 
 ### Auth / usuarios
 
-| Método       | Endpoint                  | Body / respuesta                                                    |
-| ------------ | ------------------------- | ------------------------------------------------------------------- |
-| POST         | `/auth/register`          | `{ name, email, password }` → `{ token, user }`                     |
-| POST         | `/auth/login`             | `{ email, password }` → `{ token, user }`                           |
-| POST         | `/auth/logout`            | —                                                                   |
-| POST         | `/auth/password/forgot`   | `{ email }` → `{ message }` (misma respuesta exista o no la cuenta) |
-| POST         | `/auth/password/reset`    | `{ token, password }` → `{ message }`                               |
-| GET          | `/users/me`               | `User`                                                              |
-| PATCH        | `/users/me`               | `{ name, phone }` → `User`                                          |
-| GET/POST     | `/users/me/addresses`     | `Address[]` / `Address`                                             |
-| PATCH/DELETE | `/users/me/addresses/:id` |                                                                     |
+| Método       | Endpoint                  | Body / respuesta                                                                                    |
+| ------------ | ------------------------- | --------------------------------------------------------------------------------------------------- |
+| POST         | `/auth/register`          | `{ name, email, password }` → `{ token, user }`                                                     |
+| POST         | `/auth/login`             | `{ email, password }` → `{ token, user }`                                                           |
+| POST         | `/auth/logout`            | —                                                                                                   |
+| POST         | `/auth/password/forgot`   | `{ email }` → `{ message }` (misma respuesta exista o no la cuenta)                                 |
+| POST         | `/auth/password/reset`    | `{ token, password }` → `{ message }`                                                               |
+| GET          | `/users/me`               | `User`                                                                                              |
+| PATCH        | `/users/me`               | `{ name, phone }` → `User`                                                                          |
+| POST         | `/users/me/password`      | `{ currentPassword, newPassword }` → `{ message }`; error de la actual en `details.currentPassword` |
+| GET/POST     | `/users/me/addresses`     | `Address[]` / `Address`                                                                             |
+| PATCH/DELETE | `/users/me/addresses/:id` |                                                                                                     |
 
 ```json
 // User
@@ -823,6 +824,8 @@ Regla visual: **azul = compra individual, cobre = mayorista**. Así la home y la
 
 - `components/ui`: Button, IconButton, Icon (set SVG propio), TextField, SelectField, Checkbox, QuantityStepper, Price, Badge, ProgressBar, ResponsiveImage, Spinner.
 - `components/feedback`: LoadingState, EmptyState, ErrorState, Skeleton, QueryBoundary, Toast (`useToast`), RouteErrorBoundary.
+- Formularios: `hooks/useForm` (valores, validación, errores del backend por campo, foco al primer error), `StackedForm` (campos + `FormError` + enviar), `PasswordField`.
+- `ConfirmModal` (foco inicial en Cancelar: lo destructivo nunca es la opción por defecto) y `ContentCard` (tarjeta de sección para dashboards). `EmptyState compact` dentro de tarjetas y paneles.
 - `components/modal` y `components/drawer`: comparten `hooks/useOverlay` (scroll lock con contador, focus trap con retorno de foco, ESC solo cierra el overlay superior, `#root` inerte) y `hooks/usePresence` (animación de salida).
 - En desarrollo, `/_ds` muestra todos los componentes. No existe en el build de producción.
 

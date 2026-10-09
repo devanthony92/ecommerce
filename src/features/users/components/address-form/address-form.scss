@@ -13,14 +13,6 @@
     }
   }
 
-  &__error {
-    padding: var(--space-3);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-sm);
-    color: var(--color-danger);
-    background-color: var(--color-danger-soft);
-  }
-
   &__actions {
     display: flex;
     flex-wrap: wrap-reverse;

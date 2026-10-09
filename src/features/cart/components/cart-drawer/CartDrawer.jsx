@@ -46,6 +46,7 @@ export function CartDrawer() {
         isEmpty={(data) => data.items.length === 0}
         empty={
           <EmptyState
+            compact
             icon="bag"
             title="Tu carrito está vacío"
             description="Explora el catálogo y aprovecha los precios por volumen."

@@ -1,7 +1,6 @@
-import { PasswordField } from '@/components/ui'
+import { PasswordField, StackedForm } from '@/components/ui'
 import { useForm } from '@/hooks/useForm'
 import { PASSWORD_HINT, validateReset } from '../utils/authValidation'
-import { AuthForm } from './auth-form/AuthForm'
 
 export function ResetPasswordForm({ onSubmit }) {
   const { field, formError, isSubmitting, handleSubmit } = useForm({
@@ -11,7 +10,8 @@ export function ResetPasswordForm({ onSubmit }) {
   })
 
   return (
-    <AuthForm
+    <StackedForm
+      blockSubmit
       onSubmit={handleSubmit}
       formError={formError}
       isSubmitting={isSubmitting}
@@ -30,6 +30,6 @@ export function ResetPasswordForm({ onSubmit }) {
         required
         {...field('confirmPassword')}
       />
-    </AuthForm>
+    </StackedForm>
   )
 }

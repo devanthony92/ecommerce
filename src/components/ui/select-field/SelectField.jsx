@@ -13,6 +13,7 @@ export function SelectField({
   error,
   id,
   hideLabel = false,
+  required,
   className,
   ...selectProps
 }) {
@@ -28,6 +29,12 @@ export function SelectField({
         htmlFor={fieldId}
       >
         {label}
+        {required && (
+          <span className="select-field__required" aria-hidden="true">
+            {' '}
+            *
+          </span>
+        )}
       </label>
 
       <div className="select-field__wrapper">
@@ -35,6 +42,7 @@ export function SelectField({
           ref={ref}
           id={fieldId}
           className="select-field__control"
+          required={required}
           aria-invalid={error ? true : undefined}
           aria-describedby={clsx(hintId, errorId) || undefined}
           {...selectProps}

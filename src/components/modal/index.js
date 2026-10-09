@@ -1,3 +1,4 @@
+export { ConfirmModal } from './ConfirmModal'
 export { Modal } from './Modal'
 export { ModalBody } from './ModalBody'
 export { ModalFooter } from './ModalFooter'

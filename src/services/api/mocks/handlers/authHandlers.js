@@ -109,4 +109,39 @@ export const authHandlers = {
   },
 
   'GET /users/me': ({ user }) => requireUser(user) ?? ok(toPublicUser(user)),
+
+  'PATCH /users/me': ({ user, body }) => {
+    const unauthorized = requireUser(user)
+    if (unauthorized) return unauthorized
+    const name = body?.name?.trim() ?? user.name
+    const phone = body?.phone?.trim() || null
+
+    const details = {}
+    if (name.length < 2) details.name = 'Ingresa tu nombre.'
+    if (phone && !/^3\d{9}$/.test(phone)) details.phone = 'Celular de 10 dígitos que empiece por 3.'
+    if (Object.keys(details).length) {
+      return fail(400, 'VALIDATION_ERROR', 'Revisa los datos del perfil.', details)
+    }
+
+    Object.assign(user, { name, phone })
+    save()
+    return ok(toPublicUser(user))
+  },
+
+  'POST /users/me/password': ({ user, body }) => {
+    const unauthorized = requireUser(user)
+    if (unauthorized) return unauthorized
+    if (user.password !== body?.currentPassword) {
+      return fail(400, 'INVALID_PASSWORD', 'La contraseña actual no es correcta.', {
+        currentPassword: 'La contraseña actual no es correcta.',
+      })
+    }
+    const invalidPassword = passwordError(body?.newPassword ?? '')
+    if (invalidPassword) {
+      return fail(400, 'VALIDATION_ERROR', invalidPassword, { newPassword: invalidPassword })
+    }
+    user.password = body.newPassword
+    save()
+    return ok({ message: 'Tu contraseña se actualizó.' })
+  },
 }
