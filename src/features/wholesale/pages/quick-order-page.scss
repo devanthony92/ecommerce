@@ -1,6 +1,13 @@
 @use '@/styles/abstracts' as *;
 
 .quick-order {
+  // Espacio para que la barra fija no tape el final de la página en móvil.
+  padding-block-end: var(--space-16);
+
+  @include mq(lg) {
+    padding-block-end: 0;
+  }
+
   &__layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -65,5 +72,33 @@
   &__total {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
+  }
+
+  &__mobile-bar {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: var(--z-header);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--gutter);
+    border-block-start: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-lg);
+
+    @include mq(lg) {
+      display: none;
+    }
+  }
+
+  &__mobile-summary {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__list-card:focus {
+    outline: none;
   }
 }

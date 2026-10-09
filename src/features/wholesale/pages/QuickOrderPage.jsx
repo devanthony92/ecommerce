@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { EmptyState, useToast } from '@/components/feedback'
 import { ContentCard, PageHeader } from '@/components/layout'
 import { Button, IconButton, QuantityStepper, ResponsiveImage, TextField } from '@/components/ui'
@@ -21,6 +21,7 @@ export default function QuickOrderPage() {
   const [lines, setLines] = useState([])
   const [isAdding, setIsAdding] = useState(false)
   const lookup = useVariantLookup(text)
+  const listRef = useRef(null)
 
   const inList = (variantId) => lines.some((line) => line.variantId === variantId)
   const units = lines.reduce((sum, line) => sum + line.quantity, 0)
@@ -122,49 +123,73 @@ export default function QuickOrderPage() {
           )}
         </ContentCard>
 
-        <ContentCard title={`Tu lista (${lines.length})`} className="quick-order__list-card">
-          {lines.length === 0 ? (
-            <EmptyState
-              compact
-              icon="bag"
-              title="Tu lista está vacía"
-              description="Agrega referencias desde la búsqueda."
-            />
-          ) : (
-            <>
-              <ul className="quick-order__lines" role="list" aria-label="Referencias del pedido">
-                {lines.map((line) => (
-                  <li key={line.variantId} className="quick-order__line">
-                    <span className="quick-order__info">
-                      <span className="quick-order__name">{line.name}</span>
-                      <span className="quick-order__meta">
-                        {variantLabel(line.attributes)} · {line.sku}
+        <div ref={listRef} className="quick-order__list-card" tabIndex={-1}>
+          <ContentCard title={`Tu lista (${lines.length})`}>
+            {lines.length === 0 ? (
+              <EmptyState
+                compact
+                icon="bag"
+                title="Tu lista está vacía"
+                description="Agrega referencias desde la búsqueda."
+              />
+            ) : (
+              <>
+                <ul className="quick-order__lines" role="list" aria-label="Referencias del pedido">
+                  {lines.map((line) => (
+                    <li key={line.variantId} className="quick-order__line">
+                      <span className="quick-order__info">
+                        <span className="quick-order__name">{line.name}</span>
+                        <span className="quick-order__meta">
+                          {variantLabel(line.attributes)} · {line.sku}
+                        </span>
                       </span>
-                    </span>
-                    <QuantityStepper
-                      size="sm"
-                      value={line.quantity}
-                      onChange={(quantity) => updateLine(line.variantId, quantity)}
-                      max={line.stock}
-                      label={`Cantidad de ${line.name} ${variantLabel(line.attributes)}`}
-                    />
-                    <IconButton
-                      icon="close"
-                      size="sm"
-                      label={`Quitar ${line.name} ${variantLabel(line.attributes)}`}
-                      onClick={() => removeLine(line.variantId)}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <p className="quick-order__total">{units} unidades en total</p>
-              <Button block loading={isAdding} onClick={handleAddAll}>
-                Agregar todo al carrito
-              </Button>
-            </>
-          )}
-        </ContentCard>
+                      <QuantityStepper
+                        size="sm"
+                        value={line.quantity}
+                        onChange={(quantity) => updateLine(line.variantId, quantity)}
+                        max={line.stock}
+                        label={`Cantidad de ${line.name} ${variantLabel(line.attributes)}`}
+                      />
+                      <IconButton
+                        icon="close"
+                        size="sm"
+                        label={`Quitar ${line.name} ${variantLabel(line.attributes)}`}
+                        onClick={() => removeLine(line.variantId)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <p className="quick-order__total">{units} unidades en total</p>
+                <Button block loading={isAdding} onClick={handleAddAll}>
+                  Agregar todo al carrito
+                </Button>
+              </>
+            )}
+          </ContentCard>
+        </div>
       </div>
+
+      {/* Móvil: la lista queda debajo de los resultados; esta barra la mantiene a mano. */}
+      {lines.length > 0 && (
+        <div className="quick-order__mobile-bar">
+          <span className="quick-order__mobile-summary">
+            {lines.length} {lines.length === 1 ? 'referencia' : 'referencias'} · {units} u.
+          </span>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              listRef.current?.focus({ preventScroll: true })
+            }}
+          >
+            Ver lista
+          </Button>
+          <Button size="sm" loading={isAdding} onClick={handleAddAll}>
+            Agregar todo
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

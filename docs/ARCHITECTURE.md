@@ -884,33 +884,58 @@ Regla visual: **azul = compra individual, cobre = mayorista**. Así la home y la
 
 ## Pendientes a confirmar
 
-1. La spec original salta las secciones **6, 7, 9 y 13**. ¿Se eliminaron a propósito o falta contenido (p. ej. búsqueda, notificaciones)?
-2. **Pasarela de pago** (Wompi, MercadoPago, PayU). En v1 el checkout simula el pago.
-3. ¿Precios **con IVA incluido**?
-4. ¿Mayorista tiene **mínimo de compra** por pedido?
-5. ¿El envío se cobra por tarifa fija, por ciudad o por peso?
-6. ¿Checkout de invitado? La spec dice que no (exige login). Se mantiene así.
+1. La spec original salta las secciones **6, 7, 9 y 13**. ¿Se eliminaron a propósito o falta contenido (p. ej. notificaciones)?
+2. **Pasarela de pago** (Wompi, MercadoPago, PayU). Hoy el checkout simula el pago y nunca pide datos bancarios.
+3. ¿Precios **con IVA incluido**? Se asume que sí.
+4. ¿Mayorista tiene **mínimo de compra** por pedido? Hoy no hay mínimo.
+5. Envío: tarifa fija de $12.000, gratis desde $200.000, express en ciudades principales. Confirmar reglas reales.
+6. Topes de niveles: se usan BRONCE < $500.000, PLATA < $2.000.000, ORO < $5.000.000, PLATINO desde $5.000.000. El ejemplo de la spec (ORO con $8.450.000) no cuadra con su tabla de niveles.
+7. Checkout de invitado: la spec exige login. Se mantiene así.
+
+---
+
+## Estado y calidad (fase 15)
+
+Las 15 fases están implementadas. Cada una quedó en su propio commit.
+
+**Tests**: 111 con Vitest + Testing Library contra el backend simulado (flujos completos: catálogo, carrito, checkout, auth, mayorista, pedidos, listas). Cobertura ~91 % de líneas (`npm run test:coverage`; excluye el mock).
+
+**Accesibilidad**:
+
+- `src/test/a11y.test.jsx` audita 20 páginas con axe-core (WCAG 2.1 A/AA + buenas prácticas) en cada `npm test`.
+- El contraste se verificó en el navegador real página por página (jsdom no calcula estilos). Todos los pares de color cumplen AA.
+- Encabezados en orden: tarjetas y líneas reciben `headingLevel` según cuelguen del h1 o de una sección.
+- Foco: modales y drawers lo atrapan y lo devuelven; los pasos del checkout y los cambios de página lo mueven al contenido; los formularios enfocan el primer error.
+
+**Rendimiento**:
+
+- Carga inicial ≈ 130 KB gzip (React + router + query ≈ 77, UI base ≈ 21, axios ≈ 19). Cada página es un chunk aparte (lazy).
+- Al pasar el cursor o enfocar una tarjeta de producto se precargan los datos y el código del detalle.
+- Imágenes con `loading="lazy"`, `aspect-ratio` reservado (sin saltos de layout) y `fetchpriority` en la principal.
+- Con `VITE_USE_MOCKS=false` el backend simulado no entra al bundle.
+
+**Dependencias**: `npm audit --omit=dev` reporta 0 vulnerabilidades. Las alertas restantes vienen de `braces`, dependencia de Stylelint usada solo al ejecutar el lint en desarrollo; no hay versión corregida publicada.
 
 ---
 
 ## Plan por fases
 
-| Fase | Entregable                                                                                             |
-| ---- | ------------------------------------------------------------------------------------------------------ |
-| 1    | Scaffold Vite, tooling, estructura, providers, `apiClient` + mocks, rutas lazy con páginas placeholder |
-| 2    | Tokens, `styles/`, componentes `ui/` y `feedback/`, Modal, Drawer                                      |
-| 3    | Header, Footer, layouts, menú móvil, CartDrawer vacío                                                  |
-| 4    | Catálogo: listado, filtros (URL), búsqueda, paginación                                                 |
-| 5    | Detalle de producto, variantes, `PriceDisplay`, `PricingTiers`, cotización                             |
-| 6    | Carrito invitado y autenticado, incentivos                                                             |
-| 7    | Checkout                                                                                               |
-| 8    | Auth: login, registro, guards, merge de carrito                                                        |
-| 9    | Cuenta comprador: dashboard, perfil, direcciones                                                       |
-| 10   | Solicitud mayorista y estados                                                                          |
-| 11   | Dashboard mayorista: nivel, progreso, beneficios                                                       |
-| 12   | Pedidos, cancelar, recompra, pedido rápido, frecuentes                                                 |
-| 13   | Favoritos y listas                                                                                     |
-| 14   | Promociones, home completa                                                                             |
-| 15   | Accesibilidad (axe), performance, tests                                                                |
+| Fase | Entregable                                                  | Estado |
+| ---- | ----------------------------------------------------------- | ------ |
+| 1    | Scaffold, tooling, estructura, providers, apiClient + mocks | Hecha  |
+| 2    | Design system: tokens, ui, feedback, Modal, Drawer          | Hecha  |
+| 3    | Header, footer, layouts, menú móvil                         | Hecha  |
+| 4    | Catálogo: filtros en URL, búsqueda, paginación              | Hecha  |
+| 5    | Detalle de producto, variantes, escalas, cotización         | Hecha  |
+| 6    | Carrito invitado y autenticado, incentivos                  | Hecha  |
+| 7    | Checkout                                                    | Hecha  |
+| 8    | Autenticación completa                                      | Hecha  |
+| 9    | Cuenta del comprador                                        | Hecha  |
+| 10   | Solicitud mayorista y estados                               | Hecha  |
+| 11   | Panel mayorista: nivel, progreso, catálogo mayorista        | Hecha  |
+| 12   | Pedidos, cancelar, recompra, pedido rápido, frecuentes      | Hecha  |
+| 13   | Favoritos y listas                                          | Hecha  |
+| 14   | Home y promociones                                          | Hecha  |
+| 15   | Accesibilidad, rendimiento, tests                           | Hecha  |
 
-> Nota: auth (fase 8) va después del checkout (fase 7) en la spec. Se adelanta un `AuthProvider` mínimo con mocks en fase 1, para que los guards y precios por usuario funcionen desde el inicio.
+Siguiente etapa natural: backend real con el contrato de la sección 7 y el panel administrativo (las rutas `/admin/*` y el permiso `admin.access` ya están previstos).

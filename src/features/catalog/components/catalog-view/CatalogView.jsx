@@ -136,6 +136,7 @@ export function CatalogView({
                   products={result.items}
                   isUpdating={query.isPlaceholderData}
                   showTiers={showTiers}
+                  headingLevel={2}
                 />
                 <Pagination
                   page={result.page}

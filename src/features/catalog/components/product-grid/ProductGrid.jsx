@@ -6,7 +6,7 @@ import './product-grid.scss'
 // Las primeras imágenes se cargan con prioridad (están en el primer pantallazo).
 const PRIORITY_COUNT = 4
 
-export function ProductGrid({ products, isUpdating = false, showTiers = false }) {
+export function ProductGrid({ products, isUpdating = false, showTiers = false, headingLevel }) {
   return (
     <ul
       className={clsx('product-grid', isUpdating && 'product-grid--updating')}
@@ -14,7 +14,12 @@ export function ProductGrid({ products, isUpdating = false, showTiers = false })
     >
       {products.map((product, index) => (
         <li key={product.id} className="product-grid__item">
-          <ProductCard product={product} priority={index < PRIORITY_COUNT} showTiers={showTiers} />
+          <ProductCard
+            product={product}
+            priority={index < PRIORITY_COUNT}
+            showTiers={showTiers}
+            headingLevel={headingLevel}
+          />
         </li>
       ))}
     </ul>

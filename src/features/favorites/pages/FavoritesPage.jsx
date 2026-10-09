@@ -33,7 +33,7 @@ export default function FavoritesPage() {
         }
         errorTitle="No pudimos cargar tus favoritos"
       >
-        {(items) => <ProductGrid products={items} />}
+        {(items) => <ProductGrid products={items} headingLevel={2} />}
       </QueryBoundary>
     </>
   )

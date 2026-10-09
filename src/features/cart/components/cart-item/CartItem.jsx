@@ -12,7 +12,8 @@ import './cart-item.scss'
  * Línea del carrito. `compact` para el drawer (sin cambio de variante).
  * La cantidad se envía al backend cuando el usuario deja de tocar el control.
  */
-export function CartItem({ item, compact = false }) {
+export function CartItem({ item, compact = false, headingLevel = 3 }) {
+  const Heading = `h${headingLevel}`
   const { updateItem, removeItem, isUpdating } = useCart()
   const toast = useToast()
   const [draft, setDraft] = useState(null)
@@ -77,11 +78,11 @@ export function CartItem({ item, compact = false }) {
       <ResponsiveImage src={item.image.url} alt={item.image.alt} className="cart-item__image" />
 
       <div className="cart-item__body">
-        <h3 className="cart-item__name">
+        <Heading className="cart-item__name">
           <Link className="cart-item__link" to={paths.product(item.productSlug)}>
             {item.name}
           </Link>
-        </h3>
+        </Heading>
 
         {compact || !item.available ? (
           <p className="cart-item__variant">{variantLabel(item.variant.attributes)}</p>

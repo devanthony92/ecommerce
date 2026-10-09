@@ -2,11 +2,19 @@ import { Badge, Button } from '@/components/ui'
 import { formatAddress } from '../../utils/addressValidation'
 import './address-card.scss'
 
-export function AddressCard({ address, onEdit, onDelete, onMakeDefault, isBusy = false }) {
+export function AddressCard({
+  address,
+  onEdit,
+  onDelete,
+  onMakeDefault,
+  isBusy = false,
+  headingLevel = 3,
+}) {
+  const Heading = `h${headingLevel}`
   return (
     <article className="address-card" aria-busy={isBusy || undefined}>
       <header className="address-card__header">
-        <h3 className="address-card__label">{address.label}</h3>
+        <Heading className="address-card__label">{address.label}</Heading>
         {address.isDefault && <Badge tone="info">Predeterminada</Badge>}
       </header>
       <p className="address-card__recipient">

@@ -55,7 +55,7 @@ export default function CartPage() {
               <ul className="cart-page__list" role="list" aria-label="Productos en el carrito">
                 {cart.items.map((item) => (
                   <li key={item.id}>
-                    <CartItem item={item} />
+                    <CartItem item={item} headingLevel={2} />
                   </li>
                 ))}
               </ul>

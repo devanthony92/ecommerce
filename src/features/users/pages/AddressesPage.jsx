@@ -90,6 +90,7 @@ export default function AddressesPage() {
                   onDelete={() => setDeleting(address)}
                   onMakeDefault={() => handleMakeDefault(address)}
                   isBusy={updateAddress.isPending}
+                  headingLevel={2}
                 />
               </li>
             ))}

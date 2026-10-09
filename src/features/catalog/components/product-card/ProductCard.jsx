@@ -4,6 +4,7 @@ import { Badge, ResponsiveImage } from '@/components/ui'
 import { FavoriteButton } from '@/features/favorites'
 import { PriceTag, TierStrip } from '@/features/pricing'
 import { paths } from '@/constants/paths'
+import { usePrefetchProduct } from '../../hooks/usePrefetchProduct'
 import './product-card.scss'
 
 const TAG_BADGES = {
@@ -14,7 +15,10 @@ const TAG_BADGES = {
 const MAX_SWATCHES = 4
 
 // `showTiers`: muestra todas las escalas (catálogo mayorista).
-export function ProductCard({ product, priority = false, showTiers = false }) {
+// `headingLevel`: 2 si la grilla cuelga del h1 de la página, 3 si va bajo una sección.
+export function ProductCard({ product, priority = false, showTiers = false, headingLevel = 3 }) {
+  const Heading = `h${headingLevel}`
+  const prefetch = usePrefetchProduct()
   // Si la imagen es de otro color (catálogo filtrado), el detalle abre con ese color.
   const href =
     product.image.color && product.image.color !== product.colors[0]?.name
@@ -53,12 +57,17 @@ export function ProductCard({ product, priority = false, showTiers = false }) {
 
       <div className="product-card__body">
         <p className="product-card__category">{product.category.name}</p>
-        <h3 className="product-card__title">
+        <Heading className="product-card__title">
           {/* El enlace cubre toda la tarjeta (::after), pero el nombre accesible es el título. */}
-          <Link className="product-card__link" to={href}>
+          <Link
+            className="product-card__link"
+            to={href}
+            onMouseEnter={() => prefetch(product.slug)}
+            onFocus={() => prefetch(product.slug)}
+          >
             {product.name}
           </Link>
-        </h3>
+        </Heading>
 
         <p className="product-card__colors-label">
           Colores: {product.colors.map((color) => color.name).join(', ')}
