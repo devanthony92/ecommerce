@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useToast } from '@/components/feedback'
 import { AuthContext, authApi, authKeys } from '@/features/auth'
 import { setUnauthorizedHandler } from '@/services/api/interceptors'
 import { storage, STORAGE_KEYS } from '@/services/storage/storage'
@@ -7,7 +9,16 @@ import { SESSION_STATUS } from '@/constants/statuses'
 
 export function AuthProvider({ children }) {
   const queryClient = useQueryClient()
+  const toast = useToast()
   const [token, setToken] = useState(() => storage.get(STORAGE_KEYS.token))
+  const { pathname } = useLocation()
+  const pathnameRef = useRef(pathname)
+  useEffect(() => {
+    pathnameRef.current = pathname
+  }, [pathname])
+  // Ruta desde la que se cerró sesión a propósito: esa ruta privada lleva al inicio,
+  // no al login. Cualquier otra ruta privada sí pide ingresar.
+  const [signedOutFrom, setSignedOutFrom] = useState(null)
 
   const meQuery = useQuery({
     queryKey: authKeys.me(),
@@ -36,6 +47,7 @@ export function AuthProvider({ children }) {
       dropUserScopedQueries()
       queryClient.setQueryData(authKeys.me(), user)
       setToken(newToken)
+      setSignedOutFrom(null)
       return user
     },
     [queryClient, dropUserScopedQueries],
@@ -56,13 +68,24 @@ export function AuthProvider({ children }) {
       await authApi.logout()
     } finally {
       clearSession()
+      setSignedOutFrom(pathnameRef.current)
+      toast.show({ title: 'Cerraste sesión' })
     }
-  }, [clearSession])
+  }, [clearSession, toast])
 
   useEffect(() => {
-    setUnauthorizedHandler(clearSession)
+    // 401 en cualquier request con sesión: el token venció o fue revocado.
+    setUnauthorizedHandler(() => {
+      if (!storage.get(STORAGE_KEYS.token)) return
+      clearSession()
+      toast.show({
+        tone: 'warning',
+        title: 'Tu sesión expiró',
+        description: 'Ingresa de nuevo para continuar.',
+      })
+    })
     return () => setUnauthorizedHandler(null)
-  }, [clearSession])
+  }, [clearSession, toast])
 
   const user = token ? (meQuery.data ?? null) : null
 
@@ -75,11 +98,12 @@ export function AuthProvider({ children }) {
       user,
       status,
       isAuthenticated: status === SESSION_STATUS.AUTHENTICATED,
+      signedOutFrom,
       login,
       register,
       logout,
     }),
-    [user, status, login, register, logout],
+    [user, status, signedOutFrom, login, register, logout],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import { Badge, IconButton } from '@/components/ui'
-import { Can, useAuth } from '@/features/auth'
+import { Can, useAuth, useRequireAuth } from '@/features/auth'
 import { CART_DRAWER_ID, useCart } from '@/features/cart'
 import { PERMISSIONS } from '@/constants/permissions'
 import { PANELS, useUi } from '@/hooks/useUi'
@@ -19,6 +19,7 @@ export function SiteHeader() {
   const { isAuthenticated } = useAuth()
   const { itemsCount } = useCart()
   const { open, isOpen } = useUi()
+  const requireAuth = useRequireAuth()
 
   return (
     <header className="site-header">
@@ -55,12 +56,17 @@ export function SiteHeader() {
             label="Favoritos"
             className="site-header__favorites"
           />
-          <IconButton
-            as={Link}
-            to={isAuthenticated ? paths.account : paths.login}
-            icon="user"
-            label={isAuthenticated ? 'Mi cuenta' : 'Ingresar'}
-          />
+          {isAuthenticated ? (
+            <IconButton as={Link} to={paths.account} icon="user" label="Mi cuenta" />
+          ) : (
+            // Sin sesión: login en modal, sin perder la página actual.
+            <IconButton
+              icon="user"
+              label="Ingresar a mi cuenta"
+              aria-haspopup="dialog"
+              onClick={() => requireAuth()}
+            />
+          )}
           <IconButton
             icon="bag"
             label={cartLabel(itemsCount)}

@@ -1,0 +1,80 @@
+@use '@/styles/abstracts' as *;
+
+.auth-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+  max-width: 56rem;
+  margin-inline: auto;
+
+  @include mq(lg) {
+    grid-template-columns: minmax(0, 28rem) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  &__card {
+    display: grid;
+    gap: var(--space-5);
+    padding: var(--space-6) var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+
+    @include mq(md) {
+      padding: var(--space-8);
+    }
+  }
+
+  &__header {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  &__description {
+    color: var(--color-text-muted);
+  }
+
+  &__notice {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-info);
+    background-color: var(--color-info-soft);
+  }
+
+  &__footer {
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid var(--color-border);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+
+  &__aside {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-muted);
+  }
+
+  &__aside-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__benefits {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  &__benefit {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+  }
+}

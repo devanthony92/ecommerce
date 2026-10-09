@@ -1,0 +1,10 @@
+.login-modal {
+  display: grid;
+  gap: var(--space-4);
+
+  &__register {
+    font-size: var(--font-size-sm);
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+}

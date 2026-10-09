@@ -1,7 +1,7 @@
 import { Link, Navigate, useSearchParams } from 'react-router'
-import { PageHeader } from '@/components/layout'
 import { paths, safeRedirectPath } from '@/constants/paths'
 import { ROLES } from '@/constants/statuses'
+import { AuthLayout } from '../components/auth-layout/AuthLayout'
 import { LoginForm } from '../components/LoginForm'
 import { useAuth } from '../hooks/useAuth'
 
@@ -19,13 +19,20 @@ export default function LoginPage() {
     return <Navigate to={safeRedirectPath(next, homeFor(user))} replace />
   }
 
+  const registerHref = next ? `${paths.register}?next=${encodeURIComponent(next)}` : paths.register
+
   return (
-    <>
-      <PageHeader title="Ingresar" />
+    <AuthLayout
+      title="Ingresar"
+      description="Compra al detal o por mayor con tu cuenta."
+      notice={next && 'Ingresa a tu cuenta para continuar.'}
+      footer={
+        <>
+          ¿No tienes cuenta? <Link to={registerHref}>Crear cuenta</Link>
+        </>
+      }
+    >
       <LoginForm onSubmit={login} />
-      <p>
-        ¿No tienes cuenta? <Link to={paths.register}>Crear cuenta</Link>
-      </p>
-    </>
+    </AuthLayout>
   )
 }

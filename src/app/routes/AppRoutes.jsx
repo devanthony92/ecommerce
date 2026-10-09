@@ -16,6 +16,8 @@ const CheckoutPage = lazy(() => import('@/features/checkout/pages/CheckoutPage')
 const OrderConfirmationPage = lazy(() => import('@/features/orders/pages/OrderConfirmationPage'))
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
+const ForgotPasswordPage = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPasswordPage'))
 const BuyerDashboardPage = lazy(() => import('@/features/users/pages/BuyerDashboardPage'))
 const WholesaleDashboardPage = lazy(
   () => import('@/features/wholesale/pages/WholesaleDashboardPage'),
@@ -45,6 +47,8 @@ export function AppRoutes() {
         <Route path={paths.cart} element={<CartPage />} />
         <Route path={paths.login} element={<LoginPage />} />
         <Route path={paths.register} element={<RegisterPage />} />
+        <Route path={paths.forgotPassword} element={<ForgotPasswordPage />} />
+        <Route path={paths.resetPassword} element={<ResetPasswordPage />} />
 
         <Route element={<RequireAuth />}>
           <Route path={paths.checkout} element={<CheckoutPage />} />

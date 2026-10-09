@@ -349,15 +349,17 @@ Lo devuelve el backend ya calculado **para el usuario que hace la request** y un
 
 ### Auth / usuarios
 
-| Método       | Endpoint                  | Body / respuesta                                |
-| ------------ | ------------------------- | ----------------------------------------------- |
-| POST         | `/auth/register`          | `{ name, email, password }` → `{ token, user }` |
-| POST         | `/auth/login`             | `{ email, password }` → `{ token, user }`       |
-| POST         | `/auth/logout`            | —                                               |
-| GET          | `/users/me`               | `User`                                          |
-| PATCH        | `/users/me`               | `{ name, phone }` → `User`                      |
-| GET/POST     | `/users/me/addresses`     | `Address[]` / `Address`                         |
-| PATCH/DELETE | `/users/me/addresses/:id` |                                                 |
+| Método       | Endpoint                  | Body / respuesta                                                    |
+| ------------ | ------------------------- | ------------------------------------------------------------------- |
+| POST         | `/auth/register`          | `{ name, email, password }` → `{ token, user }`                     |
+| POST         | `/auth/login`             | `{ email, password }` → `{ token, user }`                           |
+| POST         | `/auth/logout`            | —                                                                   |
+| POST         | `/auth/password/forgot`   | `{ email }` → `{ message }` (misma respuesta exista o no la cuenta) |
+| POST         | `/auth/password/reset`    | `{ token, password }` → `{ message }`                               |
+| GET          | `/users/me`               | `User`                                                              |
+| PATCH        | `/users/me`               | `{ name, phone }` → `User`                                          |
+| GET/POST     | `/users/me/addresses`     | `Address[]` / `Address`                                             |
+| PATCH/DELETE | `/users/me/addresses/:id` |                                                                     |
 
 ```json
 // User
@@ -374,6 +376,14 @@ Lo devuelve el backend ya calculado **para el usuario que hace la request** y un
 // Address
 { "id": "a1", "label": "Tienda", "recipient": "Carlos Pérez", "phone": "300...", "department": "Antioquia", "city": "Medellín", "line1": "Cra 1 # 2-3", "line2": null, "notes": null, "isDefault": true }
 ```
+
+Reglas de auth (fase 8):
+
+- Login: el mismo error para correo inexistente o contraseña incorrecta. Contraseña: 8+ caracteres con letras y números. Registro exige `acceptTerms`.
+- Un 401 en `/auth/*` es "credenciales inválidas"; un 401 en cualquier otra ruta con sesión cierra la sesión y avisa "Tu sesión expiró".
+- Errores por campo en `error.details` (p. ej. `EMAIL_TAKEN` → `details.email`); el frontend los muestra junto al campo y enfoca el primero.
+- `devResetToken` solo existe en el mock (no hay correo en la demo). El backend real nunca lo devuelve.
+- Acciones que requieren cuenta usan `useRequireAuth()`: sin sesión abre el modal de login y, al ingresar, ejecuta la acción pendiente.
 
 ### Catálogo
 

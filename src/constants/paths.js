@@ -10,6 +10,8 @@ export const paths = Object.freeze({
   wholesaleLanding: '/mayoristas',
   login: '/ingresar',
   register: '/registro',
+  forgotPassword: '/recuperar-contrasena',
+  resetPassword: '/restablecer-contrasena',
 
   checkout: '/checkout',
   orderConfirmation: (orderId) => `/checkout/confirmacion/${orderId}`,

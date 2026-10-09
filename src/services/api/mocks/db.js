@@ -3,7 +3,7 @@
 import { storage } from '@/services/storage/storage'
 
 const DB_KEY = 'mock-db'
-const DB_VERSION = 3
+const DB_VERSION = 4
 
 // Usuarios semilla para probar cada perfil (solo existen en el mock).
 const seed = () => ({
@@ -49,6 +49,8 @@ const seed = () => ({
   },
   orders: [],
   orderSequence: 120,
+  // Tokens de recuperación de contraseña: { [token]: { userId, expiresAt } }
+  passwordResets: {},
 })
 
 let db = load()

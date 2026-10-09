@@ -1,45 +1,47 @@
-import { useState } from 'react'
-import { Button, TextField } from '@/components/ui'
+import { Link } from 'react-router'
+import { PasswordField, TextField } from '@/components/ui'
+import { paths } from '@/constants/paths'
+import { useForm } from '@/hooks/useForm'
+import { validateLogin } from '../utils/authValidation'
+import { AuthForm } from './auth-form/AuthForm'
 import './login-form.scss'
 
-// Versión mínima funcional. Validación por campo y diseño final en la fase 8.
-export function LoginForm({ onSubmit }) {
-  const [error, setError] = useState(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  async function handleSubmit(event) {
-    event.preventDefault()
-    const form = new FormData(event.currentTarget)
-    setError(null)
-    setIsSubmitting(true)
-    try {
-      await onSubmit({ email: form.get('email'), password: form.get('password') })
-    } catch (err) {
-      setError(err.message)
-      setIsSubmitting(false)
-    }
-  }
+// `onNavigate`: cierra el modal al ir a recuperar contraseña. `emailRef`: foco inicial del modal.
+export function LoginForm({ onSubmit, onNavigate, emailRef }) {
+  const { field, formError, isSubmitting, handleSubmit } = useForm({
+    initialValues: { email: '', password: '' },
+    validate: validateLogin,
+    onSubmit,
+  })
 
   return (
-    <form className="login-form" onSubmit={handleSubmit} noValidate>
-      <TextField label="Correo" name="email" type="email" autoComplete="email" required />
+    <AuthForm
+      onSubmit={handleSubmit}
+      formError={formError}
+      isSubmitting={isSubmitting}
+      submitLabel="Ingresar"
+      className="login-form"
+    >
       <TextField
-        label="Contraseña"
-        name="password"
-        type="password"
-        autoComplete="current-password"
+        ref={emailRef}
+        label="Correo"
+        type="email"
+        autoComplete="email"
+        inputMode="email"
         required
+        {...field('email')}
       />
-
-      {error && (
-        <p className="login-form__error" role="alert">
-          {error}
-        </p>
-      )}
-
-      <Button type="submit" block loading={isSubmitting}>
-        Ingresar
-      </Button>
-    </form>
+      <div className="login-form__password">
+        <PasswordField
+          label="Contraseña"
+          autoComplete="current-password"
+          required
+          {...field('password')}
+        />
+        <Link className="login-form__forgot" to={paths.forgotPassword} onClick={onNavigate}>
+          ¿Olvidaste tu contraseña?
+        </Link>
+      </div>
+    </AuthForm>
   )
 }
