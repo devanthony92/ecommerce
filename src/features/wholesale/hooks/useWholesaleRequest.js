@@ -15,6 +15,13 @@ export function useWholesaleProfile() {
   return useQuery({ queryKey: wholesaleKeys.profile(), queryFn: wholesaleApi.getProfile })
 }
 
+export function useFrequentProducts() {
+  return useQuery({
+    queryKey: wholesaleKeys.frequent(),
+    queryFn: wholesaleApi.getFrequentProducts,
+  })
+}
+
 export function useWholesaleRequest() {
   return useQuery({ queryKey: wholesaleKeys.request(), queryFn: wholesaleApi.getMyRequest })
 }

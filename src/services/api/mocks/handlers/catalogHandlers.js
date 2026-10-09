@@ -76,6 +76,35 @@ const SORTERS = {
 export const catalogHandlers = {
   'GET /categories': () => ok(categories),
 
+  // Pedido rápido: busca variantes por SKU o por nombre. Va antes de /products/:slug.
+  'GET /products/lookup': ({ query, user }) => {
+    const q = normalize(query.q ?? '').trim()
+    if (q.length < 2) return ok([])
+    const results = []
+    for (const product of products) {
+      const nameMatches = normalize(product.name).includes(q)
+      for (const variant of product.variants) {
+        if (!nameMatches && !normalize(variant.sku).includes(q)) continue
+        const image =
+          product.images.find((item) => item.color === variant.attributes.color) ??
+          product.images[0]
+        results.push({
+          variantId: variant.id,
+          sku: variant.sku,
+          productSlug: product.slug,
+          productName: product.name,
+          attributes: variant.attributes,
+          available: variant.available,
+          stock: variant.stock,
+          image: { url: image.url, alt: image.alt },
+          pricing: buildPriceView(product, user, 1),
+        })
+        if (results.length >= 12) return ok(results)
+      }
+    }
+    return ok(results)
+  },
+
   'GET /products/:slug': ({ params, user }) => {
     const product = products.find((item) => item.slug === params.slug)
     return product

@@ -1,0 +1,67 @@
+@use '@/styles/abstracts' as *;
+
+// Móvil: vertical. Desde md: horizontal.
+.order-timeline {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  list-style: none;
+
+  @include mq(md) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &--cancelled {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    color: var(--color-danger);
+    background-color: var(--color-danger-soft);
+  }
+
+  &__step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+
+    @include mq(md) {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    &--done,
+    &--current {
+      color: var(--color-text);
+    }
+
+    &--current {
+      font-weight: var(--font-weight-semibold);
+    }
+  }
+
+  &__dot {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 2px solid var(--color-border-strong);
+    border-radius: 50%;
+    background-color: var(--color-surface);
+  }
+
+  &__step--done &__dot {
+    border-color: var(--color-success);
+    color: var(--color-success);
+  }
+
+  &__step--current &__dot {
+    border-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+    background-color: var(--color-primary);
+  }
+}

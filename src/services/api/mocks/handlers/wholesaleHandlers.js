@@ -3,6 +3,8 @@ import { findLevel, levels } from '../fixtures/levels'
 import { getDb, save } from '../db'
 import { fail, ok, requireUser } from '../router'
 import { profileFor } from '../wholesale'
+import { findVariant } from '../cart'
+import { buildPriceView } from '../pricing'
 
 const NIT_RE = /^\d{6,10}(-\d)?$/
 const PHONE_RE = /^3\d{9}$/
@@ -44,6 +46,62 @@ export const wholesaleHandlers = {
       return fail(403, 'FORBIDDEN', 'Esta sección es solo para cuentas mayoristas.')
     }
     return ok(profileFor(getDb(), user))
+  },
+
+  // Variantes que más compra, con su cantidad habitual (promedio por pedido).
+  'GET /wholesale/frequent-products': ({ user }) => {
+    const unauthorized = requireUser(user)
+    if (unauthorized) return unauthorized
+    if (user.role !== 'WHOLESALE') {
+      return fail(403, 'FORBIDDEN', 'Esta sección es solo para cuentas mayoristas.')
+    }
+
+    const byVariant = new Map()
+    for (const order of getDb().orders) {
+      if (order.userId !== user.id || order.status === 'CANCELLED') continue
+      for (const item of order.items) {
+        const entry = byVariant.get(item.variant.id) ?? { times: 0, units: 0, last: '' }
+        entry.times += 1
+        entry.units += item.quantity
+        if (order.createdAt > entry.last) entry.last = order.createdAt
+        byVariant.set(item.variant.id, entry)
+      }
+    }
+
+    const items = [...byVariant]
+      .map(([variantId, entry]) => {
+        const found = findVariant(variantId)
+        if (!found) return null
+        const { product, variant } = found
+        const usualQuantity = Math.max(1, Math.round(entry.units / entry.times))
+        const image =
+          product.images.find((item) => item.color === variant.attributes.color) ??
+          product.images[0]
+        return {
+          variant: {
+            id: variant.id,
+            sku: variant.sku,
+            attributes: variant.attributes,
+            available: variant.available,
+            stock: variant.stock,
+          },
+          product: {
+            slug: product.slug,
+            name: product.name,
+            image: { url: image.url, alt: image.alt },
+          },
+          usualQuantity,
+          timesOrdered: entry.times,
+          lastOrderedAt: entry.last,
+          pricing: buildPriceView(product, user, usualQuantity),
+        }
+      })
+      .filter(Boolean)
+      .sort(
+        (a, b) => b.timesOrdered - a.timesOrdered || b.lastOrderedAt.localeCompare(a.lastOrderedAt),
+      )
+
+    return ok(items)
   },
 
   'GET /wholesale/requests/me': ({ user }) => requireUser(user) ?? ok(requestOf(user)),

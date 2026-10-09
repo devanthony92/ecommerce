@@ -13,6 +13,10 @@ const ProductPage = lazy(() => import('@/features/catalog/pages/ProductPage'))
 const SearchPage = lazy(() => import('@/features/catalog/pages/SearchPage'))
 const CartPage = lazy(() => import('@/features/cart/pages/CartPage'))
 const CheckoutPage = lazy(() => import('@/features/checkout/pages/CheckoutPage'))
+const OrdersPage = lazy(() => import('@/features/orders/pages/OrdersPage'))
+const OrderDetailPage = lazy(() => import('@/features/orders/pages/OrderDetailPage'))
+const QuickOrderPage = lazy(() => import('@/features/wholesale/pages/QuickOrderPage'))
+const FrequentProductsPage = lazy(() => import('@/features/wholesale/pages/FrequentProductsPage'))
 const OrderConfirmationPage = lazy(() => import('@/features/orders/pages/OrderConfirmationPage'))
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
@@ -63,8 +67,8 @@ export function AppRoutes() {
           {/* Comprador */}
           <Route path={paths.account} element={<AccountLayout />}>
             <Route index element={<BuyerDashboardPage />} />
-            <Route path={paths.orders} element={soon('Pedidos', 12)} />
-            <Route path={paths.order(':orderId')} element={soon('Detalle del pedido', 12)} />
+            <Route path={paths.orders} element={<OrdersPage />} />
+            <Route path={paths.order(':orderId')} element={<OrderDetailPage />} />
             <Route path={paths.favorites} element={soon('Favoritos', 13)} />
             <Route path={paths.lists} element={soon('Listas de compra', 13)} />
             <Route path={paths.list(':listId')} element={soon('Lista de compra', 13)} />
@@ -78,8 +82,8 @@ export function AppRoutes() {
             <Route path={paths.wholesale} element={<WholesaleLayout />}>
               <Route index element={<WholesaleDashboardPage />} />
               <Route path={paths.wholesaleCatalog} element={<WholesaleCatalogPage />} />
-              <Route path={paths.quickOrder} element={soon('Pedido rápido', 12)} />
-              <Route path={paths.frequentProducts} element={soon('Productos frecuentes', 12)} />
+              <Route path={paths.quickOrder} element={<QuickOrderPage />} />
+              <Route path={paths.frequentProducts} element={<FrequentProductsPage />} />
               <Route path={paths.benefits} element={<BenefitsPage />} />
             </Route>
           </Route>

@@ -1,0 +1,66 @@
+@use '@/styles/abstracts' as *;
+
+.frequent-products {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+
+  &__list {
+    display: grid;
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    padding-block: var(--space-3);
+    border-block-end: 1px solid var(--color-border);
+
+    @include mq(md) {
+      grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    }
+  }
+
+  &__image {
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+  }
+
+  &__info {
+    display: grid;
+  }
+
+  &__meta {
+    padding-inline-start: calc(1.25rem + var(--space-3));
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__controls {
+    display: flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+
+    @include mq(md) {
+      grid-column: auto;
+    }
+  }
+
+  &__price {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__footer {
+    position: sticky;
+    inset-block-end: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding-block: var(--space-3);
+    background-color: var(--color-bg);
+  }
+}

@@ -1,4 +1,4 @@
-import { buildCart, FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from '../cart'
+import { buildCart, findVariant, FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from '../cart'
 import { getDb, save } from '../db'
 import { fail, ok, requireUser } from '../router'
 import { updateLevel } from '../wholesale'
@@ -53,10 +53,19 @@ function shippingOptions(cart, address) {
 const ownOrder = (user, id) =>
   getDb().orders.find((order) => order.id === id && order.userId === user.id)
 
+// Filtros del historial (?group=).
+const STATUS_GROUPS = {
+  active: ['PENDING_PAYMENT', 'PAID', 'PROCESSING', 'SHIPPED'],
+  delivered: ['DELIVERED'],
+  cancelled: ['CANCELLED'],
+}
+
+const CANCELLABLE = ['PENDING_PAYMENT', 'PAID', 'PROCESSING']
+
 function toPublicOrder({ userId: _userId, ...order }) {
   return {
     ...order,
-    canCancel: ['PENDING_PAYMENT', 'PAID', 'PROCESSING'].includes(order.status),
+    canCancel: CANCELLABLE.includes(order.status),
     canReorder: true,
   }
 }
@@ -130,8 +139,10 @@ export const orderHandlers = {
     if (unauthorized) return unauthorized
     const page = Math.max(1, Number(query.page) || 1)
     const pageSize = Math.min(20, Number(query.pageSize) || 10)
+    const statuses = STATUS_GROUPS[query.group]
     const mine = getDb()
       .orders.filter((order) => order.userId === user.id)
+      .filter((order) => !statuses || statuses.includes(order.status))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     return ok({
       items: mine.slice((page - 1) * pageSize, page * pageSize).map(toPublicOrder),
@@ -140,6 +151,64 @@ export const orderHandlers = {
       total: mine.length,
       totalPages: Math.max(1, Math.ceil(mine.length / pageSize)),
     })
+  },
+
+  'POST /orders/:id/cancel': ({ user, params, body }) => {
+    const unauthorized = requireUser(user)
+    if (unauthorized) return unauthorized
+    const order = ownOrder(user, params.id)
+    if (!order) return fail(404, 'ORDER_NOT_FOUND', 'El pedido no existe.')
+    if (!CANCELLABLE.includes(order.status)) {
+      return fail(
+        422,
+        'ORDER_NOT_CANCELLABLE',
+        'Este pedido ya salió de bodega y no se puede cancelar.',
+      )
+    }
+    order.status = 'CANCELLED'
+    order.cancelledAt = new Date().toISOString()
+    order.cancelReason = body?.reason?.trim() || null
+    save()
+    return ok(toPublicOrder(order))
+  },
+
+  // Agrega al carrito los productos del pedido que siguen disponibles.
+  'POST /orders/:id/reorder': ({ user, params }) => {
+    const unauthorized = requireUser(user)
+    if (unauthorized) return unauthorized
+    const order = ownOrder(user, params.id)
+    if (!order) return fail(404, 'ORDER_NOT_FOUND', 'El pedido no existe.')
+
+    const db = getDb()
+    const lines = (db.carts[user.id] ??= [])
+    const skipped = []
+    for (const item of order.items) {
+      const found = findVariant(item.variant.id)
+      if (!found?.variant.available) {
+        skipped.push(item)
+        continue
+      }
+      const existing = lines.find((line) => line.variantId === item.variant.id)
+      if (existing) existing.quantity += item.quantity
+      else {
+        lines.push({
+          id: `ci-${Date.now().toString(36)}-${lines.length}`,
+          variantId: item.variant.id,
+          quantity: item.quantity,
+        })
+      }
+    }
+
+    const cart = buildCart(lines, user, `cart-${user.id}`)
+    for (const item of skipped) {
+      cart.warnings.push({
+        code: 'REORDER_UNAVAILABLE',
+        cartItemId: item.variant.id,
+        message: `${item.name} (${item.variant.attributes.color} / ${item.variant.attributes.size}) ya no está disponible.`,
+      })
+    }
+    save()
+    return ok(cart)
   },
 
   'GET /orders/:id': ({ user, params }) => {

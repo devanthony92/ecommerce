@@ -645,6 +645,14 @@ Checkout (fase 7):
 
 `nextLevel: null` → nivel máximo alcanzado.
 
+Pedidos y recompra (fase 12):
+
+- `GET /orders?group=active|delivered|cancelled&page=`: filtros del historial.
+- `POST /orders/:id/cancel { reason }`: solo en `PENDING_PAYMENT | PAID | PROCESSING` (si no, 422 `ORDER_NOT_CANCELLABLE`). La orden guarda `cancelledAt` y `cancelReason`.
+- `POST /orders/:id/reorder` → `Cart`: agrega lo disponible; lo agotado viene en `warnings` con `code: REORDER_UNAVAILABLE`.
+- `GET /products/lookup?q=` (2+ caracteres): variantes por nombre o SKU para el pedido rápido `[{ variantId, sku, productName, attributes, available, stock, image, pricing }]`.
+- `GET /wholesale/frequent-products`: `[{ variant, product, usualQuantity, timesOrdered, lastOrderedAt, pricing }]`; `usualQuantity` = promedio de unidades por pedido.
+
 Panel mayorista (fase 11):
 
 - `accumulatedPurchase` = compras del año (pedidos no cancelados). El nivel es el más alto cuyo `minPurchase` se alcanzó y **no baja durante el año**. `progressPercent` mide el avance entre el tope del nivel actual y el del siguiente.
