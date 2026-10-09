@@ -1,0 +1,114 @@
+@use '@/styles/abstracts' as *;
+
+.variant-selector {
+  display: grid;
+  gap: var(--space-5);
+
+  &__group {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  &__legend {
+    margin-block-end: var(--space-3);
+    padding: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__value {
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-muted);
+  }
+
+  &__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  &__input {
+    @include visually-hidden;
+  }
+
+  &__sr-label {
+    @include visually-hidden;
+  }
+
+  &__single {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  // Color: círculo de 44px (área táctil) con anillo al seleccionarlo.
+  &__color {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+  }
+
+  &__swatch {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 50%;
+  }
+
+  &__input:checked + &__swatch {
+    box-shadow:
+      0 0 0 3px var(--color-surface),
+      0 0 0 5px var(--color-text);
+  }
+
+  &__input:focus-visible + &__swatch,
+  &__input:focus-visible + &__size-label {
+    @include focus-ring;
+  }
+
+  // Agotado: línea diagonal sobre el color.
+  &__color--unavailable &__swatch {
+    background-image: linear-gradient(
+      to top right,
+      transparent calc(50% - 1px),
+      var(--color-text-muted) calc(50% - 1px),
+      var(--color-text-muted) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    );
+    opacity: 0.6;
+  }
+
+  &__size {
+    position: relative;
+    cursor: pointer;
+  }
+
+  &__size-label {
+    display: inline-grid;
+    place-items: center;
+    min-width: 48px;
+    min-height: 44px;
+    padding-inline: var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    background-color: var(--color-surface);
+  }
+
+  &__input:checked + &__size-label {
+    border-color: var(--color-text);
+    color: var(--color-surface);
+    background-color: var(--color-text);
+  }
+
+  &__input:disabled + &__size-label {
+    border-style: dashed;
+    color: var(--color-text-subtle);
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+}

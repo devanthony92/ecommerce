@@ -76,4 +76,13 @@ describe('Catálogo', () => {
     expect(await productCount('1 producto')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Riñonera urbana' })).toBeInTheDocument()
   })
+
+  it('con filtro de color la tarjeta abre el detalle en ese color', async () => {
+    renderApp('/catalogo/camisetas?color=Blanco')
+    await productCount('4 productos')
+    expect(screen.getByRole('link', { name: 'Camiseta básica' })).toHaveAttribute(
+      'href',
+      '/producto/camiseta-basica?color=Blanco',
+    )
+  })
 })

@@ -1,0 +1,94 @@
+@use '@/styles/abstracts' as *;
+
+.pricing-tiers {
+  display: grid;
+  gap: var(--space-3);
+
+  &__title {
+    font-size: var(--font-size-md);
+  }
+
+  // Móvil: carrusel con snap. Desde md: fila completa.
+  &__list {
+    display: grid;
+    grid-auto-columns: minmax(7.5rem, 1fr);
+    grid-auto-flow: column;
+    gap: var(--space-2);
+    overflow-x: auto;
+
+    // Espacio arriba para la etiqueta "Mejor precio" (el overflow la recortaría).
+    padding-block: var(--space-5) var(--space-1);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  &__item {
+    display: grid;
+    scroll-snap-align: start;
+  }
+
+  &__tier {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    align-content: start;
+    gap: 2px;
+    width: 100%;
+    padding: var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font: inherit;
+    text-align: start;
+    color: inherit;
+    background-color: var(--color-surface);
+
+    &:is(button):hover {
+      border-color: var(--color-text);
+    }
+
+    &--best {
+      border-color: var(--color-success);
+    }
+
+    &--current {
+      border-color: var(--color-primary);
+      box-shadow: inset 0 0 0 1px var(--color-primary);
+      background-color: var(--color-info-soft);
+    }
+  }
+
+  &__best {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: var(--space-2);
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-pill);
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-semibold);
+    color: #fff;
+    background-color: var(--color-success);
+    transform: translateY(-50%);
+  }
+
+  &__quantity {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__price {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__unit {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__savings {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-success);
+  }
+}

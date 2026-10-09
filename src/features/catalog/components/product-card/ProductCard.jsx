@@ -13,6 +13,12 @@ const TAG_BADGES = {
 const MAX_SWATCHES = 4
 
 export function ProductCard({ product, priority = false }) {
+  // Si la imagen es de otro color (catálogo filtrado), el detalle abre con ese color.
+  const href =
+    product.image.color && product.image.color !== product.colors[0]?.name
+      ? `${paths.product(product.slug)}?color=${encodeURIComponent(product.image.color)}`
+      : paths.product(product.slug)
+
   const badges = product.tags.filter((tag) => TAG_BADGES[tag]).slice(0, 1)
   const extraColors = product.colors.length - MAX_SWATCHES
 
@@ -46,7 +52,7 @@ export function ProductCard({ product, priority = false }) {
         <p className="product-card__category">{product.category.name}</p>
         <h3 className="product-card__title">
           {/* El enlace cubre toda la tarjeta (::after), pero el nombre accesible es el título. */}
-          <Link className="product-card__link" to={paths.product(product.slug)}>
+          <Link className="product-card__link" to={href}>
             {product.name}
           </Link>
         </h3>

@@ -1,0 +1,34 @@
+.breadcrumbs {
+  font-size: var(--font-size-sm);
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-child)::after {
+      content: '/';
+      margin-inline: var(--space-2);
+      color: var(--color-text-subtle);
+    }
+  }
+
+  &__link {
+    color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
+  &__current {
+    color: var(--color-text);
+  }
+}

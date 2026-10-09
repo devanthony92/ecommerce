@@ -1,0 +1,61 @@
+.price-display {
+  display: grid;
+  gap: var(--space-2);
+  transition: opacity var(--duration-fast);
+
+  &--updating {
+    opacity: 0.6;
+  }
+
+  &__public {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  &__label {
+    flex-basis: 100%;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-wholesale-hover);
+  }
+
+  &__total {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__total-amount {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+  }
+
+  &__rules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding: 0;
+    list-style: none;
+  }
+
+  &__rule {
+    padding: 2px var(--space-2);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &--wholesale &__rule {
+    border-color: var(--color-wholesale);
+    color: var(--color-wholesale-hover);
+  }
+}

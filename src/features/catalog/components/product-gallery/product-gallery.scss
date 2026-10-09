@@ -1,0 +1,29 @@
+.product-gallery {
+  display: grid;
+  gap: var(--space-3);
+
+  &__main {
+    overflow: hidden;
+    border-radius: var(--radius-md);
+  }
+
+  &__thumbs {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+  }
+
+  &__thumb {
+    display: block;
+    width: 4rem;
+    overflow: hidden;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    background: none;
+
+    &--active {
+      border-color: var(--color-text);
+    }
+  }
+}

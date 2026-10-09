@@ -412,7 +412,7 @@ Lo devuelve el backend ya calculado **para el usuario que hace la request** y un
 // ProductDetail = ProductSummary +
 {
   "description": "...",
-  "images": [ { "url": "...", "alt": "...", "width": 800, "height": 1000 } ],
+  "images": [ { "url": "...", "alt": "...", "width": 800, "height": 1000, "color": "Negro" } ],
   "options": [
     { "name": "size",  "label": "Talla", "values": ["S", "M", "L", "XL"] },
     { "name": "color", "label": "Color", "values": ["Negro", "Blanco"] }

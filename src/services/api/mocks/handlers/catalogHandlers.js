@@ -1,7 +1,7 @@
 import { categories } from '../fixtures/categories'
 import { products } from '../fixtures/products'
 import { buildPriceView } from '../pricing'
-import { ok } from '../router'
+import { fail, ok } from '../router'
 
 const DEFAULT_PAGE_SIZE = 12
 const MAX_PAGE_SIZE = 48
@@ -26,6 +26,19 @@ function toSummary(product, user, colorFilter = []) {
     tags: product.tags,
     inStock: product.variants.some((variant) => variant.available),
     pricing: buildPriceView(product, user, 1),
+  }
+}
+
+function toDetail(product, user) {
+  return {
+    ...toSummary(product, user),
+    description: product.description,
+    images: product.images,
+    options: [
+      { name: 'color', label: 'Color', values: product.colors.map((color) => color.name) },
+      { name: 'size', label: 'Talla', values: product.sizes },
+    ],
+    variants: product.variants,
   }
 }
 
@@ -62,6 +75,13 @@ const SORTERS = {
 
 export const catalogHandlers = {
   'GET /categories': () => ok(categories),
+
+  'GET /products/:slug': ({ params, user }) => {
+    const product = products.find((item) => item.slug === params.slug)
+    return product
+      ? ok(toDetail(product, user))
+      : fail(404, 'PRODUCT_NOT_FOUND', 'El producto no existe o ya no está disponible.')
+  },
 
   'GET /products': ({ query, user }) => {
     const q = normalize(query.q ?? '').trim()

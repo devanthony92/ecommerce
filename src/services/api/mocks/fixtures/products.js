@@ -434,6 +434,7 @@ export const products = RAW.map(
       images: colors.map((color) => ({
         url: productImage(shape, color.hex),
         alt: `${name} color ${color.name.toLowerCase()}`,
+        color: color.name,
         width: 400,
         height: 500,
       })),
