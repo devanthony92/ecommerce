@@ -136,6 +136,12 @@ function ProductDetail({ product, initialColor }) {
 
         <QuantityTierProgress pricing={pricing} />
         <PricingTiers tiers={pricing.tiers} onSelect={setQuantity} />
+        {pricing.audience !== 'WHOLESALE' && (
+          <p className="product-page__wholesale-hint">
+            ¿Compras para tu negocio? Con cuenta mayorista pagas menos desde media docena.{' '}
+            <Link to={paths.wholesaleLanding}>Conoce el programa</Link>
+          </p>
+        )}
 
         <section className="product-page__description" aria-labelledby="product-description">
           <h2 className="product-page__subtitle" id="product-description">

@@ -3,17 +3,13 @@
 .wholesale-request-page {
   &__status,
   &__apply,
-  &__levels {
+  &__benefits {
     display: grid;
     gap: var(--space-5);
   }
 
-  &__levels {
+  &__benefits {
     gap: var(--space-3);
-  }
-
-  &__muted {
-    color: var(--color-text-muted);
   }
 
   &__reason {

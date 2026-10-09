@@ -85,9 +85,8 @@ describe('Programa mayorista', () => {
       'href',
       '/registro?next=%2Fcuenta%2Fsolicitud-mayorista',
     )
-    const levels = await screen.findByText('PLATINO')
-    expect(levels).toBeInTheDocument()
-    expect(screen.getByText('15%')).toBeInTheDocument()
+    expect(await screen.findByText('Precios por volumen desde media docena')).toBeInTheDocument()
+    expect(screen.getByText(/^Pedido mínimo:/)).toHaveTextContent(/120\.000/)
   })
 
   it('el mayorista ve su solicitud aprobada y su panel en la invitación', async () => {

@@ -9,8 +9,8 @@ import './volume-offers.scss'
 const PARAMS = { tag: 'volume-offer', pageSize: 3 }
 
 /**
- * "Compra más, paga menos": productos con sus escalas reales del backend
- * (con el nivel del usuario aplicado si es mayorista).
+ * "Compra más, paga menos": productos con sus escalas reales del backend.
+ * Solo se muestra a mayoristas (las escalas son exclusivas de su cuenta).
  */
 export function VolumeOffers() {
   const query = useProducts(PARAMS)

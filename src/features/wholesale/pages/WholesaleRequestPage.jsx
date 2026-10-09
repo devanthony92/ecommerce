@@ -8,7 +8,7 @@ import { paths } from '@/constants/paths'
 import { WHOLESALE_REQUEST_STATUS } from '@/constants/statuses'
 import { BUSINESS_TYPES, MONTHLY_VOLUMES, labelOf } from '../constants'
 import { DevReviewPanel } from '../components/dev-review-panel/DevReviewPanel'
-import { LevelCards } from '../components/level-cards/LevelCards'
+import { ProgramBenefits } from '../components/program-benefits/ProgramBenefits'
 import { RequestTimeline } from '../components/request-timeline/RequestTimeline'
 import { WholesaleRequestForm } from '../components/wholesale-request-form/WholesaleRequestForm'
 import { useSubmitWholesaleRequest, useWholesaleRequest } from '../hooks/useWholesaleRequest'
@@ -108,7 +108,7 @@ export default function WholesaleRequestPage() {
     <div className="wholesale-request-page">
       <PageHeader
         title="Cuenta mayorista"
-        description="Precios especiales por nivel para tiendas y revendedores."
+        description="Precios por volumen para tiendas y revendedores."
       />
       <QueryBoundary
         query={query}
@@ -120,12 +120,12 @@ export default function WholesaleRequestPage() {
             <RequestStatus request={request} onResubmit={() => setIsResubmitting(true)} />
           ) : (
             <div className="wholesale-request-page__apply">
-              <section aria-labelledby="levels-title" className="wholesale-request-page__levels">
-                <h2 id="levels-title">Niveles y descuentos</h2>
-                <p className="wholesale-request-page__muted">
-                  Empiezas en Bronce y subes de nivel según tus compras del año.
-                </p>
-                <LevelCards />
+              <section
+                aria-labelledby="benefits-title"
+                className="wholesale-request-page__benefits"
+              >
+                <h2 id="benefits-title">Beneficios</h2>
+                <ProgramBenefits />
               </section>
               <ContentCard title="Solicitud">
                 <WholesaleRequestForm

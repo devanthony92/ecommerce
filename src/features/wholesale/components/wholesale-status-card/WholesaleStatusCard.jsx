@@ -36,8 +36,8 @@ export function WholesaleStatusCard() {
       ) : (
         <>
           <p>
-            ¿Tienes una tienda o revendes ropa? Solicita tu cuenta mayorista y accede a precios
-            especiales por nivel.
+            ¿Tienes una tienda o revendes ropa? Solicita tu cuenta mayorista y accede a precios por
+            volumen.
           </p>
           <Button as={Link} to={paths.wholesaleRequest} variant="wholesale" size="sm">
             Solicitar cuenta mayorista

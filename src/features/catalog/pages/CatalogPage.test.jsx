@@ -57,10 +57,16 @@ describe('Catálogo', () => {
     ).toBeInTheDocument()
   })
 
-  it('el mayorista ve su precio especial', async () => {
+  it('solo el mayorista ve los precios por volumen', async () => {
     renderApp('/catalogo/gorras', { as: 'wholesale' })
     await productCount('4 productos')
-    expect(screen.getAllByText('Tu precio mayorista').length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/llevando 24/).length).toBeGreaterThan(0)
+  })
+
+  it('el invitado ve el precio por unidad, sin escalas', async () => {
+    renderApp('/catalogo/gorras')
+    await productCount('4 productos')
+    expect(screen.queryByText(/llevando/)).not.toBeInTheDocument()
   })
 
   it('la búsqueda sin resultados ofrece volver al catálogo', async () => {

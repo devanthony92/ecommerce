@@ -25,8 +25,8 @@ export function PaymentStep({ selected, onSelect, onContinue }) {
 
       <p className="payment-step__notice">
         <Icon name="info" size="sm" />
-        Entorno de demostración: el pago se aprueba automáticamente y nunca se piden datos
-        bancarios.
+        Pagas en el sitio seguro de Mercado Pago: nunca escribes datos bancarios en esta tienda.
+        {import.meta.env.VITE_USE_MOCKS === 'true' && ' (Demo: el pago se aprueba al instante.)'}
       </p>
 
       <Button className="payment-step__continue" disabled={!selected} onClick={onContinue}>

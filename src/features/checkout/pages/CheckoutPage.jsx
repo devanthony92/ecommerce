@@ -8,6 +8,7 @@ import { useCreateOrder } from '@/features/orders'
 import { formatAddress, useAddresses } from '@/features/users'
 import { paths } from '@/constants/paths'
 import { formatMoney } from '@/utils/formatMoney'
+import { redirectTo } from '@/utils/redirect'
 import { AddressStep } from '../components/address-step/AddressStep'
 import { CheckoutStep } from '../components/checkout-step/CheckoutStep'
 import { CheckoutSummary } from '../components/checkout-summary/CheckoutSummary'
@@ -25,7 +26,7 @@ function stepStatus(step, current) {
   return diff < 0 ? 'complete' : 'upcoming'
 }
 
-function Checkout({ cart }) {
+function Checkout({ cart, onRedirect }) {
   const navigate = useNavigate()
   const addresses = useAddresses()
   const createOrder = useCreateOrder()
@@ -49,13 +50,19 @@ function Checkout({ cart }) {
   async function handleConfirm() {
     setSubmitError(null)
     try {
-      const { order, levelUp } = await createOrder.mutateAsync({
+      const { order, payment } = await createOrder.mutateAsync({
         addressId,
         shippingOptionId: shippingOption.id,
         paymentMethod,
         notes,
       })
-      navigate(paths.orderConfirmation(order.id), { replace: true, state: { levelUp } })
+      // Mercado Pago: el pago se hace en su sitio y vuelve a la confirmación del pedido.
+      if (payment?.redirectUrl) {
+        onRedirect()
+        redirectTo(payment.redirectUrl)
+        return
+      }
+      navigate(paths.orderConfirmation(order.id), { replace: true })
     } catch (error) {
       setSubmitError(error.message)
     }
@@ -151,8 +158,38 @@ function Checkout({ cart }) {
   )
 }
 
+function MinimumOrderPending({ minimumOrder }) {
+  return (
+    <EmptyState
+      icon="bag"
+      title="Aún no alcanzas el pedido mínimo"
+      description={`El pedido mínimo mayorista es de ${formatMoney(minimumOrder.amount)} en productos. Te faltan ${formatMoney(minimumOrder.remaining)}.`}
+      action={
+        <Button as={Link} to={paths.cart}>
+          Volver al carrito
+        </Button>
+      }
+    />
+  )
+}
+
 export default function CheckoutPage() {
   const { query } = useCart()
+  // Al crear el pedido el carrito queda vacío: mientras sale hacia Mercado Pago
+  // se muestra este aviso en lugar del checkout.
+  const [isRedirecting, setIsRedirecting] = useState(false)
+
+  if (isRedirecting) {
+    return (
+      <div className="checkout-page" role="status">
+        <EmptyState
+          icon="info"
+          title="Te llevamos a Mercado Pago"
+          description="Allí completas el pago. No cierres esta ventana."
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="checkout-page">
@@ -175,7 +212,13 @@ export default function CheckoutPage() {
         }
         errorTitle="No pudimos cargar tu carrito"
       >
-        {(cart) => <Checkout cart={cart} />}
+        {(cart) =>
+          cart.minimumOrder && !cart.minimumOrder.met ? (
+            <MinimumOrderPending minimumOrder={cart.minimumOrder} />
+          ) : (
+            <Checkout cart={cart} onRedirect={() => setIsRedirecting(true)} />
+          )
+        }
       </QueryBoundary>
     </div>
   )

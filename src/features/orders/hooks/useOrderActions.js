@@ -14,6 +14,11 @@ export function useCancelOrder() {
   })
 }
 
+// Solo pide la URL de pago: quien la usa decide cuándo redirigir.
+export function usePayOrder() {
+  return useMutation({ mutationFn: ordersApi.pay })
+}
+
 export function useReorder() {
   const queryClient = useQueryClient()
   return useMutation({

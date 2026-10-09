@@ -1,15 +1,10 @@
 // Medios de pago que ofrece la tienda. El backend valida cuáles acepta.
-// Mientras no exista pasarela real, todos son simulados: nunca se piden datos de tarjeta.
+// Con Mercado Pago el pago se hace en su sitio: la tienda nunca pide datos bancarios.
 export const PAYMENT_METHODS = [
   {
-    value: 'CARD',
-    label: 'Tarjeta débito o crédito',
-    description: 'Pago en línea a través de la pasarela.',
-  },
-  {
-    value: 'PSE',
-    label: 'PSE',
-    description: 'Pago desde tu cuenta bancaria.',
+    value: 'MERCADO_PAGO',
+    label: 'Mercado Pago',
+    description: 'Tarjeta, PSE, Nequi o efectivo. Te llevamos a Mercado Pago para pagar.',
   },
   {
     value: 'CASH_ON_DELIVERY',

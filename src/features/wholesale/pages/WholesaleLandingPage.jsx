@@ -3,8 +3,10 @@ import { QueryBoundary } from '@/components/feedback'
 import { Button } from '@/components/ui'
 import { ProductGrid, ProductGridSkeleton, useProducts } from '@/features/catalog'
 import { paths } from '@/constants/paths'
-import { LevelCards } from '../components/level-cards/LevelCards'
+import { formatMoney } from '@/utils/formatMoney'
+import { ProgramBenefits } from '../components/program-benefits/ProgramBenefits'
 import { useWholesaleCta } from '../hooks/useWholesaleCta'
+import { useWholesaleProgram } from '../hooks/useWholesaleRequest'
 import './wholesale-landing-page.scss'
 
 const VOLUME_OFFERS = { tag: 'volume-offer', pageSize: 4 }
@@ -12,23 +14,18 @@ const VOLUME_OFFERS = { tag: 'volume-offer', pageSize: 4 }
 const STEPS = [
   { title: 'Crea tu cuenta', text: 'Regístrate gratis como comprador.' },
   { title: 'Envía tu solicitud', text: 'Cuéntanos de tu negocio. La revisamos en 2 días hábiles.' },
-  { title: 'Compra con tu precio', text: 'Precios por volumen más el descuento de tu nivel.' },
+  { title: 'Compra con tu precio', text: 'Precios por volumen desde media docena.' },
 ]
 
-const FAQ = [
+// El pedido mínimo viene del backend; mientras carga, la respuesta no da la cifra.
+const faqFor = (program) => [
   {
     question: '¿Necesito tener tienda física?',
     answer: 'No. Aceptamos tiendas en línea, venta por catálogo y distribuidores.',
   },
   {
     question: '¿Hay un pedido mínimo?',
-    answer:
-      'No. Los precios por volumen aplican desde media docena por producto, sumando tallas y colores.',
-  },
-  {
-    question: '¿Cómo subo de nivel?',
-    answer:
-      'El nivel se calcula con tus compras del año. Al pasar cada tope, el descuento sube automáticamente.',
+    answer: `Sí${program ? `: ${formatMoney(program.minimumOrder)} en productos por pedido` : ''}. Los precios por volumen aplican desde media docena por producto, sumando tallas y colores.`,
   },
   {
     question: '¿Puedo seguir comprando al detal?',
@@ -39,6 +36,7 @@ const FAQ = [
 export default function WholesaleLandingPage() {
   const cta = useWholesaleCta()
   const offers = useProducts(VOLUME_OFFERS)
+  const { data: program } = useWholesaleProgram()
 
   return (
     <div className="wholesale-landing">
@@ -48,7 +46,7 @@ export default function WholesaleLandingPage() {
           Compra por mayor y gana más en tu negocio
         </h1>
         <p className="wholesale-landing__lead">
-          Precios por volumen desde media docena y descuentos de hasta 15% según tu nivel.
+          Precios por volumen desde media docena, sumando tallas y colores del mismo producto.
         </p>
         <div className="wholesale-landing__actions">
           <Button as={Link} to={cta.to} variant="wholesale" size="lg">
@@ -75,13 +73,13 @@ export default function WholesaleLandingPage() {
         </ol>
       </section>
 
-      <section className="wholesale-landing__section" aria-labelledby="levels-landing-title">
-        <h2 id="levels-landing-title">Niveles y descuentos</h2>
-        <LevelCards />
+      <section className="wholesale-landing__section" aria-labelledby="benefits-landing-title">
+        <h2 id="benefits-landing-title">Beneficios</h2>
+        <ProgramBenefits />
       </section>
 
       <section className="wholesale-landing__section" aria-labelledby="offers-title">
-        <h2 id="offers-title">Ofertas por volumen</h2>
+        <h2 id="offers-title">Productos con precio por volumen</h2>
         <QueryBoundary query={offers} loading={<ProductGridSkeleton count={4} />}>
           {(data) => <ProductGrid products={data.items} />}
         </QueryBoundary>
@@ -90,7 +88,7 @@ export default function WholesaleLandingPage() {
       <section className="wholesale-landing__section" aria-labelledby="faq-title">
         <h2 id="faq-title">Preguntas frecuentes</h2>
         <div className="wholesale-landing__faq">
-          {FAQ.map((item) => (
+          {faqFor(program).map((item) => (
             <details key={item.question} className="wholesale-landing__question">
               <summary className="wholesale-landing__summary">{item.question}</summary>
               <p className="wholesale-landing__answer">{item.answer}</p>

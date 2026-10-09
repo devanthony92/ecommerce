@@ -4,10 +4,13 @@ import clsx from 'clsx'
 import { Button, Price } from '@/components/ui'
 import { paths } from '@/constants/paths'
 import { formatMoney } from '@/utils/formatMoney'
+import { MinimumOrderNotice } from '../minimum-order-notice/MinimumOrderNotice'
 import './cart-summary.scss'
 
 // Totales tal como los devuelve el backend. No se suma nada aquí.
-export function CartSummary({ summary, className }) {
+export function CartSummary({ summary, minimumOrder, className }) {
+  const isBelowMinimum = Boolean(minimumOrder && !minimumOrder.met)
+
   const titleId = useId()
   return (
     <section className={clsx('cart-summary', className)} aria-labelledby={titleId}>
@@ -46,10 +49,18 @@ export function CartSummary({ summary, className }) {
         </p>
       )}
 
+      <MinimumOrderNotice minimumOrder={minimumOrder} />
+
       {/* Sin sesión, RequireAuth lleva al login y vuelve al checkout. */}
-      <Button as={Link} to={paths.checkout} size="lg" block>
-        Finalizar compra
-      </Button>
+      {isBelowMinimum ? (
+        <Button size="lg" block disabled>
+          Finalizar compra
+        </Button>
+      ) : (
+        <Button as={Link} to={paths.checkout} size="lg" block>
+          Finalizar compra
+        </Button>
+      )}
     </section>
   )
 }

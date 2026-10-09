@@ -31,9 +31,7 @@ export default function CatalogPage() {
       key={categorySlug ?? 'all'}
       title={category?.name ?? 'Catálogo'}
       description={
-        category
-          ? undefined
-          : 'Compra por unidad o aprovecha los precios por volumen en todas las prendas.'
+        category ? undefined : 'Compra por unidad o, con cuenta mayorista, con precios por volumen.'
       }
       categorySlug={categorySlug}
     />

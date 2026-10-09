@@ -4,7 +4,7 @@ import { storage } from '@/services/storage/storage'
 import { seedOrders } from './fixtures/orders'
 
 const DB_KEY = 'mock-db'
-const DB_VERSION = 7
+const DB_VERSION = 8
 
 // Compra acumulada del mayorista semilla en 2026: pedidos de ejemplo + compras previas.
 const SEED_ACCUMULATED = 3450000
@@ -23,7 +23,7 @@ const seed = () => {
         password: 'Trama1234',
         phone: '3001112233',
         role: 'BUYER',
-        wholesale: { requestStatus: null, levelCode: null },
+        wholesale: { requestStatus: null },
       },
       {
         id: 'u-wholesale',
@@ -34,7 +34,6 @@ const seed = () => {
         role: 'WHOLESALE',
         wholesale: {
           requestStatus: 'APPROVED',
-          levelCode: 'GOLD',
           accumulatedBase: SEED_ACCUMULATED - ordersTotal,
           savingsBase: 180000,
         },
@@ -89,7 +88,6 @@ const seed = () => {
         submittedAt: '2026-03-02T14:00:00Z',
         reviewedAt: '2026-03-04T10:00:00Z',
         rejectionReason: null,
-        levelCode: 'GOLD',
         data: {
           tradeName: 'Moda Carlos',
           legalName: 'Carlos Pérez',

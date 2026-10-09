@@ -39,29 +39,4 @@
     color: var(--color-wholesale-hover);
     background-color: var(--color-wholesale-soft);
   }
-
-  // Niveles: texto blanco sobre el color del nivel.
-  &--level-bronze,
-  &--level-silver,
-  &--level-gold,
-  &--level-platinum {
-    color: #fff;
-    text-transform: uppercase;
-  }
-
-  &--level-bronze {
-    background-color: var(--color-level-bronze);
-  }
-
-  &--level-silver {
-    background-color: var(--color-level-silver);
-  }
-
-  &--level-gold {
-    background-color: var(--color-level-gold);
-  }
-
-  &--level-platinum {
-    background-color: var(--color-level-platinum);
-  }
 }

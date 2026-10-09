@@ -1,6 +1,6 @@
 export { wholesaleApi } from './api/wholesaleApi'
 export { wholesaleKeys } from './api/wholesaleKeys'
 export { useWholesaleCta } from './hooks/useWholesaleCta'
-export { useWholesaleLevels, useWholesaleRequest } from './hooks/useWholesaleRequest'
-export { LevelCards } from './components/level-cards/LevelCards'
+export { useWholesaleProgram, useWholesaleRequest } from './hooks/useWholesaleRequest'
+export { ProgramBenefits } from './components/program-benefits/ProgramBenefits'
 export { WholesaleStatusCard } from './components/wholesale-status-card/WholesaleStatusCard'

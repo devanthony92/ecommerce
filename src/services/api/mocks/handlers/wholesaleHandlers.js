@@ -1,5 +1,5 @@
 import { categories } from '../fixtures/categories'
-import { findLevel, levels } from '../fixtures/levels'
+import { program } from '../fixtures/program'
 import { getDb, save } from '../db'
 import { fail, ok, requireUser } from '../router'
 import { profileFor } from '../wholesale'
@@ -37,7 +37,7 @@ function validate(body) {
 const requestOf = (user) => getDb().wholesaleRequests[user.id] ?? null
 
 export const wholesaleHandlers = {
-  'GET /wholesale/levels': () => ok(levels),
+  'GET /wholesale/program': () => ok(program),
 
   'GET /wholesale/profile': ({ user }) => {
     const unauthorized = requireUser(user)
@@ -126,7 +126,6 @@ export const wholesaleHandlers = {
       submittedAt: new Date().toISOString(),
       reviewedAt: null,
       rejectionReason: null,
-      levelCode: null,
       data: {
         tradeName: body.tradeName.trim(),
         legalName: body.legalName.trim(),
@@ -168,12 +167,10 @@ export const wholesaleHandlers = {
       status === 'REJECTED'
         ? (body.rejectionReason ?? 'No pudimos verificar el NIT del negocio.')
         : null
-    request.levelCode = status === 'APPROVED' ? 'BRONZE' : null
 
     user.wholesale.requestStatus = status
-    user.wholesale.levelCode = request.levelCode
     user.role = status === 'APPROVED' ? 'WHOLESALE' : 'BUYER'
     save()
-    return ok({ request, level: findLevel(request.levelCode) })
+    return ok({ request })
   },
 }

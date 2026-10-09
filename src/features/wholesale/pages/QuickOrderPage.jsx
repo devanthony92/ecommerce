@@ -10,8 +10,8 @@ import './quick-order-page.scss'
 
 /**
  * Pedido rápido: buscar referencias por nombre o SKU, armar una lista con
- * cantidades y agregarla completa al carrito. El precio final (con escala y
- * nivel) lo calcula el carrito.
+ * cantidades y agregarla completa al carrito. El precio final (con la escala
+ * por cantidad) lo calcula el carrito.
  */
 export default function QuickOrderPage() {
   const toast = useToast()

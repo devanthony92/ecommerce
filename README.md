@@ -1,6 +1,6 @@
 # Trama — E-commerce B2C + Mayorista
 
-Frontend de una tienda de ropa con dos propuestas: **compra individual** y **compra por volumen para mayoristas**, con precios por escala de cantidad y por nivel comercial.
+Frontend de una tienda de ropa con dos propuestas: **compra individual** y **compra por volumen para mayoristas**, con precios por escala de cantidad exclusivos para mayoristas.
 
 React 19 · Vite 8 · React Router 8 · TanStack Query · SCSS con BEM estricto · Vitest + Testing Library + axe-core.
 
@@ -9,11 +9,11 @@ La arquitectura, rutas, contrato de API, reglas comerciales y design system est�
 ## Funcionalidades
 
 - **Catálogo**: filtros en la URL (talla, color, precio, orden), búsqueda sin tildes, paginación, ofertas.
-- **Precios dinámicos**: el backend calcula todo (público, promoción, escala por cantidad, nivel mayorista) y el frontend explica por qué ves cada precio. Cotización al cambiar la cantidad.
-- **Carrito**: invitado o con sesión (se fusionan al ingresar), escalas sumando tallas y colores, incentivos de envío gratis y de la siguiente escala.
-- **Checkout**: dirección, envío con total calculado por el backend, pago simulado y confirmación.
+- **Precios dinámicos**: el backend calcula todo (público, promoción y, para mayoristas, escala por cantidad) y el frontend explica por qué ves cada precio. Cotización al cambiar la cantidad.
+- **Carrito**: invitado o con sesión (se fusionan al ingresar), escalas para mayoristas sumando tallas y colores, incentivos de envío gratis y de la siguiente escala.
+- **Checkout**: dirección, envío con total calculado por el backend, pago con Mercado Pago (Checkout Pro) o contra entrega, y confirmación.
 - **Cuenta**: dashboard, perfil, contraseña, direcciones, pedidos (filtros, detalle, cancelar, repetir), favoritos y listas de compra.
-- **Mayoristas**: solicitud con estados, panel con nivel y progreso, catálogo con todas las escalas, pedido rápido por referencia, productos habituales, subida de nivel automática.
+- **Mayoristas**: solicitud con estados, pedido mínimo, panel con compra acumulada y beneficios, catálogo con todas las escalas, pedido rápido por referencia, productos habituales.
 - **Accesibilidad**: navegación por teclado, foco gestionado en modales, drawers y pasos, contraste WCAG AA, auditoría axe en 20 páginas.
 
 ## Requisitos
@@ -30,10 +30,10 @@ npm run dev
 
 ## Usuarios de prueba (backend simulado)
 
-| Perfil                | Correo                 |
-| --------------------- | ---------------------- |
-| Comprador             | `comprador@trama.test` |
-| Mayorista (nivel ORO) | `mayorista@trama.test` |
+| Perfil    | Correo                 |
+| --------- | ---------------------- |
+| Comprador | `comprador@trama.test` |
+| Mayorista | `mayorista@trama.test` |
 
 La contraseña de ambos está en `src/services/api/mocks/db.js`. Para reiniciar los datos de la demo, borra la clave `trama.mock-db` de localStorage. En `/cuenta/solicitud-mayorista` hay un simulador para aprobar o rechazar solicitudes (solo con el backend simulado).
 

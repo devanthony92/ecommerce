@@ -1,16 +1,27 @@
+import { paths } from '@/constants/paths'
+import { formatMoney } from '@/utils/formatMoney'
 import { buildCart, findVariant, FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from '../cart'
 import { getDb, save } from '../db'
 import { fail, ok, requireUser } from '../router'
-import { updateLevel } from '../wholesale'
 import { addressesOf } from './addressHandlers'
 
 const EXPRESS_CITIES = ['Medellín', 'Bogotá', 'Bogotá D.C.', 'Cali', 'Barranquilla']
 
 const PAYMENT_METHODS = {
-  // Pago simulado: se aprueba al instante. No existe pasarela real.
-  CARD: { label: 'Tarjeta débito o crédito', status: 'PAID' },
-  PSE: { label: 'PSE', status: 'PAID' },
+  MERCADO_PAGO: { label: 'Mercado Pago', status: 'PENDING_PAYMENT' },
   CASH_ON_DELIVERY: { label: 'Pago contra entrega', status: 'PROCESSING' },
+}
+
+/**
+ * Checkout Pro de Mercado Pago, simulado. El backend real crea una preferencia
+ * (back_urls hacia la confirmación del pedido) y devuelve su `init_point`; el
+ * pedido pasa a PAID cuando llega el webhook. Aquí el pago se aprueba al
+ * instante y la "redirección" vuelve directo a la confirmación, como lo haría
+ * Mercado Pago con `?status=approved`.
+ */
+function startPayment(order) {
+  order.status = 'PAID'
+  return { redirectUrl: `${paths.orderConfirmation(order.id)}?status=approved` }
 }
 
 function cartOf(user) {
@@ -26,7 +37,9 @@ function shippingOptions(cart, address) {
     {
       id: 'standard',
       label: 'Envío estándar',
-      description: freeStandard ? 'Gratis por compras desde $200.000' : 'Transportadora nacional',
+      description: freeStandard
+        ? `Gratis por compras desde ${formatMoney(FREE_SHIPPING_THRESHOLD)}`
+        : 'Transportadora nacional',
       price: freeStandard ? 0 : SHIPPING_COST,
       estimatedDays: '3 a 5 días hábiles',
     },
@@ -89,6 +102,13 @@ export const orderHandlers = {
     if (items.length === 0) {
       return fail(422, 'CART_EMPTY', 'Tu carrito no tiene productos disponibles.')
     }
+    if (cart.minimumOrder && !cart.minimumOrder.met) {
+      return fail(
+        422,
+        'MINIMUM_ORDER_NOT_MET',
+        `El pedido mínimo mayorista es de ${formatMoney(cart.minimumOrder.amount)} en productos.`,
+      )
+    }
     const address = addressesOf(user).find((item) => item.id === body?.addressId)
     if (!address) return fail(422, 'ADDRESS_REQUIRED', 'Elige una dirección de entrega.')
     const option = shippingOptions(cart, address).find((item) => item.id === body.shippingOptionId)
@@ -128,10 +148,24 @@ export const orderHandlers = {
 
     db.orders.push(order)
     db.carts[user.id] = []
-    // Mayorista: la compra suma al acumulado del año y puede subirlo de nivel.
-    const levelUp = user.role === 'WHOLESALE' ? updateLevel(db, user) : null
+    const checkout =
+      body.paymentMethod === 'MERCADO_PAGO' ? startPayment(order) : { redirectUrl: null }
     save()
-    return ok({ order: toPublicOrder(order), payment: { redirectUrl: null }, levelUp }, 201)
+    return ok({ order: toPublicOrder(order), payment: checkout }, 201)
+  },
+
+  // Nuevo intento de pago de un pedido pendiente (p. ej. si el pago fue rechazado).
+  'POST /orders/:id/payment': ({ user, params }) => {
+    const unauthorized = requireUser(user)
+    if (unauthorized) return unauthorized
+    const order = ownOrder(user, params.id)
+    if (!order) return fail(404, 'ORDER_NOT_FOUND', 'El pedido no existe.')
+    if (order.status !== 'PENDING_PAYMENT') {
+      return fail(422, 'ORDER_NOT_PAYABLE', 'Este pedido no tiene pagos pendientes.')
+    }
+    const payment = startPayment(order)
+    save()
+    return ok(payment)
   },
 
   'GET /orders': ({ user, query }) => {

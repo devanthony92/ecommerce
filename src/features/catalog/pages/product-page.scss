@@ -80,6 +80,13 @@
     }
   }
 
+  &__wholesale-hint {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    background-color: var(--color-wholesale-soft);
+  }
+
   &__description {
     display: grid;
     gap: var(--space-2);

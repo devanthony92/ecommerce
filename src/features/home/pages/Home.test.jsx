@@ -22,11 +22,8 @@ describe('Home', () => {
       await within(section('Categorías')).findAllByRole('link', { name: /productos$/ }),
     ).toHaveLength(7)
     expect(await within(section('Destacados')).findAllByRole('article')).toHaveLength(4)
-    expect(
-      await within(section('Compra más, paga menos')).findAllByRole('list', {
-        name: 'Precios por cantidad',
-      }),
-    ).toHaveLength(3)
+    // Las escalas por cantidad son solo para mayoristas.
+    expect(screen.queryByRole('region', { name: 'Compra más, paga menos' })).not.toBeInTheDocument()
     expect(await within(section('Los más vendidos')).findAllByRole('article')).toHaveLength(4)
     expect(section('Beneficios')).toBeInTheDocument()
 
@@ -38,11 +35,16 @@ describe('Home', () => {
     )
   })
 
-  it('el mayorista ve accesos a su panel', async () => {
+  it('el mayorista ve accesos a su panel y las ofertas por volumen', async () => {
     renderApp('/', { as: 'wholesale' })
     expect(
       (await screen.findAllByRole('link', { name: 'Ir a mi panel mayorista' })).length,
     ).toBeGreaterThan(0)
+    expect(
+      await within(section('Compra más, paga menos')).findAllByRole('list', {
+        name: 'Precios por cantidad',
+      }),
+    ).toHaveLength(3)
   })
 })
 

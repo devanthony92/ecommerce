@@ -3,10 +3,10 @@ import { useAuth } from '@/features/auth'
 import { wholesaleApi } from '../api/wholesaleApi'
 import { wholesaleKeys } from '../api/wholesaleKeys'
 
-export function useWholesaleLevels() {
+export function useWholesaleProgram() {
   return useQuery({
-    queryKey: wholesaleKeys.levels(),
-    queryFn: wholesaleApi.getLevels,
+    queryKey: wholesaleKeys.program(),
+    queryFn: wholesaleApi.getProgram,
     staleTime: 30 * 60 * 1000,
   })
 }

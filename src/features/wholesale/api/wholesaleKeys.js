@@ -1,6 +1,6 @@
 export const wholesaleKeys = {
   all: ['wholesale'],
-  levels: () => [...wholesaleKeys.all, 'levels'],
+  program: () => [...wholesaleKeys.all, 'program'],
   request: () => [...wholesaleKeys.all, 'request'],
   profile: () => [...wholesaleKeys.all, 'profile'],
   frequent: () => [...wholesaleKeys.all, 'frequent'],

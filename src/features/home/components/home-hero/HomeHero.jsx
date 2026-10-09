@@ -18,8 +18,7 @@ export function HomeHero() {
           <p className="home-hero__eyebrow">Compra individual</p>
           <h2 className="home-hero__option-title">Desde una sola prenda</h2>
           <p className="home-hero__text">
-            Camisetas, jeans y más con envío a todo el país. Lleva media docena y paga menos por
-            unidad.
+            Camisetas, jeans y más con envío a todo el país. Gratis desde $120.000.
           </p>
           <Button as={Link} to={paths.catalog} size="lg">
             Ver catálogo
@@ -29,8 +28,7 @@ export function HomeHero() {
           <p className="home-hero__eyebrow">Compra por volumen</p>
           <h2 className="home-hero__option-title">Precios mayoristas para tu tienda</h2>
           <p className="home-hero__text">
-            Escalas por cantidad y hasta 15% adicional según tu nivel. Pedidos rápidos y recompra en
-            un clic.
+            Precios por volumen desde media docena, pedidos rápidos y recompra en un clic.
           </p>
           <Button as={Link} to={wholesaleCta.to} variant="wholesale" size="lg">
             {wholesaleCta.label}

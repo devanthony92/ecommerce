@@ -15,8 +15,8 @@ const address = {
   isDefault: true,
 }
 
-// El precio se calcula con el nivel que tenía al comprar (ORO).
-const buyer = { role: 'WHOLESALE', wholesale: { levelCode: 'GOLD' } }
+// Precios mayoristas (con escalas por cantidad).
+const buyer = { role: 'WHOLESALE' }
 
 function line(slug, colorKey, size, quantity, productUnits = quantity) {
   const product = products.find((item) => item.slug === slug)
@@ -57,7 +57,7 @@ function order(id, number, createdAt, status, items) {
     },
     address,
     shipping: { id: 'standard', label: 'Envío estándar', estimatedDays: '3 a 5 días hábiles' },
-    payment: { method: 'PSE', label: 'PSE' },
+    payment: { method: 'MERCADO_PAGO', label: 'Mercado Pago' },
     notes: null,
   }
 }

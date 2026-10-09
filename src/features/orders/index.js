@@ -1,7 +1,7 @@
 export { ordersApi } from './api/ordersApi'
 export { ordersKeys } from './api/ordersKeys'
 export { useCreateOrder } from './hooks/useCreateOrder'
-export { useCancelOrder, useReorder } from './hooks/useOrderActions'
+export { useCancelOrder, usePayOrder, useReorder } from './hooks/useOrderActions'
 export { useOrder } from './hooks/useOrder'
 export { useOrders } from './hooks/useOrders'
 export { OrderStatusBadge } from './components/order-status-badge/OrderStatusBadge'

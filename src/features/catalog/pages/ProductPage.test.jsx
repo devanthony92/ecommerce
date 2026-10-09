@@ -10,17 +10,20 @@ async function openProduct(slug = 'camiseta-basica', options) {
 }
 
 describe('Detalle de producto', () => {
-  it('muestra precio público, escalas y pide elegir talla', async () => {
+  it('muestra precio público, invita al programa mayorista y pide elegir talla', async () => {
     await openProduct()
     expect(priceRegion()).toHaveTextContent(/35\.000/)
-    expect(screen.getByRole('heading', { name: 'Compra más, paga menos' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /^Docena/ })).toBeInTheDocument()
+    // Las escalas por cantidad son solo para mayoristas.
+    expect(
+      screen.queryByRole('heading', { name: 'Compra más, paga menos' }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Conoce el programa' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Elige una talla' })).toBeDisabled()
   })
 
   it('al elegir una escala cotiza con el backend y muestra el incentivo siguiente', async () => {
     const user = userEvent.setup()
-    await openProduct()
+    await openProduct('camiseta-basica', { as: 'wholesale' })
 
     await user.click(screen.getByRole('button', { name: /^Media docena/ }))
     expect(screen.getByRole('spinbutton', { name: 'Cantidad' })).toHaveValue('6')
@@ -50,12 +53,12 @@ describe('Detalle de producto', () => {
     expect(screen.getByRole('button', { name: 'Carrito, 1 producto' })).toBeInTheDocument()
   })
 
-  it('el mayorista ve su precio y por qué', async () => {
+  it('el mayorista ve las escalas y no la invitación al programa', async () => {
     await openProduct('camiseta-basica', { as: 'wholesale' })
-    expect(screen.getByText('Tu precio')).toBeInTheDocument()
-    expect(screen.getByText('Nivel ORO −12%')).toBeInTheDocument()
-    // 35.000 − 12% = 30.800
-    expect(priceRegion()).toHaveTextContent(/30\.800/)
+    expect(screen.getByRole('heading', { name: 'Compra más, paga menos' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^Docena/ })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Conoce el programa' })).not.toBeInTheDocument()
+    expect(priceRegion()).toHaveTextContent(/35\.000/)
   })
 
   it('producto inexistente muestra aviso', async () => {

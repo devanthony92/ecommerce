@@ -1,7 +1,9 @@
 import { useId } from 'react'
 import { Link } from 'react-router'
+import { Can } from '@/features/auth'
 import { PromotionBanners } from '@/features/promotions'
 import { paths } from '@/constants/paths'
+import { PERMISSIONS } from '@/constants/permissions'
 import { BenefitsStrip } from '../components/benefits-strip/BenefitsStrip'
 import { CategoryTiles } from '../components/category-tiles/CategoryTiles'
 import { HomeHero } from '../components/home-hero/HomeHero'
@@ -42,7 +44,10 @@ export default function HomePage() {
         params={FEATURED}
         action={{ to: paths.catalog, label: 'Ver catálogo' }}
       />
-      <VolumeOffers />
+      {/* Las escalas por cantidad solo existen para cuentas mayoristas. */}
+      <Can permission={PERMISSIONS.WHOLESALE_ACCESS}>
+        <VolumeOffers />
+      </Can>
       <ProductShelf
         title="Los más vendidos"
         description="Lo que más se llevan nuestras tiendas aliadas."

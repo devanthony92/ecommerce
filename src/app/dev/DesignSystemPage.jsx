@@ -87,10 +87,6 @@ export default function DesignSystemPage() {
         <Badge tone="warning">Pendiente</Badge>
         <Badge tone="danger">Cancelado</Badge>
         <Badge tone="wholesale">Mayorista</Badge>
-        <Badge level="bronze">Bronce</Badge>
-        <Badge level="silver">Plata</Badge>
-        <Badge level="gold">Oro</Badge>
-        <Badge level="platinum">Platino</Badge>
       </Section>
 
       <Section title="Precios">
@@ -108,8 +104,7 @@ export default function DesignSystemPage() {
             label="Progreso a media docena"
             valueText="5 de 6 unidades"
           />
-          <ProgressBar value={175000} max={200000} tone="success" label="Progreso a envío gratis" />
-          <ProgressBar value={84} tone="wholesale" label="Progreso a nivel Platino" />
+          <ProgressBar value={95000} max={120000} tone="success" label="Progreso a envío gratis" />
         </div>
       </Section>
 

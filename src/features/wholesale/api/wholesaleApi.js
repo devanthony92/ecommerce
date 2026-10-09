@@ -1,7 +1,7 @@
 import { http } from '@/services/api/apiClient'
 
 export const wholesaleApi = {
-  getLevels: () => http.get('/wholesale/levels'),
+  getProgram: () => http.get('/wholesale/program'),
   getProfile: () => http.get('/wholesale/profile'),
   getFrequentProducts: () => http.get('/wholesale/frequent-products'),
   getMyRequest: () => http.get('/wholesale/requests/me'),

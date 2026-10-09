@@ -8,7 +8,7 @@ export default function PromotionsPage() {
   return (
     <CatalogView
       title="Ofertas"
-      description="Precios de temporada por tiempo limitado. Se suman a los precios por volumen."
+      description="Precios de temporada por tiempo limitado. Para mayoristas, se suman a los precios por volumen."
       baseParams={ON_SALE}
       intro={<PromotionBanners exclude="SEASON" />}
     />

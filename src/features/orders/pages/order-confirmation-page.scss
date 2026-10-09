@@ -4,12 +4,14 @@
   max-width: 40rem;
   margin-inline: auto;
 
-  &__level-up {
+  &__pending {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
     padding: var(--space-4);
     border-radius: var(--radius-md);
     text-align: center;
-    color: var(--color-wholesale-hover);
-    background-color: var(--color-wholesale-soft);
+    background-color: var(--color-warning-soft);
   }
 
   &__header {
@@ -27,6 +29,11 @@
     border-radius: 50%;
     color: var(--color-success);
     background-color: var(--color-success-soft);
+
+    &--pending {
+      color: var(--color-warning);
+      background-color: var(--color-warning-soft);
+    }
   }
 
   &__number {

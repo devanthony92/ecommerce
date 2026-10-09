@@ -6,18 +6,18 @@ Documento base del proyecto. Define estructura, rutas, contratos de API, permiso
 
 ## 1. Requisitos analizados
 
-| Área               | Requisito clave                                              | Consecuencia técnica                                                       |
-| ------------------ | ------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| Usuarios           | Visitante, Comprador, Mayorista (aprobado); Admin futuro     | Rol + permisos vienen del backend; rutas por perfil                        |
-| Precios            | Cadena base → cliente → nivel → cantidad → promoción → final | **El backend calcula**. El front solo muestra un `PriceView`               |
-| Escalas            | Tiers por cantidad visibles en card, detalle y carrito       | Componentes `PricingTiers` / `PricingTier` alimentados por `tiers[]`       |
-| Compra inteligente | "Agrega 1 más…", "faltan $X para envío gratis"               | Backend envía números (`incentives[]`); el front arma el texto             |
-| Mayorista          | Niveles, progreso, pedidos rápidos, recompra, listas         | Feature `wholesale` + `lists` + `orders`                                   |
-| Solicitud          | Flujo con estados PENDING → APPROVED/REJECTED/SUSPENDED      | UI distinta por estado                                                     |
-| Visitante          | Navega y arma carrito sin login; login para pagar            | Carrito invitado en `localStorage` + cotización vía API + merge al loguear |
-| UI base            | Modal y Drawer reutilizables, accesibles                     | `components/modal`, `components/drawer` sin lógica de negocio              |
-| Calidad            | BEM estricto, mobile-first, WCAG, lazy routes, estados de UI | Convenciones en §5, §11, §12                                               |
-| Backend            | Se construye después                                         | Contrato en §7 + mocks intercambiables (§13)                               |
+| Área               | Requisito clave                                                      | Consecuencia técnica                                                       |
+| ------------------ | -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Usuarios           | Visitante, Comprador, Mayorista (aprobado); Admin futuro             | Rol + permisos vienen del backend; rutas por perfil                        |
+| Precios            | Cadena base → promoción → escala por cantidad (mayorista)            | **El backend calcula**. El front solo muestra un `PriceView`               |
+| Escalas            | Tiers por cantidad, solo para mayoristas, en card, detalle y carrito | Componentes `PricingTiers` / `PricingTier` alimentados por `tiers[]`       |
+| Compra inteligente | "Agrega 1 más…", "faltan $X para envío gratis"                       | Backend envía números (`incentives[]`); el front arma el texto             |
+| Mayorista          | Escalas, pedido mínimo, pedidos rápidos, recompra, listas            | Feature `wholesale` + `lists` + `orders`                                   |
+| Solicitud          | Flujo con estados PENDING → APPROVED/REJECTED/SUSPENDED              | UI distinta por estado                                                     |
+| Visitante          | Navega y arma carrito sin login; login para pagar                    | Carrito invitado en `localStorage` + cotización vía API + merge al loguear |
+| UI base            | Modal y Drawer reutilizables, accesibles                             | `components/modal`, `components/drawer` sin lógica de negocio              |
+| Calidad            | BEM estricto, mobile-first, WCAG, lazy routes, estados de UI         | Convenciones en §5, §11, §12                                               |
+| Backend            | Se construye después                                                 | Contrato en §7 + mocks intercambiables (§13)                               |
 
 ---
 
@@ -27,7 +27,7 @@ Documento base del proyecto. Define estructura, rutas, contratos de API, permiso
 User ──┬── role, permissions[]
        ├── Address[]
        ├── WholesaleRequest (0..1 activa)
-       └── WholesaleProfile (si aprobado) ── Level
+       └── WholesaleProfile (si aprobado)
 
 Category ── Product ── Variant[] (talla, color, stock, sku)
                 └── PriceView (calculado por backend según usuario + cantidad)
@@ -53,7 +53,7 @@ Promotion
 | `orders`          | Historial, detalle, cancelar, recompra                                                                                      |
 | `favorites`       | Favoritos                                                                                                                   |
 | `lists`           | Listas de compra (comprador y mayorista)                                                                                    |
-| `wholesale`       | Solicitud, perfil/nivel, dashboard, pedido rápido, frecuentes                                                               |
+| `wholesale`       | Solicitud, programa (beneficios y pedido mínimo), dashboard, pedido rápido, frecuentes                                      |
 | `promotions`      | Promociones activas, banners, ofertas por volumen                                                                           |
 | `home`            | Composición de la home (solo orquesta componentes de otros features)                                                        |
 
@@ -204,7 +204,7 @@ Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Pat
 | `Checkbox`        | `checkbox`         |                                                                                                      |
 | `QuantityStepper` | `quantity-stepper` | `[-] n [+]`, min/max, accesible por teclado                                                          |
 | `Price`           | `price`            | muestra un monto formateado; `--strike`, `--highlight`                                               |
-| `Badge`           | `badge`            | `--success --warning --wholesale --level-<code>`                                                     |
+| `Badge`           | `badge`            | `--success --warning --wholesale`                                                                    |
 | `ProgressBar`     | `progress-bar`     | `role="progressbar"`, `aria-valuenow/min/max`                                                        |
 | `ResponsiveImage` | `responsive-image` | `loading="lazy"`, `srcset`, aspect-ratio fijo                                                        |
 | `Spinner`         | `spinner`          |                                                                                                      |
@@ -242,20 +242,20 @@ Helper `QueryBoundary`: recibe `{ isLoading, isError, error, refetch, isEmpty }`
 
 ## 6. Componentes por feature
 
-| Feature      | Componentes                                                                                                                                                                                       | Hooks                                                                                                                                   |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `auth`       | `LoginForm`, `RegisterForm`, `LoginModal`, `Can`                                                                                                                                                  | `useAuth`, `usePermission`, `useLogin`, `useRegister`                                                                                   |
-| `users`      | `ProfileForm`, `AddressList`, `AddressForm`, `AddressFormModal`                                                                                                                                   | `useMe`, `useAddresses`, `useUpdateProfile`                                                                                             |
-| `catalog`    | `ProductCard`, `ProductGrid`, `ProductGallery`, `VariantSelector`, `CatalogFilters`, `FiltersDrawer`, `SortSelect`, `Pagination`, `CategoryList`, `ProductDetailsModal`                           | `useProducts(filters)`, `useProduct(slug)`, `useCategories`, `useCatalogFilters` (sync con URL)                                         |
-| `pricing`    | `PriceDisplay` (público vs. tu precio + motivo), `PricingTiers`, `PricingTier`, `SavingsIndicator`, `QuantityTierProgress`, `AppliedRulesList`                                                    | `usePriceQuote(variantId, qty)`                                                                                                         |
-| `cart`       | `CartDrawer`, `CartItem`, `CartSummary`, `CartIncentives`, `FreeShippingProgress`, `AddToCartButton`, `AddToCartModal`                                                                            | `useCart` (fachada invitado/autenticado), `useAddToCart`, `useUpdateCartItem`, `useRemoveCartItem`                                      |
-| `checkout`   | `CheckoutSteps`, `AddressStep`, `ShippingStep`, `PaymentStep`, `OrderReview`                                                                                                                      | `useCheckout`, `useCreateOrder`                                                                                                         |
-| `orders`     | `OrderList`, `OrderCard`, `OrderStatusBadge`, `OrderDetail`, `CancelOrderModal`, `ReorderButton`                                                                                                  | `useOrders`, `useOrder`, `useCancelOrder`, `useReorder`                                                                                 |
-| `favorites`  | `FavoriteButton`, `FavoritesGrid`                                                                                                                                                                 | `useFavorites`, `useToggleFavorite`                                                                                                     |
-| `lists`      | `PurchaseList`, `PurchaseListItem`, `ListCard`, `CreateListModal`, `AddToListModal`                                                                                                               | `useLists`, `useList`, `useListMutations`, `useAddListToCart`                                                                           |
-| `wholesale`  | `WholesaleLevelCard`, `WholesaleProgress`, `WholesaleBenefits`, `WholesaleRequestForm`, `WholesaleRequestStatus`, `WholesaleRequestModal`, `QuickOrder`, `FrequentProducts`, `WholesaleDashboard` | `useWholesaleProfile`, `useWholesaleLevels`, `useWholesaleRequest`, `useSubmitWholesaleRequest`, `useFrequentProducts`, `useQuickOrder` |
-| `promotions` | `PromotionBanner`, `VolumeOffers`                                                                                                                                                                 | `usePromotions`                                                                                                                         |
-| `home`       | `HomeHero` (dos CTAs: individual / mayorista), `FeaturedProducts`, `BestSellers`, `BenefitsStrip`, `WholesaleCta`                                                                                 | — (usa hooks de otros features)                                                                                                         |
+| Feature      | Componentes                                                                                                                                                                  | Hooks                                                                                                                                    |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth`       | `LoginForm`, `RegisterForm`, `LoginModal`, `Can`                                                                                                                             | `useAuth`, `usePermission`, `useLogin`, `useRegister`                                                                                    |
+| `users`      | `ProfileForm`, `AddressList`, `AddressForm`, `AddressFormModal`                                                                                                              | `useMe`, `useAddresses`, `useUpdateProfile`                                                                                              |
+| `catalog`    | `ProductCard`, `ProductGrid`, `ProductGallery`, `VariantSelector`, `CatalogFilters`, `FiltersDrawer`, `SortSelect`, `Pagination`, `CategoryList`, `ProductDetailsModal`      | `useProducts(filters)`, `useProduct(slug)`, `useCategories`, `useCatalogFilters` (sync con URL)                                          |
+| `pricing`    | `PriceDisplay` (público vs. tu precio + motivo), `PricingTiers`, `PricingTier`, `SavingsIndicator`, `QuantityTierProgress`, `AppliedRulesList`                               | `usePriceQuote(variantId, qty)`                                                                                                          |
+| `cart`       | `CartDrawer`, `CartItem`, `CartSummary`, `CartIncentives`, `FreeShippingProgress`, `AddToCartButton`, `AddToCartModal`                                                       | `useCart` (fachada invitado/autenticado), `useAddToCart`, `useUpdateCartItem`, `useRemoveCartItem`                                       |
+| `checkout`   | `CheckoutSteps`, `AddressStep`, `ShippingStep`, `PaymentStep`, `OrderReview`                                                                                                 | `useCheckout`, `useCreateOrder`                                                                                                          |
+| `orders`     | `OrderList`, `OrderCard`, `OrderStatusBadge`, `OrderDetail`, `CancelOrderModal`, `ReorderButton`                                                                             | `useOrders`, `useOrder`, `useCancelOrder`, `useReorder`                                                                                  |
+| `favorites`  | `FavoriteButton`, `FavoritesGrid`                                                                                                                                            | `useFavorites`, `useToggleFavorite`                                                                                                      |
+| `lists`      | `PurchaseList`, `PurchaseListItem`, `ListCard`, `CreateListModal`, `AddToListModal`                                                                                          | `useLists`, `useList`, `useListMutations`, `useAddListToCart`                                                                            |
+| `wholesale`  | `WholesaleSummaryCard`, `ProgramBenefits`, `WholesaleRequestForm`, `WholesaleRequestStatus`, `WholesaleRequestModal`, `QuickOrder`, `FrequentProducts`, `WholesaleDashboard` | `useWholesaleProfile`, `useWholesaleProgram`, `useWholesaleRequest`, `useSubmitWholesaleRequest`, `useFrequentProducts`, `useQuickOrder` |
+| `promotions` | `PromotionBanner`, `VolumeOffers`                                                                                                                                            | `usePromotions`                                                                                                                          |
+| `home`       | `HomeHero` (dos CTAs: individual / mayorista), `FeaturedProducts`, `BestSellers`, `BenefitsStrip`, `WholesaleCta`                                                            | — (usa hooks de otros features)                                                                                                          |
 
 `PurchaseProgress` de la spec queda cubierto por `QuantityTierProgress` + `FreeShippingProgress`, ambos sobre `ProgressBar`.
 
@@ -270,7 +270,7 @@ Este es el contrato que deberá cumplir el backend propio. Los mocks lo implemen
 - Base: `VITE_API_URL` (p. ej. `http://localhost:3000/api/v1`).
 - JSON, `camelCase`.
 - **Dinero: enteros en COP** (sin decimales). `35000` = $35.000. El front formatea con `Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 })`.
-- Precios **con IVA incluido** (a confirmar, §13).
+- Precios **con IVA incluido**.
 - Fechas ISO 8601 UTC.
 - Auth: `Authorization: Bearer <token>`.
 - Paginación: `?page=1&pageSize=24` → `{ items, page, pageSize, total, totalPages }`.
@@ -294,15 +294,11 @@ Lo devuelve el backend ya calculado **para el usuario que hace la request** y un
   "audience": "WHOLESALE",
   "quantity": 5,
   "listPrice": 35000,
-  "unitPrice": 29500,
+  "unitPrice": 35000,
   "compareAtPrice": null,
-  "lineTotal": 147500,
-  "savings": { "unit": 5500, "total": 27500, "percent": 16 },
-  "appliedRules": [
-    { "type": "WHOLESALE_LEVEL", "label": "Nivel ORO", "percent": 12 },
-    { "type": "QUANTITY_TIER", "label": "Desde 1 unidad", "minQty": 1 },
-    { "type": "PROMOTION", "label": "Temporada", "promotionId": "p1" }
-  ],
+  "lineTotal": 175000,
+  "savings": { "unit": 0, "total": 0, "percent": 0 },
+  "appliedRules": [{ "type": "PROMOTION", "label": "Temporada", "promotionId": "p1" }],
   "tiers": [
     {
       "minQty": 1,
@@ -343,7 +339,8 @@ Lo devuelve el backend ya calculado **para el usuario que hace la request** y un
 
 - `audience`: `PUBLIC | BUYER | WHOLESALE`.
 - `appliedRules` explica **por qué** el usuario ve ese precio (requisito de la spec).
-- `tiers` vacío → el producto no tiene escalas.
+- `tiers` vacío → el producto no tiene escalas **o el usuario no es mayorista** (las escalas son exclusivas de las cuentas mayoristas). Sin escalas, `nextTier` es `null`.
+- `appliedRules[].type`: `PROMOTION | QUANTITY_TIER`.
 
 ### Auth / usuarios
 
@@ -369,7 +366,7 @@ Lo devuelve el backend ya calculado **para el usuario que hace la request** y un
   "phone": "3001234567",
   "role": "WHOLESALE",
   "permissions": ["cart.manage", "checkout.create", "orders.view", "favorites.manage", "lists.manage", "wholesale.access", "wholesale.quick-order"],
-  "wholesale": { "requestStatus": "APPROVED", "levelCode": "GOLD" }
+  "wholesale": { "requestStatus": "APPROVED" }
 }
 
 // Address
@@ -482,8 +479,8 @@ Autenticado: carrito en servidor. Invitado: items en `localStorage`, precios ví
     "itemsCount": 5,
     "subtotal": 175000,
     "discountTotal": 20000,
-    "shipping": 12000,
-    "total": 167000,
+    "shipping": 0,
+    "total": 155000,
     "savingsTotal": 20000
   },
   "incentives": [
@@ -500,14 +497,15 @@ Autenticado: carrito en servidor. Invitado: items en `localStorage`, precios ví
     },
     {
       "type": "FREE_SHIPPING",
-      "achieved": false,
-      "current": 175000,
-      "target": 200000,
-      "remaining": 25000,
-      "progressPercent": 87
+      "achieved": true,
+      "current": 155000,
+      "target": 120000,
+      "remaining": 0,
+      "progressPercent": 100
     }
   ],
-  "warnings": [{ "code": "STOCK_REDUCED", "cartItemId": "ci1", "message": "..." }]
+  "warnings": [{ "code": "STOCK_REDUCED", "cartItemId": "ci1", "message": "..." }],
+  "minimumOrder": { "amount": 120000, "remaining": 0, "met": true }
 }
 ```
 
@@ -517,6 +515,8 @@ Reglas del carrito (backend):
 - `subtotal` es a precio público; `discountTotal` = subtotal − total de líneas.
 - Variantes agotadas: `available: false`, aviso en `warnings` y fuera de los totales. Si se pide más que el stock, se ajusta y se avisa (`STOCK_REDUCED`).
 - Cambiar la variante a una que ya está en el carrito une las dos líneas.
+- **Envío estándar**: $10.000, gratis desde $120.000 en productos (incentivo `FREE_SHIPPING`).
+- **Pedido mínimo mayorista**: $120.000 en productos (sin envío). `minimumOrder` es `null` para quien no es mayorista. Si `met` es `false`, el frontend deshabilita "Finalizar compra" y `POST /orders` responde 422 `MINIMUM_ORDER_NOT_MET`.
 
 El backend manda **números**, no frases. El texto ("Agrega 1 unidad más y obtén precio de media docena") lo arma el componente. Así el copy se puede cambiar sin tocar el backend.
 
@@ -528,6 +528,7 @@ El backend manda **números**, no frases. El texto ("Agrega 1 unidad más y obt�
 | POST   | `/orders`                               | `{ addressId, shippingOptionId, paymentMethod, notes }` → `{ order, payment: { redirectUrl? } }`       |
 | GET    | `/orders`                               | paginado de `OrderSummary`                                                                             |
 | GET    | `/orders/:id`                           | `Order`                                                                                                |
+| POST   | `/orders/:id/payment`                   | → `{ redirectUrl }`: nuevo intento de pago de un pedido `PENDING_PAYMENT`                              |
 | POST   | `/orders/:id/cancel`                    | `{ reason }` → `Order`                                                                                 |
 | POST   | `/orders/:id/reorder`                   | → `Cart` (+ `warnings` si algo no hay stock)                                                           |
 
@@ -555,7 +556,7 @@ El backend manda **números**, no frases. El texto ("Agrega 1 unidad más y obt�
     "label": "Envío estándar",
     "estimatedDays": "3 a 5 días hábiles"
   },
-  "payment": { "method": "PSE", "label": "PSE" },
+  "payment": { "method": "MERCADO_PAGO", "label": "Mercado Pago" },
   "notes": null,
   "canCancel": true,
   "canReorder": true
@@ -566,7 +567,11 @@ El backend manda **números**, no frases. El texto ("Agrega 1 unidad más y obt�
 
 Checkout (fase 7):
 
-- `paymentMethod`: `CARD | PSE | CASH_ON_DELIVERY`. **Mientras no haya pasarela, el pago es simulado**: el frontend nunca pide ni envía datos de tarjeta o bancarios. Con pasarela real, `payment.redirectUrl` llevará al pago y la confirmación llegará por webhook al backend.
+- `paymentMethod`: `MERCADO_PAGO | CASH_ON_DELIVERY`. La pasarela es **Mercado Pago Checkout Pro**: el frontend nunca pide ni envía datos de tarjeta o bancarios.
+- Con `MERCADO_PAGO`, el backend crea el pedido en `PENDING_PAYMENT`, crea la preferencia (con `external_reference` = id del pedido y `back_urls` hacia `/checkout/confirmacion/:id`) y responde `payment.redirectUrl` = `init_point`. El frontend redirige (`utils/redirect.js`).
+- Mercado Pago devuelve al usuario con `?status=approved|pending|rejected`. Ese parámetro solo ajusta el mensaje: **el estado real lo da el pedido**, que el backend pasa a `PAID` al recibir el webhook. Si sigue en `PENDING_PAYMENT`, la confirmación ofrece "Pagar con Mercado Pago" (`POST /orders/:id/payment`).
+- Contra entrega: el pedido nace en `PROCESSING` y `payment.redirectUrl` es `null`.
+- El mock simula Checkout Pro: aprueba al instante y redirige directo a la confirmación con `?status=approved`.
 - El total con envío se muestra desde `shipping-options[].total`; el frontend no suma el envío.
 - Al crear el pedido el backend vacía el carrito; el frontend invalida la caché del carrito.
 
@@ -607,26 +612,23 @@ Checkout (fase 7):
 
 | Método | Endpoint                       | Notas                                                                  |
 | ------ | ------------------------------ | ---------------------------------------------------------------------- |
-| GET    | `/wholesale/levels`            | niveles configurables                                                  |
+| GET    | `/wholesale/program`           | `{ minimumOrder, benefits[] }` (configurable, público)                 |
 | GET    | `/wholesale/profile`           | solo `wholesale.access`                                                |
 | GET    | `/wholesale/requests/me`       | solicitud actual o `null`                                              |
 | POST   | `/wholesale/requests`          | formulario comercial                                                   |
 | GET    | `/wholesale/frequent-products` | `[{ product: ProductSummary, variant, usualQuantity, lastOrderedAt }]` |
 
 ```json
-// Level
-{ "code": "GOLD", "name": "ORO", "minPurchase": 2000000, "maxPurchase": 4999999, "discountPercent": 12, "benefits": [ { "code": "FREE_SHIPPING", "label": "Envío gratis" } ] }
+// WholesaleProgram
+{ "minimumOrder": 120000, "benefits": [ { "code": "TIER_PRICES", "label": "Precios por volumen desde media docena" } ] }
 
 // WholesaleProfile
 {
-  "currentLevel": { "code": "GOLD", "name": "ORO", "discountPercent": 12 },
-  "accumulatedPurchase": 8450000,
+  "accumulatedPurchase": 3450000,
   "period": { "from": "2026-01-01", "to": "2026-12-31" },
-  "nextLevel": { "code": "PLATINUM", "name": "PLATINO", "minPurchase": 10000000, "discountPercent": 15 },
-  "amountToNextLevel": 1550000,
-  "progressPercent": 84,
   "totalSavings": 1240000,
-  "benefits": [ { "code": "FREE_SHIPPING", "label": "Envío gratis", "description": "..." } ]
+  "minimumOrder": 120000,
+  "benefits": [ { "code": "TIER_PRICES", "label": "Precios por volumen desde media docena" } ]
 }
 
 // WholesaleRequest
@@ -641,12 +643,12 @@ Checkout (fase 7):
 }
 ```
 
-`nextLevel: null` → nivel máximo alcanzado.
+No hay niveles: todos los mayoristas aprobados tienen las mismas condiciones.
 
 Home y promociones (fase 14):
 
 - `GET /promotions/active` → `[{ id, type: SEASON | VOLUME | SHIPPING, title, description, link, startsAt, endsAt }]`. El backend filtra por vigencia (el mock devuelve todas para que la demo no dependa de la fecha).
-- La home solo compone secciones (hero con las dos propuestas, promociones, categorías, destacados, "Compra más, paga menos" con escalas reales, más vendidos, beneficios e invitación mayorista); cada sección pide sus datos y maneja sus estados.
+- La home solo compone secciones (hero con las dos propuestas, promociones, categorías, destacados, "Compra más, paga menos" con escalas reales (solo para mayoristas), más vendidos, beneficios e invitación mayorista); cada sección pide sus datos y maneja sus estados.
 - `CatalogView` acepta `baseParams` (filtros fijos, p. ej. `{ onSale: true }`) e `intro`.
 
 Favoritos y listas (fase 13):
@@ -666,14 +668,13 @@ Pedidos y recompra (fase 12):
 
 Panel mayorista (fase 11):
 
-- `accumulatedPurchase` = compras del año (pedidos no cancelados). El nivel es el más alto cuyo `minPurchase` se alcanzó y **no baja durante el año**. `progressPercent` mide el avance entre el tope del nivel actual y el del siguiente.
-- `POST /orders` de un mayorista responde además `levelUp: { from, to, discountPercent } | null`. Si subió, el frontend llama `refreshSession()` (cambian sus precios) y la confirmación lo anuncia.
+- `accumulatedPurchase` = compras del año (pedidos no cancelados). Es informativo: no cambia precios.
 - `GET /wholesale/profile` responde 403 si el usuario no es mayorista.
 
 Solicitud mayorista (fase 10):
 
 - Puede solicitar quien nunca lo hizo o fue rechazado (`requestStatus` `null` o `REJECTED`); el backend responde 409 en otro caso. Suspendido debe contactar a la tienda.
-- Al enviar, `requestStatus` pasa a `PENDING` y el usuario pierde `wholesale.request`. Al aprobarse cambian `role`, `permissions` y `levelCode`: el frontend llama `refreshSession()` (vuelve a pedir `/users/me` y descarta precios y carrito cacheados).
+- Al enviar, `requestStatus` pasa a `PENDING` y el usuario pierde `wholesale.request`. Al aprobarse cambian `role` y `permissions`: el frontend llama `refreshSession()` (vuelve a pedir `/users/me` y descarta precios y carrito cacheados).
 - Campos: `tradeName`, `legalName`, `nit` (6–10 dígitos, `-dv` opcional), `phone`, `city`, `address`, `businessType` (`PHYSICAL_STORE | ONLINE_STORE | CATALOG | DISTRIBUTOR | OTHER`), `socialLinks?`, `estimatedMonthlyVolume` (`UNDER_1M | 1M_5M | 5M_10M | OVER_10M`), `categoriesOfInterest[]`.
 - **Solo en el mock**: `POST /_dev/wholesale-review { status }` simula la decisión del administrador para la demo (panel "Simulador de revisión", visible solo con `VITE_USE_MOCKS=true`). En producción la decisión llega desde el panel administrativo.
 
@@ -705,7 +706,7 @@ Constantes en `src/constants/permissions.js`. Uso:
 
 ```jsx
 <Can permission="wholesale.access" fallback={<WholesaleCta />}>
-  <WholesaleLevelCard />
+  <WholesaleSummaryCard />
 </Can>
 ```
 
@@ -739,7 +740,7 @@ role: BUYER | WHOLESALE | ADMIN
 | `null`         | Formulario + beneficios del programa                                    |
 | `PENDING`      | "Recibimos tu solicitud", fecha de envío, datos enviados (solo lectura) |
 | `UNDER_REVIEW` | "Estamos revisando", línea de tiempo con paso actual                    |
-| `APPROVED`     | Nivel asignado + CTA al panel mayorista                                 |
+| `APPROVED`     | Cuenta aprobada + CTA al panel mayorista                                |
 | `REJECTED`     | Motivo (`rejectionReason`) + "Enviar nueva solicitud"                   |
 | `SUSPENDED`    | Aviso + contacto. Pierde `wholesale.access` (lo decide el backend)      |
 
@@ -754,19 +755,19 @@ Principio: **el front no calcula precios**. Solo los presenta.
 Cadena que aplica el backend (implementada así en el mock, `services/api/mocks/pricing.js`):
 
 ```text
-precio base → promoción → escala por cantidad (todos los clientes) → % del nivel mayorista
+precio base → promoción → escala por cantidad (solo mayoristas)
 ```
 
-Las escalas por cantidad aplican a cualquier cliente ("Compra más, paga menos"); el mayorista suma encima el descuento de su nivel. Si el catálogo se filtra por color, `image` corresponde a ese color.
+Las escalas por cantidad son **exclusivas de las cuentas mayoristas**; visitantes y compradores pagan el precio por unidad (con la promoción, si hay) y ven una invitación al programa mayorista en el detalle de producto. Si el catálogo se filtra por color, `image` corresponde a ese color.
 
 1. Cada producto llega con un `PriceView` ya calculado para el usuario actual.
 2. Si el usuario cambia la cantidad en el detalle de producto, `usePriceQuote(variantId, qty)` llama `/pricing/quote` (con debounce de 300 ms y `placeholderData` del valor anterior para no parpadear).
 3. El resaltado de tier en la tabla (`isCurrent`, `isBest`) viene del backend.
 4. Al cambiar de sesión (login, logout, aprobación mayorista), se invalidan **todas** las queries de catálogo, precios y carrito: `queryClient.invalidateQueries()` + reset de las que dependen del usuario. Los precios dependen de quién mira.
 5. El texto lo arma la presentación con datos del backend:
-   - `PriceDisplay`: "Precio público $35.000 · **Tu precio $29.500** · Ahorras $5.500" + `appliedRules` como explicación ("Nivel ORO −12%").
+   - `PriceDisplay`: "Precio público $35.000 · **Tu precio $29.500** · Ahorras $5.500" + `appliedRules` como explicación ("Precio por media docena").
    - `QuantityTierProgress`: `nextTier.unitsToReach` → "Agrega 1 unidad y desbloquea precio de media docena".
-   - `FreeShippingProgress`: `incentive.remaining` → "Agrega $25.000 más y obtén envío gratis".
+   - `FreeShippingProgress`: `incentive.remaining` → "Agrega $50.000 más y obtén envío gratis".
 6. Única utilidad monetaria del front: `formatMoney(amount)`. Nada de sumas ni descuentos.
 
 Excepción: el subtotal visual del carrito invitado **no** se calcula localmente; se obtiene de `/cart/quote`.
@@ -823,7 +824,6 @@ Fuente de verdad: `src/styles/base/_tokens.scss`. Todos los pares texto/fondo cu
 | `--color-primary`                                    | CTA compra individual                   | `#1F3A5F`                                     |
 | `--color-wholesale`                                  | todo lo mayorista                       | `#B4561E`                                     |
 | `--color-success` / `-warning` / `-danger` / `-info` | estados (con variante `-soft` de fondo) | `#256B42` / `#8A5800` / `#B3261E` / `#1F5FA8` |
-| `--color-level-bronze/silver/gold/platinum`          | badges de nivel (texto blanco)          | `#8C5A2B` / `#626770` / `#86690F` / `#4E6A7A` |
 
 Regla visual: **azul = compra individual, cobre = mayorista**. Así la home y las cards comunican las dos propuestas.
 
@@ -882,14 +882,14 @@ Regla visual: **azul = compra individual, cobre = mayorista**. Así la home y la
 
 ---
 
-## Pendientes a confirmar
+## Decisiones de negocio confirmadas
 
-1. La spec original salta las secciones **6, 7, 9 y 13**. ¿Se eliminaron a propósito o falta contenido (p. ej. notificaciones)?
-2. **Pasarela de pago** (Wompi, MercadoPago, PayU). Hoy el checkout simula el pago y nunca pide datos bancarios.
-3. ¿Precios **con IVA incluido**? Se asume que sí.
-4. ¿Mayorista tiene **mínimo de compra** por pedido? Hoy no hay mínimo.
-5. Envío: tarifa fija de $12.000, gratis desde $200.000, express en ciudades principales. Confirmar reglas reales.
-6. Topes de niveles: se usan BRONCE < $500.000, PLATA < $2.000.000, ORO < $5.000.000, PLATINO desde $5.000.000. El ejemplo de la spec (ORO con $8.450.000) no cuadra con su tabla de niveles.
+1. La spec no tiene secciones 6, 7, 9 y 13: no falta contenido.
+2. **Pasarela de pago**: Mercado Pago (Checkout Pro). Ver §7, "Checkout".
+3. Precios **con IVA incluido**.
+4. **Pedido mínimo mayorista**: $120.000 en productos por pedido.
+5. **Envío**: estándar $10.000, gratis desde $120.000. Express ($24.000, ciudades principales) y recoger en bodega (gratis) se mantienen.
+6. **Sin niveles mayoristas**. La ventaja del mayorista son las escalas por cantidad, exclusivas de su cuenta.
 7. Checkout de invitado: la spec exige login. Se mantiene así.
 
 ---
@@ -932,7 +932,7 @@ Las 15 fases están implementadas. Cada una quedó en su propio commit.
 | 8    | Autenticación completa                                      | Hecha  |
 | 9    | Cuenta del comprador                                        | Hecha  |
 | 10   | Solicitud mayorista y estados                               | Hecha  |
-| 11   | Panel mayorista: nivel, progreso, catálogo mayorista        | Hecha  |
+| 11   | Panel mayorista: resumen, beneficios, catálogo mayorista    | Hecha  |
 | 12   | Pedidos, cancelar, recompra, pedido rápido, frecuentes      | Hecha  |
 | 13   | Favoritos y listas                                          | Hecha  |
 | 14   | Home y promociones                                          | Hecha  |

@@ -1,9 +1,10 @@
 // Armado del Cart del contrato (§7). En producción vive en el backend.
 import { products } from './fixtures/products'
+import { program } from './fixtures/program'
 import { buildPriceView } from './pricing'
 
-export const FREE_SHIPPING_THRESHOLD = 200000
-export const SHIPPING_COST = 12000
+export const FREE_SHIPPING_THRESHOLD = 120000
+export const SHIPPING_COST = 10000
 
 const variantIndex = new Map(
   products.flatMap((product) =>
@@ -130,6 +131,16 @@ export function buildCart(lines, user, cartId = 'guest') {
     })
   }
 
+  // Pedido mínimo: solo aplica a mayoristas y se mide con el valor de los productos.
+  const minimumOrder =
+    user?.role === 'WHOLESALE'
+      ? {
+          amount: program.minimumOrder,
+          remaining: Math.max(0, program.minimumOrder - itemsTotal),
+          met: itemsTotal >= program.minimumOrder,
+        }
+      : null
+
   return {
     id: cartId,
     items,
@@ -143,5 +154,6 @@ export function buildCart(lines, user, cartId = 'guest') {
     },
     incentives,
     warnings,
+    minimumOrder,
   }
 }

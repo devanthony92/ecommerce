@@ -1,7 +1,5 @@
 // Motor de precios simulado. En producción esta lógica vive SOLO en el backend;
 // el frontend nunca calcula precios (docs/ARCHITECTURE.md §10).
-import { findLevel } from './fixtures/levels'
-
 const roundCop = (amount) => Math.round(amount / 100) * 100
 
 export function audienceFor(user) {
@@ -10,20 +8,18 @@ export function audienceFor(user) {
 }
 
 /**
- * Cadena: precio base → promoción → escala por cantidad → nivel mayorista.
+ * Cadena: precio base → promoción → escala por cantidad (solo mayoristas).
  * Devuelve el PriceView del contrato.
  */
 export function buildPriceView(product, user, quantity = 1) {
   const audience = audienceFor(user)
-  const level = audience === 'WHOLESALE' ? findLevel(user.wholesale.levelCode) : null
-  const levelPercent = level?.discountPercent ?? 0
   const listPrice = product.basePrice
   const baseUnit = product.promoPrice ?? listPrice
 
-  const priceForTier = (def) =>
-    roundCop(baseUnit * (1 - def.discountPercent / 100) * (1 - levelPercent / 100))
+  const priceForTier = (def) => roundCop(baseUnit * (1 - def.discountPercent / 100))
 
-  const defs = product.tierDefs
+  // Las escalas por cantidad son exclusivas de las cuentas mayoristas.
+  const defs = audience === 'WHOLESALE' ? product.tierDefs : product.tierDefs.slice(0, 1)
   const current = [...defs].reverse().find((def) => def.minQty <= quantity) ?? defs[0]
   const next = defs.find((def) => def.minQty > quantity) ?? null
   const unitPrice = priceForTier(current)
@@ -49,13 +45,6 @@ export function buildPriceView(product, user, quantity = 1) {
   }
   if (current.minQty > 1) {
     appliedRules.push({ type: 'QUANTITY_TIER', label: current.label, minQty: current.minQty })
-  }
-  if (level) {
-    appliedRules.push({
-      type: 'WHOLESALE_LEVEL',
-      label: `Nivel ${level.name}`,
-      percent: level.discountPercent,
-    })
   }
 
   const unitSavings = listPrice - unitPrice

@@ -52,7 +52,7 @@ export const authHandlers = {
       password,
       phone: null,
       role: 'BUYER',
-      wholesale: { requestStatus: null, levelCode: null },
+      wholesale: { requestStatus: null },
     }
     db.users.push(user)
     save()

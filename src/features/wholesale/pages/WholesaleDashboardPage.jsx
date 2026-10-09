@@ -6,7 +6,7 @@ import { RecentOrders, ReorderButton, useOrders } from '@/features/orders'
 import { paths } from '@/constants/paths'
 import { formatDate } from '@/utils/formatDate'
 import { QuickActions } from '../components/quick-actions/QuickActions'
-import { WholesaleLevelCard } from '../components/wholesale-level-card/WholesaleLevelCard'
+import { WholesaleSummaryCard } from '../components/wholesale-summary-card/WholesaleSummaryCard'
 import { useWholesaleProfile } from '../hooks/useWholesaleRequest'
 import './wholesale-dashboard-page.scss'
 
@@ -40,7 +40,7 @@ export default function WholesaleDashboardPage() {
     >
       {(profile) => (
         <div className="wholesale-dashboard">
-          <WholesaleLevelCard name={user.name} profile={profile} />
+          <WholesaleSummaryCard name={user.name} profile={profile} />
           <QuickActions />
 
           <div className="wholesale-dashboard__grid">
@@ -63,7 +63,7 @@ export default function WholesaleDashboardPage() {
 
             <ContentCard
               title="Tus beneficios"
-              action={{ to: paths.benefits, label: 'Ver niveles' }}
+              action={{ to: paths.benefits, label: 'Ver beneficios' }}
             >
               <ul className="wholesale-dashboard__benefits" role="list">
                 {profile.benefits.map((benefit) => (

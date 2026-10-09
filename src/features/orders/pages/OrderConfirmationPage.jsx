@@ -1,32 +1,77 @@
-import { Link, useLocation, useParams } from 'react-router'
-import { QueryBoundary, Skeleton } from '@/components/feedback'
+import { Link, useParams, useSearchParams } from 'react-router'
+import clsx from 'clsx'
+import { QueryBoundary, Skeleton, useToast } from '@/components/feedback'
 import { Button, Icon, Price } from '@/components/ui'
 import { variantLabel } from '@/features/cart'
 import { formatAddress } from '@/features/users'
 import { paths } from '@/constants/paths'
 import { formatMoney } from '@/utils/formatMoney'
+import { redirectTo } from '@/utils/redirect'
 import { OrderStatusBadge } from '../components/order-status-badge/OrderStatusBadge'
+import { usePayOrder } from '../hooks/useOrderActions'
 import { useOrder } from '../hooks/useOrder'
 import './order-confirmation-page.scss'
 
-function Confirmation({ order, levelUp }) {
+/**
+ * Pedido sin pagar. El estado real lo da el backend (webhook de Mercado Pago);
+ * `paymentStatus` es el `?status=` con el que Mercado Pago devuelve al usuario.
+ */
+function PendingPayment({ order, paymentStatus }) {
+  const toast = useToast()
+  const pay = usePayOrder()
+
+  async function handlePay() {
+    try {
+      const { redirectUrl } = await pay.mutateAsync(order.id)
+      redirectTo(redirectUrl)
+    } catch (error) {
+      toast.show({
+        tone: 'danger',
+        title: 'No pudimos iniciar el pago',
+        description: error.message,
+      })
+    }
+  }
+
+  return (
+    <div className="order-confirmation__pending" role="status">
+      <p>
+        {paymentStatus === 'rejected'
+          ? 'Mercado Pago rechazó el pago. Puedes intentarlo de nuevo con otro medio.'
+          : 'Si ya pagaste, la confirmación de Mercado Pago puede tardar unos minutos.'}
+      </p>
+      {order.payment.method === 'MERCADO_PAGO' && (
+        <Button loading={pay.isPending} onClick={handlePay}>
+          Pagar con Mercado Pago
+        </Button>
+      )}
+    </div>
+  )
+}
+
+function Confirmation({ order, paymentStatus }) {
+  const isPending = order.status === 'PENDING_PAYMENT'
+
   return (
     <div className="order-confirmation">
-      {levelUp && (
-        <p className="order-confirmation__level-up" role="status">
-          ¡Subiste a nivel <strong>{levelUp.to}</strong>! Desde ahora tienes{' '}
-          {levelUp.discountPercent}% de descuento.
-        </p>
-      )}
       <header className="order-confirmation__header">
-        <span className="order-confirmation__icon">
-          <Icon name="check" size="xl" />
+        <span
+          className={clsx(
+            'order-confirmation__icon',
+            isPending && 'order-confirmation__icon--pending',
+          )}
+        >
+          <Icon name={isPending ? 'info' : 'check'} size="xl" />
         </span>
-        <h1 className="order-confirmation__title">¡Gracias por tu compra!</h1>
+        <h1 className="order-confirmation__title">
+          {isPending ? 'Tu pedido está pendiente de pago' : '¡Gracias por tu compra!'}
+        </h1>
         <p className="order-confirmation__number">
           Pedido <strong>{order.number}</strong> <OrderStatusBadge status={order.status} />
         </p>
       </header>
+
+      {isPending && <PendingPayment order={order} paymentStatus={paymentStatus} />}
 
       <section className="order-confirmation__section" aria-labelledby="confirmation-delivery">
         <h2 className="order-confirmation__subtitle" id="confirmation-delivery">
@@ -94,7 +139,7 @@ function Confirmation({ order, levelUp }) {
 export default function OrderConfirmationPage() {
   const { orderId } = useParams()
   const query = useOrder(orderId)
-  const levelUp = useLocation().state?.levelUp
+  const [searchParams] = useSearchParams()
 
   return (
     <QueryBoundary
@@ -102,7 +147,7 @@ export default function OrderConfirmationPage() {
       loading={<Skeleton variant="rect" height="20rem" />}
       errorTitle="No encontramos este pedido"
     >
-      {(order) => <Confirmation order={order} levelUp={levelUp} />}
+      {(order) => <Confirmation order={order} paymentStatus={searchParams.get('status')} />}
     </QueryBoundary>
   )
 }

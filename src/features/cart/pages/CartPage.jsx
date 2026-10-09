@@ -37,7 +37,7 @@ export default function CartPage() {
           <EmptyState
             icon="bag"
             title="Tu carrito está vacío"
-            description="Compra por unidad o aprovecha los precios por volumen."
+            description="Explora el catálogo y encuentra tu próxima prenda."
             action={
               <Button as={Link} to={paths.catalog}>
                 Ver catálogo
@@ -63,7 +63,11 @@ export default function CartPage() {
                 Seguir comprando
               </Link>
             </div>
-            <CartSummary summary={cart.summary} className="cart-page__summary" />
+            <CartSummary
+              summary={cart.summary}
+              minimumOrder={cart.minimumOrder}
+              className="cart-page__summary"
+            />
           </div>
         )}
       </QueryBoundary>
