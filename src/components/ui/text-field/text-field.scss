@@ -1,0 +1,31 @@
+@use '@/styles/abstracts' as *;
+
+.text-field {
+  display: grid;
+  gap: var(--space-1);
+
+  &__label {
+    @include field-label;
+  }
+
+  &__required {
+    color: var(--color-danger);
+  }
+
+  &__control {
+    @include field-control;
+
+    &--multiline {
+      min-height: 6rem;
+      resize: vertical;
+    }
+  }
+
+  &__hint {
+    @include field-hint;
+  }
+
+  &__error {
+    @include field-error;
+  }
+}

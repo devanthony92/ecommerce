@@ -1,0 +1,105 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-fast),
+    border-color var(--duration-fast),
+    color var(--duration-fast);
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &--loading {
+    cursor: progress;
+
+    &:disabled {
+      opacity: 0.8;
+    }
+  }
+
+  // Tamaños: md cumple el mínimo táctil de 44px.
+  &--sm {
+    min-height: 36px;
+    padding-inline: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  &--md {
+    min-height: 44px;
+    padding-inline: var(--space-5);
+    font-size: var(--font-size-md);
+  }
+
+  &--lg {
+    min-height: 52px;
+    padding-inline: var(--space-6);
+    font-size: var(--font-size-lg);
+  }
+
+  &--block {
+    width: 100%;
+  }
+
+  // Variantes
+  &--primary {
+    color: var(--color-primary-contrast);
+    background-color: var(--color-primary);
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--color-primary-hover);
+    }
+  }
+
+  &--wholesale {
+    color: var(--color-wholesale-contrast);
+    background-color: var(--color-wholesale);
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--color-wholesale-hover);
+    }
+  }
+
+  &--secondary {
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      border-color: var(--color-text);
+    }
+  }
+
+  &--ghost {
+    color: var(--color-text);
+    background-color: transparent;
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--color-surface-muted);
+    }
+  }
+
+  &--danger {
+    color: var(--color-danger-contrast);
+    background-color: var(--color-danger);
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--color-danger-hover);
+    }
+  }
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

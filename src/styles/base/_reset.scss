@@ -9,7 +9,10 @@
 }
 
 html {
+  // Safari iOS solo soporta la versión con prefijo.
+  // stylelint-disable-next-line property-no-vendor-prefix
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {

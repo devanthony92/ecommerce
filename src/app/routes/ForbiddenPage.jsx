@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { PageHeader } from '@/components/layout/PageHeader'
+import { PageHeader } from '@/components/layout'
 import { Can } from '@/features/auth'
 import { PERMISSIONS } from '@/constants/permissions'
 import { paths } from './paths'

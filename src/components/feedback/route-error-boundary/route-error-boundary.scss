@@ -1,0 +1,11 @@
+.route-error-boundary {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  padding-block: var(--space-16);
+  text-align: center;
+
+  &__text {
+    color: var(--color-text-muted);
+  }
+}

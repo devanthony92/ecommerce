@@ -4,8 +4,7 @@ import { paths } from '@/app/routes/paths'
 import { Can, useAuth } from '@/features/auth'
 import { useCart } from '@/features/cart'
 import { PERMISSIONS } from '@/constants/permissions'
-import { PageLoader } from '@/components/feedback/PageLoader'
-import { RouteErrorBoundary } from '@/components/feedback/RouteErrorBoundary'
+import { LoadingState, RouteErrorBoundary } from '@/components/feedback'
 import './main-layout.scss'
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -62,7 +61,7 @@ export function MainLayout() {
 
       <main id="main-content" className="main-layout__main" tabIndex={-1}>
         <RouteErrorBoundary>
-          <Suspense fallback={<PageLoader />}>
+          <Suspense fallback={<LoadingState page />}>
             <Outlet />
           </Suspense>
         </RouteErrorBoundary>

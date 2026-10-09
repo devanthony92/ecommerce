@@ -724,26 +724,24 @@ Los tokens se exponen como **CSS custom properties** en `:root` (permite tema y 
 
 ### Color
 
-| Token                                       | Uso                   | Valor inicial                |
-| ------------------------------------------- | --------------------- | ---------------------------- |
-| `--color-bg`                                | fondo                 | `#FAFAF8`                    |
-| `--color-surface`                           | cards                 | `#FFFFFF`                    |
-| `--color-text`                              | texto                 | `#1A1A1A`                    |
-| `--color-text-muted`                        | secundario            | `#5C5C5C` (≥ 4.5:1 sobre bg) |
-| `--color-border`                            | bordes                | `#E4E2DD`                    |
-| `--color-primary`                           | CTA compra            | `#1F3A5F`                    |
-| `--color-primary-contrast`                  | texto sobre primary   | `#FFFFFF`                    |
-| `--color-wholesale`                         | todo lo mayorista     | `#B4561E`                    |
-| `--color-success`                           | ahorro, stock         | `#2E7D4F`                    |
-| `--color-warning`                           | stock bajo, pendiente | `#A86B00`                    |
-| `--color-danger`                            | error, cancelado      | `#B3261E`                    |
-| `--color-level-bronze/silver/gold/platinum` | badges de nivel       | bronce, plata, oro, platino  |
+Fuente de verdad: `src/styles/base/_tokens.scss`. Todos los pares texto/fondo cumplen WCAG AA (≥ 4.5:1) y los bordes de controles ≥ 3:1 (WCAG 1.4.11).
+
+| Token                                                | Uso                                     | Valor                                         |
+| ---------------------------------------------------- | --------------------------------------- | --------------------------------------------- |
+| `--color-bg` / `--color-surface`                     | fondo / cards                           | `#FAFAF8` / `#FFFFFF`                         |
+| `--color-text` / `-muted` / `-subtle`                | texto                                   | `#1A1A1A` / `#5C5C5C` / `#767676`             |
+| `--color-border`                                     | separadores decorativos                 | `#E4E2DD`                                     |
+| `--color-border-strong`                              | borde de inputs y botones secundarios   | `#8A867E`                                     |
+| `--color-primary`                                    | CTA compra individual                   | `#1F3A5F`                                     |
+| `--color-wholesale`                                  | todo lo mayorista                       | `#B4561E`                                     |
+| `--color-success` / `-warning` / `-danger` / `-info` | estados (con variante `-soft` de fondo) | `#256B42` / `#8A5800` / `#B3261E` / `#1F5FA8` |
+| `--color-level-bronze/silver/gold/platinum`          | badges de nivel (texto blanco)          | `#8C5A2B` / `#626770` / `#86690F` / `#4E6A7A` |
 
 Regla visual: **azul = compra individual, cobre = mayorista**. Así la home y las cards comunican las dos propuestas.
 
 ### Tipografía
 
-- Fuente: **Inter** (self-hosted con `@fontsource/inter`, sin dependencias externas), fallback `system-ui`.
+- Fuente: **Inter** (self-hosted con `@fontsource-variable/inter`, sin dependencias externas), fallback `system-ui`.
 - Escala (rem): `xs 0.75 · sm 0.875 · md 1 · lg 1.125 · xl 1.25 · 2xl 1.5 · 3xl 1.875 · 4xl 2.25`. Títulos con `clamp()` en hero.
 - Precios con `font-variant-numeric: tabular-nums`.
 
@@ -760,10 +758,18 @@ Regla visual: **azul = compra individual, cobre = mayorista**. Así la home y la
 - Un componente = un bloque. `ProductCard.jsx` ↔ `.product-card` ↔ `product-card.scss` en la misma carpeta.
 - Elementos `__`, modificadores `--`. Sin anidar elementos (`block__el__sub` está prohibido).
 - Estados de JS como modificador (`.drawer--open`) o atributo ARIA (`[aria-expanded="true"]`). Nada de `.is-active` global.
-- Utilidad `cn()` (clsx) para componer modificadores.
+- `clsx` para componer modificadores.
 - Sin clases utilitarias (`mt-20`) ni nombres de color (`red`).
 - Globales permitidos: reset, tipografía base y tokens.
-- Stylelint con regla de patrón BEM (Fase 2).
+- Stylelint valida el patrón BEM (`selector-class-pattern`); `npm run lint` falla si una clase no lo cumple.
+- Cada componente vive en su carpeta kebab-case: `components/ui/quantity-stepper/QuantityStepper.jsx` + `quantity-stepper.scss`.
+
+### Componentes base (fase 2)
+
+- `components/ui`: Button, IconButton, Icon (set SVG propio), TextField, SelectField, Checkbox, QuantityStepper, Price, Badge, ProgressBar, ResponsiveImage, Spinner.
+- `components/feedback`: LoadingState, EmptyState, ErrorState, Skeleton, QueryBoundary, Toast (`useToast`), RouteErrorBoundary.
+- `components/modal` y `components/drawer`: comparten `hooks/useOverlay` (scroll lock con contador, focus trap con retorno de foco, ESC solo cierra el overlay superior, `#root` inerte) y `hooks/usePresence` (animación de salida).
+- En desarrollo, `/_ds` muestra todos los componentes. No existe en el build de producción.
 
 ---
 

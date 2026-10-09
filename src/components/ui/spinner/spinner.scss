@@ -1,0 +1,36 @@
+@use '@/styles/abstracts' as *;
+
+.spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  border: 2px solid currentcolor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-rotate 0.75s linear infinite;
+
+  &--sm {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &--md {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &--lg {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-width: 3px;
+  }
+
+  &__label {
+    @include visually-hidden;
+  }
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,65 @@
+@use '@/styles/abstracts' as *;
+
+.quantity-stepper {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+
+  &:focus-within {
+    border-color: var(--color-focus);
+  }
+
+  &__label {
+    @include visually-hidden;
+  }
+
+  &__button {
+    display: grid;
+    place-items: center;
+    border: 0;
+    color: var(--color-text);
+    background: none;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-surface-muted);
+    }
+
+    &:disabled {
+      color: var(--color-text-subtle);
+      cursor: not-allowed;
+    }
+  }
+
+  &__input {
+    border: 0;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--font-weight-semibold);
+    background: none;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  &--sm &__button {
+    width: 32px;
+    height: 32px;
+  }
+
+  &--sm &__input {
+    width: 2.5rem;
+    font-size: var(--font-size-sm);
+  }
+
+  &--md &__button {
+    width: 44px;
+    height: 44px;
+  }
+
+  &--md &__input {
+    width: 3rem;
+  }
+}

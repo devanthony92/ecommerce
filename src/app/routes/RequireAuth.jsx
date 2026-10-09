@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router'
 import { useAuth } from '@/features/auth'
 import { SESSION_STATUS } from '@/constants/statuses'
-import { PageLoader } from '@/components/feedback/PageLoader'
+import { LoadingState } from '@/components/feedback'
 import { paths } from './paths'
 
 export function RequireAuth() {
@@ -9,7 +9,7 @@ export function RequireAuth() {
   const location = useLocation()
 
   // Mientras se valida el token no se redirige: evita expulsar a alguien con sesión válida.
-  if (status === SESSION_STATUS.UNKNOWN) return <PageLoader label="Verificando sesión…" />
+  if (status === SESSION_STATUS.UNKNOWN) return <LoadingState page label="Verificando sesión…" />
 
   if (status === SESSION_STATUS.ANONYMOUS) {
     const next = encodeURIComponent(location.pathname + location.search)

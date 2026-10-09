@@ -5,8 +5,8 @@ import { renderApp } from '@/test/renderApp'
 // Credenciales semilla del backend simulado (src/services/api/mocks/db.js).
 async function loginAs(email) {
   const user = userEvent.setup()
-  await user.type(await screen.findByLabelText('Correo'), email)
-  await user.type(screen.getByLabelText('Contraseña'), 'Trama1234')
+  await user.type(await screen.findByLabelText(/^Correo/), email)
+  await user.type(screen.getByLabelText(/^Contraseña/), 'Trama1234')
   await user.click(screen.getByRole('button', { name: 'Ingresar' }))
 }
 
@@ -35,8 +35,8 @@ describe('App', () => {
   it('muestra error con credenciales inválidas', async () => {
     renderApp('/ingresar')
     const user = userEvent.setup()
-    await user.type(await screen.findByLabelText('Correo'), 'nadie@trama.test')
-    await user.type(screen.getByLabelText('Contraseña'), 'incorrecta')
+    await user.type(await screen.findByLabelText(/^Correo/), 'nadie@trama.test')
+    await user.type(screen.getByLabelText(/^Contraseña/), 'incorrecta')
     await user.click(screen.getByRole('button', { name: 'Ingresar' }))
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Correo o contraseña incorrectos.')

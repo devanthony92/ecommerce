@@ -1,9 +1,9 @@
-import { useId, useState } from 'react'
+import { useState } from 'react'
+import { Button, TextField } from '@/components/ui'
 import './login-form.scss'
 
-// Versión funcional mínima. Estilo y validación final en la fase 8 (con TextField/Button).
+// Versión mínima funcional. Validación por campo y diseño final en la fase 8.
 export function LoginForm({ onSubmit }) {
-  const id = useId()
   const [error, setError] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -22,33 +22,14 @@ export function LoginForm({ onSubmit }) {
 
   return (
     <form className="login-form" onSubmit={handleSubmit} noValidate>
-      <div className="login-form__field">
-        <label className="login-form__label" htmlFor={`${id}-email`}>
-          Correo
-        </label>
-        <input
-          className="login-form__input"
-          id={`${id}-email`}
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-        />
-      </div>
-
-      <div className="login-form__field">
-        <label className="login-form__label" htmlFor={`${id}-password`}>
-          Contraseña
-        </label>
-        <input
-          className="login-form__input"
-          id={`${id}-password`}
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-        />
-      </div>
+      <TextField label="Correo" name="email" type="email" autoComplete="email" required />
+      <TextField
+        label="Contraseña"
+        name="password"
+        type="password"
+        autoComplete="current-password"
+        required
+      />
 
       {error && (
         <p className="login-form__error" role="alert">
@@ -56,9 +37,9 @@ export function LoginForm({ onSubmit }) {
         </p>
       )}
 
-      <button className="login-form__submit" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Ingresando…' : 'Ingresar'}
-      </button>
+      <Button type="submit" block loading={isSubmitting}>
+        Ingresar
+      </Button>
     </form>
   )
 }

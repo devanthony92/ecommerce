@@ -1,0 +1,20 @@
+.loading-state {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-3);
+  padding-block: var(--space-10);
+  color: var(--color-text-muted);
+
+  &--page {
+    min-height: 40dvh;
+  }
+
+  &__spinner {
+    color: var(--color-primary);
+  }
+
+  &__label {
+    font-size: var(--font-size-sm);
+  }
+}

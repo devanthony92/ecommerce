@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 import { Route, Routes } from 'react-router'
-import { MainLayout } from '@/components/layout/MainLayout'
+import { MainLayout } from '@/components/layout'
 import { PERMISSIONS } from '@/constants/permissions'
 import { RequireAuth } from './RequireAuth'
 import { RequirePermission } from './RequirePermission'
@@ -18,6 +18,11 @@ const WholesaleDashboardPage = lazy(
   () => import('@/features/wholesale/pages/WholesaleDashboardPage'),
 )
 const NotFoundPage = lazy(() => import('./NotFoundPage'))
+
+// Catálogo de componentes: solo en desarrollo, no entra al build de producción.
+const DesignSystemPage = import.meta.env.DEV
+  ? lazy(() => import('@/app/dev/DesignSystemPage'))
+  : null
 
 export function AppRoutes() {
   return (
@@ -44,6 +49,7 @@ export function AppRoutes() {
           {/* Admin (futuro): <Route element={<RequirePermission permission={PERMISSIONS.ADMIN_ACCESS} />}> */}
         </Route>
 
+        {DesignSystemPage && <Route path="/_ds" element={<DesignSystemPage />} />}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

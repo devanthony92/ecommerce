@@ -1,4 +1,4 @@
-import { PageHeader } from '@/components/layout/PageHeader'
+import { PageHeader } from '@/components/layout'
 import { useAuth } from '@/features/auth'
 
 export default function BuyerDashboardPage() {

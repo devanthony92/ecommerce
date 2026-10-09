@@ -1,0 +1,43 @@
+@use '@/styles/abstracts' as *;
+
+.select-field {
+  display: grid;
+  gap: var(--space-1);
+
+  &__label {
+    @include field-label;
+
+    &--hidden {
+      @include visually-hidden;
+    }
+  }
+
+  &__wrapper {
+    position: relative;
+  }
+
+  &__control {
+    @include field-control;
+
+    appearance: none;
+    padding-inline-end: var(--space-10);
+    cursor: pointer;
+  }
+
+  &__arrow {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: var(--space-3);
+    color: var(--color-text-muted);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  &__hint {
+    @include field-hint;
+  }
+
+  &__error {
+    @include field-error;
+  }
+}

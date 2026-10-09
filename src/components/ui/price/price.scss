@@ -1,0 +1,53 @@
+@use '@/styles/abstracts' as *;
+
+.price {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+
+  &--sm {
+    font-size: var(--font-size-sm);
+  }
+
+  &--md {
+    font-size: var(--font-size-md);
+  }
+
+  &--lg {
+    font-size: var(--font-size-xl);
+  }
+
+  &--xl {
+    font-size: var(--font-size-3xl);
+  }
+
+  &--default {
+    color: var(--color-text);
+  }
+
+  &--muted {
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-muted);
+  }
+
+  &--highlight {
+    color: var(--color-primary);
+  }
+
+  &--wholesale {
+    color: var(--color-wholesale);
+  }
+
+  &--success {
+    color: var(--color-success);
+  }
+
+  &--strike {
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-muted);
+  }
+
+  &__sr-label {
+    @include visually-hidden;
+  }
+}

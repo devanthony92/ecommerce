@@ -1,0 +1,32 @@
+.design-system-page {
+  display: grid;
+  gap: var(--space-10);
+
+  &__section {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  &__heading {
+    padding-block-end: var(--space-2);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  &__stack {
+    display: grid;
+    gap: var(--space-4);
+    width: 100%;
+    max-width: 32rem;
+  }
+
+  &__image {
+    width: 12rem;
+  }
+}

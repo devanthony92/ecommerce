@@ -1,0 +1,27 @@
+.responsive-image {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background-color: var(--color-surface-muted);
+
+  &__img {
+    width: 100%;
+    height: 100%;
+  }
+
+  &--cover &__img {
+    object-fit: cover;
+  }
+
+  &--contain &__img {
+    object-fit: contain;
+  }
+
+  &__fallback {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    color: var(--color-text-subtle);
+  }
+}

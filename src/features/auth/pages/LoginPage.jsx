@@ -1,5 +1,5 @@
 import { Link, Navigate, useSearchParams } from 'react-router'
-import { PageHeader } from '@/components/layout/PageHeader'
+import { PageHeader } from '@/components/layout'
 import { paths, safeRedirectPath } from '@/app/routes/paths'
 import { ROLES } from '@/constants/statuses'
 import { LoginForm } from '../components/LoginForm'
