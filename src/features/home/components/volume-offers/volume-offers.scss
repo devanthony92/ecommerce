@@ -1,0 +1,61 @@
+@use '@/styles/abstracts' as *;
+
+.volume-offers {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-wholesale-soft);
+
+  @include mq(md) {
+    padding: var(--space-8);
+  }
+
+  &__header {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  &__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  &__text {
+    color: var(--color-text-muted);
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+
+    @include mq(lg) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+  }
+
+  &__image {
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+  }
+
+  &__body {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  &__name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+  }
+}

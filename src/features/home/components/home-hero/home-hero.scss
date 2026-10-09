@@ -1,0 +1,63 @@
+@use '@/styles/abstracts' as *;
+
+.home-hero {
+  display: grid;
+  gap: var(--space-5);
+
+  &__title {
+    max-width: 18ch;
+    font-size: clamp(var(--font-size-3xl), 7vw, 3rem);
+    letter-spacing: -0.02em;
+  }
+
+  &__options {
+    display: grid;
+    gap: var(--space-4);
+
+    @include mq(md) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__option {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: var(--space-3);
+    padding: var(--space-6) var(--space-5);
+    border-radius: var(--radius-lg);
+
+    @include mq(lg) {
+      padding: var(--space-10) var(--space-8);
+    }
+
+    &--retail {
+      background-color: var(--color-info-soft);
+    }
+
+    &--wholesale {
+      background-color: var(--color-wholesale-soft);
+    }
+  }
+
+  &__eyebrow {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  &__option--wholesale &__eyebrow {
+    color: var(--color-wholesale-hover);
+  }
+
+  &__option-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  &__text {
+    max-width: 40ch;
+    color: var(--color-text-muted);
+  }
+}

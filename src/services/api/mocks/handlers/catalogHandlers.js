@@ -74,7 +74,14 @@ const SORTERS = {
 }
 
 export const catalogHandlers = {
-  'GET /categories': () => ok(categories),
+  // Cada categoría con una imagen representativa (su primer producto).
+  'GET /categories': () =>
+    ok(
+      categories.map((category) => {
+        const product = products.find((item) => item.categoryId === category.id)
+        return { ...category, image: product ? { url: product.images[0].url, alt: '' } : null }
+      }),
+    ),
 
   // Pedido rápido: busca variantes por SKU o por nombre. Va antes de /products/:slug.
   'GET /products/lookup': ({ query, user }) => {
@@ -120,6 +127,7 @@ export const catalogHandlers = {
     const minPrice = Number(query.minPrice) || 0
     const maxPrice = Number(query.maxPrice) || Infinity
     const tag = query.tag
+    const onSale = query.onSale === true || query.onSale === 'true'
     const page = Math.max(1, Number(query.page) || 1)
     const pageSize = Math.min(MAX_PAGE_SIZE, Number(query.pageSize) || DEFAULT_PAGE_SIZE)
 
@@ -128,6 +136,7 @@ export const catalogHandlers = {
     const base = products
       .filter((product) => !category || product.categoryId === category.id)
       .filter((product) => !tag || product.tags.includes(tag))
+      .filter((product) => !onSale || product.promoPrice !== null)
       .filter((product) => {
         if (!q) return true
         const categoryName = categories.find((c) => c.id === product.categoryId).name

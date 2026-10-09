@@ -14,7 +14,7 @@ describe('App', () => {
   it('renderiza la home', async () => {
     renderApp('/')
     expect(
-      await screen.findByRole('heading', { name: 'Compra individual o por volumen' }),
+      await screen.findByRole('heading', { name: 'Ropa para ti y para tu negocio', level: 1 }),
     ).toBeInTheDocument()
   })
 

@@ -1,0 +1,39 @@
+@use '@/styles/abstracts' as *;
+
+.benefits-strip {
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5) var(--space-4);
+
+    @include mq(lg) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  &__item {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-1);
+  }
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-block-end: var(--space-2);
+    border-radius: 50%;
+    color: var(--color-primary);
+    background-color: var(--color-info-soft);
+  }
+
+  &__title {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+}

@@ -69,10 +69,4 @@ describe('Shell de la tienda', () => {
     expect(within(nav).getByRole('link', { name: 'Pedido rápido' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Mayorista/ })).toHaveAttribute('href', '/mayorista')
   })
-
-  it('las rutas pendientes muestran el aviso de construcción', async () => {
-    renderApp('/ofertas')
-    expect(await screen.findByRole('heading', { name: 'Ofertas' })).toBeInTheDocument()
-    expect(screen.getByText('Esta página se implementa en la fase 14.')).toBeInTheDocument()
-  })
 })

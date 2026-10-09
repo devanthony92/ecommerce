@@ -6,7 +6,7 @@ import { RequireAuth } from './RequireAuth'
 import { RequirePermission } from './RequirePermission'
 import { paths } from '@/constants/paths'
 
-// Code splitting por página. Cada fase reemplaza sus ComingSoonPage (ver docs/ARCHITECTURE.md §4).
+// Code splitting por página (ver docs/ARCHITECTURE.md §4).
 const HomePage = lazy(() => import('@/features/home/pages/HomePage'))
 const CatalogPage = lazy(() => import('@/features/catalog/pages/CatalogPage'))
 const ProductPage = lazy(() => import('@/features/catalog/pages/ProductPage'))
@@ -35,15 +35,13 @@ const BenefitsPage = lazy(() => import('@/features/wholesale/pages/BenefitsPage'
 const WholesaleDashboardPage = lazy(
   () => import('@/features/wholesale/pages/WholesaleDashboardPage'),
 )
-const ComingSoonPage = lazy(() => import('./ComingSoonPage'))
+const PromotionsPage = lazy(() => import('@/features/promotions/pages/PromotionsPage'))
 const NotFoundPage = lazy(() => import('./NotFoundPage'))
 
 // Catálogo de componentes: solo en desarrollo, no entra al build de producción.
 const DesignSystemPage = import.meta.env.DEV
   ? lazy(() => import('@/app/dev/DesignSystemPage'))
   : null
-
-const soon = (title, phase) => <ComingSoonPage title={title} phase={phase} />
 
 export function AppRoutes() {
   return (
@@ -55,7 +53,7 @@ export function AppRoutes() {
         <Route path={paths.category(':categorySlug')} element={<CatalogPage />} />
         <Route path={paths.product(':slug')} element={<ProductPage />} />
         <Route path={paths.search} element={<SearchPage />} />
-        <Route path={paths.promotions} element={soon('Ofertas', 14)} />
+        <Route path={paths.promotions} element={<PromotionsPage />} />
         <Route path={paths.wholesaleLanding} element={<WholesaleLandingPage />} />
         <Route path={paths.cart} element={<CartPage />} />
         <Route path={paths.login} element={<LoginPage />} />

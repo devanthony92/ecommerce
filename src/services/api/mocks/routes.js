@@ -5,6 +5,7 @@ import { catalogHandlers } from './handlers/catalogHandlers'
 import { listHandlers } from './handlers/listHandlers'
 import { orderHandlers } from './handlers/orderHandlers'
 import { pricingHandlers } from './handlers/pricingHandlers'
+import { promotionHandlers } from './handlers/promotionHandlers'
 import { wholesaleHandlers } from './handlers/wholesaleHandlers'
 import { defineRoutes } from './router'
 
@@ -18,4 +19,5 @@ export const routes = defineRoutes({
   ...orderHandlers,
   ...wholesaleHandlers,
   ...listHandlers,
+  ...promotionHandlers,
 })

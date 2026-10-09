@@ -1,0 +1,25 @@
+.product-shelf {
+  display: grid;
+  gap: var(--space-4);
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  &__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  &__description {
+    color: var(--color-text-muted);
+  }
+
+  &__action {
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+  }
+}

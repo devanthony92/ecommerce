@@ -85,7 +85,6 @@ ecommerce/
 │   │       ├── AppRoutes.jsx
 │   │       ├── RequireAuth.jsx
 │   │       ├── RequirePermission.jsx
-│   │       └── ComingSoonPage.jsx      # marcador de rutas de fases futuras
 │   │
 │   ├── components/                     # genéricos, sin lógica de negocio
 │   │   ├── ui/                         # Button, Input, Price, ProgressBar, QuantityStepper...
@@ -216,7 +215,6 @@ Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Pat
 - `components/layout` (genéricos): `PageHeader`, `SectionNav` (pestañas en móvil; `orientation="auto"` pasa a sidebar desde lg).
 - `app/layout` (shell, compone features): `MainLayout` (skip link, foco y scroll al navegar, error boundary por ruta), `SiteHeader`, `HeaderSearch`, `CategoryNav`, `MobileMenu` (Drawer izquierdo), `SiteFooter`, `AccountLayout` (sidebar en desktop / pestañas en móvil), `WholesaleLayout` (banda cobre + pestañas).
 - `CartDrawer` vive en `features/cart` y lo monta `MainLayout`.
-- Las rutas de fases futuras ya existen y muestran `ComingSoonPage`, así la navegación completa funciona desde ahora.
 
 ### `components/modal`
 
@@ -395,7 +393,7 @@ Reglas de auth (fase 8):
 | GET    | `/products/:slug`       | `ProductDetail`                                                                         |
 | GET    | `/products/lookup?sku=` | para pedido rápido                                                                      |
 
-`sort`: `relevance | price_asc | price_desc | newest | bestsellers`. `tag`: `featured | bestseller | volume-offer`.
+`sort`: `relevance | price_asc | price_desc | newest | bestsellers`. `tag`: `featured | bestseller | volume-offer`. `onSale=true`: solo productos con precio de temporada (página Ofertas). `GET /categories` incluye `image` representativa.
 
 ```json
 // Respuesta de /products
@@ -644,6 +642,12 @@ Checkout (fase 7):
 ```
 
 `nextLevel: null` → nivel máximo alcanzado.
+
+Home y promociones (fase 14):
+
+- `GET /promotions/active` → `[{ id, type: SEASON | VOLUME | SHIPPING, title, description, link, startsAt, endsAt }]`. El backend filtra por vigencia (el mock devuelve todas para que la demo no dependa de la fecha).
+- La home solo compone secciones (hero con las dos propuestas, promociones, categorías, destacados, "Compra más, paga menos" con escalas reales, más vendidos, beneficios e invitación mayorista); cada sección pide sus datos y maneja sus estados.
+- `CatalogView` acepta `baseParams` (filtros fijos, p. ej. `{ onSale: true }`) e `intro`.
 
 Favoritos y listas (fase 13):
 

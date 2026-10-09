@@ -1,0 +1,57 @@
+@use '@/styles/abstracts' as *;
+
+.promotion-banners {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+
+  @include mq(md) {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    height: 100%;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--color-text);
+    background-color: var(--color-info-soft);
+
+    &--season {
+      background-color: var(--color-danger-soft);
+    }
+
+    &--volume {
+      background-color: var(--color-wholesale-soft);
+    }
+
+    &--shipping {
+      background-color: var(--color-success-soft);
+    }
+
+    &:hover {
+      box-shadow: var(--shadow-md);
+    }
+  }
+
+  &__icon {
+    margin-block-start: 2px;
+  }
+
+  &__text {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__title {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+}

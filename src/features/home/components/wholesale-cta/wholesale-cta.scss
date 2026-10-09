@@ -1,0 +1,29 @@
+@use '@/styles/abstracts' as *;
+
+.wholesale-cta {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-10) var(--space-5);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  color: var(--color-primary-contrast);
+  background-color: var(--color-primary);
+
+  &__title {
+    font-size: clamp(var(--font-size-2xl), 5vw, var(--font-size-3xl));
+  }
+
+  &__text {
+    max-width: 44ch;
+    opacity: 0.9;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-block-start: var(--space-2);
+  }
+}

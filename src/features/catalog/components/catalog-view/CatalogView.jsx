@@ -20,11 +20,23 @@ const resultsLabel = (total) => `${total} ${total === 1 ? 'producto' : 'producto
 
 /**
  * Listado de productos con filtros en la URL. Lo usan el catálogo,
- * las categorías y la búsqueda.
+ * las categorías, la búsqueda, ofertas y el catálogo mayorista.
+ * `baseParams`: filtros fijos de la página (p. ej. { onSale: true }).
+ * `intro`: contenido entre el título y la barra de herramientas.
  */
-export function CatalogView({ title, description, categorySlug, showTiers = false }) {
+export function CatalogView({
+  title,
+  description,
+  categorySlug,
+  baseParams,
+  intro,
+  showTiers = false,
+}) {
   const { filters, activeCount, update, toggleValue, reset, pageHref } = useCatalogFilters()
-  const params = useMemo(() => toProductsQuery(filters, categorySlug), [filters, categorySlug])
+  const params = useMemo(
+    () => ({ ...baseParams, ...toProductsQuery(filters, categorySlug) }),
+    [baseParams, filters, categorySlug],
+  )
   const query = useProducts(params)
   const { isOpen, open, close } = useUi()
   const resultsRef = useRef(null)
@@ -49,6 +61,7 @@ export function CatalogView({ title, description, categorySlug, showTiers = fals
   return (
     <div className="catalog-view">
       <PageHeader title={title} description={description} />
+      {intro}
 
       <div className="catalog-view__toolbar">
         <p className="catalog-view__count" aria-live="polite">

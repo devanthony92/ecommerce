@@ -120,7 +120,7 @@ describe('Autenticación', () => {
 
     expect(await screen.findByText('Cerraste sesión')).toBeInTheDocument()
     expect(
-      await screen.findByRole('heading', { name: 'Compra individual o por volumen' }),
+      await screen.findByRole('heading', { name: 'Ropa para ti y para tu negocio', level: 1 }),
     ).toBeInTheDocument()
   })
 
@@ -129,7 +129,7 @@ describe('Autenticación', () => {
     renderApp('/cuenta', { as: 'buyer' })
     const account = await screen.findByRole('navigation', { name: 'Mi cuenta' })
     await user.click(within(account.parentElement).getByRole('button', { name: 'Cerrar sesión' }))
-    await screen.findByRole('heading', { name: 'Compra individual o por volumen' })
+    await screen.findByRole('heading', { name: 'Ropa para ti y para tu negocio', level: 1 })
 
     // El acceso a favoritos del header (el footer tiene otro enlace con el mismo nombre).
     await user.click(
