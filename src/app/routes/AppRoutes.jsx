@@ -12,6 +12,8 @@ const CatalogPage = lazy(() => import('@/features/catalog/pages/CatalogPage'))
 const ProductPage = lazy(() => import('@/features/catalog/pages/ProductPage'))
 const SearchPage = lazy(() => import('@/features/catalog/pages/SearchPage'))
 const CartPage = lazy(() => import('@/features/cart/pages/CartPage'))
+const CheckoutPage = lazy(() => import('@/features/checkout/pages/CheckoutPage'))
+const OrderConfirmationPage = lazy(() => import('@/features/orders/pages/OrderConfirmationPage'))
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const BuyerDashboardPage = lazy(() => import('@/features/users/pages/BuyerDashboardPage'))
@@ -45,7 +47,8 @@ export function AppRoutes() {
         <Route path={paths.register} element={<RegisterPage />} />
 
         <Route element={<RequireAuth />}>
-          <Route path={paths.checkout} element={soon('Checkout', 7)} />
+          <Route path={paths.checkout} element={<CheckoutPage />} />
+          <Route path={paths.orderConfirmation(':orderId')} element={<OrderConfirmationPage />} />
 
           {/* Comprador */}
           <Route path={paths.account} element={<AccountLayout />}>

@@ -1,0 +1,30 @@
+@use '@/styles/abstracts' as *;
+
+.address-step {
+  display: grid;
+  gap: var(--space-4);
+
+  &__intro {
+    color: var(--color-text-muted);
+  }
+
+  &__options {
+    display: grid;
+    gap: var(--space-3);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  &__legend {
+    @include visually-hidden;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+}

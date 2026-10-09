@@ -1,0 +1,35 @@
+@use '@/styles/abstracts' as *;
+
+.checkout-page {
+  &__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+
+    @include mq(lg) {
+      grid-template-columns: minmax(0, 1fr) 22rem;
+      align-items: start;
+      gap: var(--space-8);
+    }
+  }
+
+  &__steps {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  &__summary {
+    @include mq(lg) {
+      position: sticky;
+      inset-block-start: 9rem;
+    }
+  }
+
+  &__error {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-danger);
+    background-color: var(--color-danger-soft);
+  }
+}

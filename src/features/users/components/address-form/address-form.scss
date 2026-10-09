@@ -1,0 +1,30 @@
+@use '@/styles/abstracts' as *;
+
+.address-form {
+  display: grid;
+  gap: var(--space-4);
+
+  &__row {
+    display: grid;
+    gap: var(--space-4);
+
+    @include mq(md) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__error {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-danger);
+    background-color: var(--color-danger-soft);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: flex-end;
+    gap: var(--space-3);
+  }
+}

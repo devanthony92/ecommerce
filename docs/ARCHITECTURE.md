@@ -513,14 +513,14 @@ El backend manda **números**, no frases. El texto ("Agrega 1 unidad más y obt�
 
 ### Checkout y pedidos
 
-| Método | Endpoint                                | Notas                                                                                            |
-| ------ | --------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| GET    | `/checkout/shipping-options?addressId=` | `[{ id, label, price, estimatedDays }]`                                                          |
-| POST   | `/orders`                               | `{ addressId, shippingOptionId, paymentMethod, notes }` → `{ order, payment: { redirectUrl? } }` |
-| GET    | `/orders`                               | paginado de `OrderSummary`                                                                       |
-| GET    | `/orders/:id`                           | `Order`                                                                                          |
-| POST   | `/orders/:id/cancel`                    | `{ reason }` → `Order`                                                                           |
-| POST   | `/orders/:id/reorder`                   | → `Cart` (+ `warnings` si algo no hay stock)                                                     |
+| Método | Endpoint                                | Notas                                                                                                  |
+| ------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| GET    | `/checkout/shipping-options?addressId=` | `[{ id, label, description, price, estimatedDays, total }]` — `total` lo calcula el backend por opción |
+| POST   | `/orders`                               | `{ addressId, shippingOptionId, paymentMethod, notes }` → `{ order, payment: { redirectUrl? } }`       |
+| GET    | `/orders`                               | paginado de `OrderSummary`                                                                             |
+| GET    | `/orders/:id`                           | `Order`                                                                                                |
+| POST   | `/orders/:id/cancel`                    | `{ reason }` → `Order`                                                                                 |
+| POST   | `/orders/:id/reorder`                   | → `Cart` (+ `warnings` si algo no hay stock)                                                           |
 
 ```json
 // Order
@@ -541,12 +541,25 @@ El backend manda **números**, no frases. El texto ("Agrega 1 unidad más y obt�
   ],
   "summary": { "subtotal": 210000, "discountTotal": 24000, "shipping": 0, "total": 186000 },
   "address": {/* Address */},
+  "shipping": {
+    "id": "standard",
+    "label": "Envío estándar",
+    "estimatedDays": "3 a 5 días hábiles"
+  },
+  "payment": { "method": "PSE", "label": "PSE" },
+  "notes": null,
   "canCancel": true,
   "canReorder": true
 }
 ```
 
 `status`: `PENDING_PAYMENT | PAID | PROCESSING | SHIPPED | DELIVERED | CANCELLED`. `canCancel` / `canReorder` los decide el backend.
+
+Checkout (fase 7):
+
+- `paymentMethod`: `CARD | PSE | CASH_ON_DELIVERY`. **Mientras no haya pasarela, el pago es simulado**: el frontend nunca pide ni envía datos de tarjeta o bancarios. Con pasarela real, `payment.redirectUrl` llevará al pago y la confirmación llegará por webhook al backend.
+- El total con envío se muestra desde `shipping-options[].total`; el frontend no suma el envío.
+- Al crear el pedido el backend vacía el carrito; el frontend invalida la caché del carrito.
 
 ### Favoritos y listas
 

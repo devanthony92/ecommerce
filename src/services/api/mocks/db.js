@@ -3,7 +3,7 @@
 import { storage } from '@/services/storage/storage'
 
 const DB_KEY = 'mock-db'
-const DB_VERSION = 2
+const DB_VERSION = 3
 
 // Usuarios semilla para probar cada perfil (solo existen en el mock).
 const seed = () => ({
@@ -30,6 +30,25 @@ const seed = () => ({
   ],
   // Carritos de usuarios autenticados: { [userId]: [{ id, variantId, quantity }] }
   carts: {},
+  // Direcciones por usuario. El mayorista ya tiene una; el comprador empieza sin ninguna.
+  addresses: {
+    'u-wholesale': [
+      {
+        id: 'a-seed-1',
+        label: 'Tienda',
+        recipient: 'Carlos Pérez',
+        phone: '3004445566',
+        department: 'Antioquia',
+        city: 'Medellín',
+        line1: 'Carrera 52 # 45-20, local 3',
+        line2: null,
+        notes: 'Horario de recibo: 8 a.m. a 5 p.m.',
+        isDefault: true,
+      },
+    ],
+  },
+  orders: [],
+  orderSequence: 120,
 })
 
 let db = load()
