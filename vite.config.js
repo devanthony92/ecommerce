@@ -27,7 +27,6 @@ export default defineConfig({
     env: {
       VITE_USE_MOCKS: 'true',
       VITE_API_URL: '/api/v1',
-      VITE_PEXELS_API_KEY: 'test-pexels-key',
     },
   },
 })

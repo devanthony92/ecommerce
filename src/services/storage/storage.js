@@ -33,5 +33,4 @@ export const storage = {
 export const STORAGE_KEYS = {
   token: 'token',
   guestCart: 'guest-cart',
-  inspiration: 'inspiration',
 }
