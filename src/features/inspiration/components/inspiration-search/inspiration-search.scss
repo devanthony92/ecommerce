@@ -1,0 +1,54 @@
+@use '@/styles/abstracts' as *;
+
+.inspiration-search {
+  display: grid;
+  gap: var(--space-3);
+
+  &__form {
+    display: grid;
+    gap: var(--space-3);
+
+    @include mq(md) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+    }
+  }
+
+  // Alinea el botón con el campo (no con su etiqueta).
+  &__submit {
+    @include mq(md) {
+      margin-block-start: 1.75rem;
+    }
+  }
+
+  &__suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__suggestion {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font: inherit;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    cursor: pointer;
+    transition:
+      border-color var(--duration-fast),
+      background-color var(--duration-fast);
+
+    &:hover {
+      border-color: var(--color-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  }
+}

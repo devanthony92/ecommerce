@@ -81,6 +81,11 @@ export function MobileMenu() {
               Ofertas
             </NavLink>
           </li>
+          <li>
+            <NavLink className={linkClass} to={paths.inspiration}>
+              Inspiración
+            </NavLink>
+          </li>
         </MenuSection>
 
         {isAuthenticated && (
