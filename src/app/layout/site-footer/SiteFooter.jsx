@@ -13,6 +13,7 @@ const COLUMNS = [
     links: [
       { to: paths.catalog, label: 'Catálogo' },
       { to: paths.promotions, label: 'Ofertas' },
+      { to: paths.inspiration, label: 'Inspiración' },
       { to: paths.wholesaleLanding, label: 'Compra por mayor' },
     ],
   },

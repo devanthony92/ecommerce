@@ -41,6 +41,11 @@ export function CategoryNav({ className }) {
             Ofertas
           </NavLink>
         </li>
+        <li>
+          <NavLink className={linkClass} to={paths.inspiration}>
+            Inspiración
+          </NavLink>
+        </li>
         <li className="category-nav__highlight">
           <NavLink
             className={({ isActive }) =>
