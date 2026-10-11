@@ -78,6 +78,19 @@
     }
   }
 
+  // En móvil cerrar sesión está en el menú lateral.
+  &__logout {
+    display: none;
+
+    @include mq(md) {
+      display: inline-flex;
+    }
+  }
+
+  &__login {
+    margin-inline-end: var(--space-1);
+  }
+
   &__favorites {
     display: none;
 

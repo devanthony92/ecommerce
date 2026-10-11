@@ -5,7 +5,7 @@ import { ROLES } from '@/constants/statuses'
 // Llamado a la acción del programa mayorista según quién mira.
 // kind: register | panel | status | apply
 export function useWholesaleCta() {
-  const { user, isAuthenticated } = useAuth()
+  const { currentUser: user, isAuthenticated } = useAuth()
 
   if (!isAuthenticated) {
     return {

@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router'
 import clsx from 'clsx'
 import { Skeleton } from '@/components/feedback'
+import { useAuth } from '@/features/auth'
 import { useCategories } from '@/features/catalog'
 import { paths } from '@/constants/paths'
 import './category-nav.scss'
@@ -11,6 +12,7 @@ const linkClass = ({ isActive }) =>
 // Navegación de categorías en desktop. Si falla la carga, quedan los enlaces fijos.
 export function CategoryNav({ className }) {
   const { data: categories, isPending } = useCategories()
+  const { isAuthenticated } = useAuth()
 
   return (
     <nav className={clsx('category-nav', className)} aria-label="Categorías">
@@ -42,10 +44,18 @@ export function CategoryNav({ className }) {
           </NavLink>
         </li>
         <li>
-          <NavLink className={linkClass} to={paths.inspiration}>
+          <NavLink className={linkClass} to={paths.inspiration} end>
             Inspiración
           </NavLink>
         </li>
+        {/* Solo con sesión: las inspiraciones guardadas son por usuario. */}
+        {isAuthenticated && (
+          <li>
+            <NavLink className={linkClass} to={paths.savedInspirations}>
+              Guardadas
+            </NavLink>
+          </li>
+        )}
         <li className="category-nav__highlight">
           <NavLink
             className={({ isActive }) =>

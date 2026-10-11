@@ -5,6 +5,8 @@ import { useState } from 'react'
  * - validate(values) → { campo: mensaje }: validación de UX antes de enviar.
  * - onSubmit(values) puede lanzar un ApiError; sus `details` se muestran por campo.
  * - Si hay errores, el foco va al primer campo inválido.
+ * - validateOnChange: valida en cada tecla y muestra el error de cada campo en
+ *   cuanto el usuario lo modifica. `isValid` permite desactivar el envío.
  */
 // namedItem devuelve una lista si varios campos comparten nombre (grupo de checkboxes).
 function focusField(form, name) {
@@ -13,28 +15,39 @@ function focusField(form, name) {
   field?.focus()
 }
 
-export function useForm({ initialValues, validate, onSubmit }) {
+export function useForm({ initialValues, validate, onSubmit, validateOnChange = false }) {
   const [values, setValues] = useState(initialValues)
+  // Errores del último envío (validación o backend).
   const [errors, setErrors] = useState({})
+  // Campos que el usuario ya modificó (validación en vivo).
+  const [touched, setTouched] = useState({})
   const [formError, setFormError] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const liveErrors = validate?.(values) ?? {}
+  const isValid = Object.keys(liveErrors).length === 0
+
   function setValue(name, value) {
     setValues((current) => ({ ...current, [name]: value }))
+    if (validateOnChange)
+      setTouched((current) => (current[name] ? current : { ...current, [name]: true }))
     if (errors[name]) setErrors(({ [name]: _removed, ...rest }) => rest)
   }
+
+  const errorFor = (name) =>
+    errors[name] ?? (validateOnChange && touched[name] ? liveErrors[name] : undefined)
 
   const field = (name) => ({
     name,
     value: values[name],
-    error: errors[name],
+    error: errorFor(name),
     onChange: (event) => setValue(name, event.target.value),
   })
 
   const checkbox = (name) => ({
     name,
     checked: values[name],
-    error: errors[name],
+    error: errorFor(name),
     onChange: (event) => setValue(name, event.target.checked),
   })
 
@@ -71,6 +84,7 @@ export function useForm({ initialValues, validate, onSubmit }) {
   return {
     values,
     errors,
+    isValid,
     formError,
     isSubmitting,
     field,

@@ -2,10 +2,16 @@ import clsx from 'clsx'
 import { ResponsiveImage } from '@/components/ui'
 import './photo-card.scss'
 
-// Foto de Pexels con el crédito del autor (lo exigen sus términos de uso).
-export function PhotoCard({ photo, linkRef, className }) {
+/**
+ * Foto de Pexels con el crédito del autor (lo exigen sus términos de uso).
+ * `badge` va arriba a la izquierda (p. ej. la palabra clave) y `action` arriba
+ * a la derecha (guardar o borrar).
+ */
+export function PhotoCard({ photo, linkRef, badge, action, className }) {
   return (
     <figure className={clsx('photo-card', className)} style={{ '--photo-color': photo.color }}>
+      {badge && <span className="photo-card__badge">{badge}</span>}
+      {action && <span className="photo-card__action">{action}</span>}
       <a
         ref={linkRef}
         className="photo-card__link"

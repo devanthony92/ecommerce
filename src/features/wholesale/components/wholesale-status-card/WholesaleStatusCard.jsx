@@ -14,7 +14,7 @@ const MESSAGES = {
 
 // Estado del programa mayorista en la cuenta del comprador (lo define el backend).
 export function WholesaleStatusCard() {
-  const { user } = useAuth()
+  const { currentUser: user } = useAuth()
   const status = user.wholesale?.requestStatus
   if (status === 'APPROVED') return null
 

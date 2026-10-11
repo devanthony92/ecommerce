@@ -2,12 +2,18 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/feedback'
-import { AuthContext, authApi, authKeys } from '@/features/auth'
 import { setUnauthorizedHandler } from '@/services/api/interceptors'
 import { storage, STORAGE_KEYS } from '@/services/storage/storage'
 import { SESSION_STATUS } from '@/constants/statuses'
+import { getCurrentUser, signin, signup } from '@/utils/MainApi'
+import { authApi } from '../api/authApi'
+import { authKeys } from '../api/authKeys'
 
-export function AuthProvider({ children }) {
+/**
+ * Estado de la sesión. El token vive en localStorage; `currentUser` sale de
+ * GET /users/me. App lo comparte con CurrentUserContext.Provider.
+ */
+export function useSession() {
   const queryClient = useQueryClient()
   const toast = useToast()
   const [token, setToken] = useState(() => storage.get(STORAGE_KEYS.token))
@@ -22,7 +28,7 @@ export function AuthProvider({ children }) {
 
   const meQuery = useQuery({
     queryKey: authKeys.me(),
-    queryFn: authApi.getMe,
+    queryFn: getCurrentUser,
     enabled: Boolean(token),
     staleTime: 5 * 60 * 1000,
     retry: false,
@@ -60,15 +66,23 @@ export function AuthProvider({ children }) {
     await queryClient.invalidateQueries({ queryKey: authKeys.me() })
   }, [queryClient, dropUserScopedQueries])
 
+  // /signin devuelve solo el token; con él se pide el usuario a /users/me.
   const login = useCallback(
-    async (credentials) => startSession(await authApi.login(credentials)),
+    async (credentials) => {
+      const { token: newToken } = await signin(credentials)
+      storage.set(STORAGE_KEYS.token, newToken)
+      try {
+        return startSession({ token: newToken, user: await getCurrentUser() })
+      } catch (error) {
+        storage.remove(STORAGE_KEYS.token)
+        throw error
+      }
+    },
     [startSession],
   )
 
-  const register = useCallback(
-    async (data) => startSession(await authApi.register(data)),
-    [startSession],
-  )
+  // El registro no inicia sesión: después se ofrece ingresar.
+  const register = useCallback((data) => signup(data), [])
 
   const logout = useCallback(async () => {
     try {
@@ -94,15 +108,15 @@ export function AuthProvider({ children }) {
     return () => setUnauthorizedHandler(null)
   }, [clearSession, toast])
 
-  const user = token ? (meQuery.data ?? null) : null
+  const currentUser = token ? (meQuery.data ?? null) : null
 
   let status = SESSION_STATUS.ANONYMOUS
-  if (user) status = SESSION_STATUS.AUTHENTICATED
+  if (currentUser) status = SESSION_STATUS.AUTHENTICATED
   else if (token && meQuery.isPending) status = SESSION_STATUS.UNKNOWN
 
-  const value = useMemo(
+  return useMemo(
     () => ({
-      user,
+      currentUser,
       status,
       isAuthenticated: status === SESSION_STATUS.AUTHENTICATED,
       signedOutFrom,
@@ -111,8 +125,6 @@ export function AuthProvider({ children }) {
       logout,
       refreshSession,
     }),
-    [user, status, signedOutFrom, login, register, logout, refreshSession],
+    [currentUser, status, signedOutFrom, login, register, logout, refreshSession],
   )
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

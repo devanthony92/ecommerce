@@ -1,20 +1,17 @@
-import { useCallback, useContext } from 'react'
-import { LoginPromptContext } from '../LoginPromptContext'
+import { useCallback } from 'react'
 import { useAuth } from './useAuth'
+import { useAuthModal } from './useAuthModal'
 
 /**
- * Ejecuta una acción que requiere cuenta. Sin sesión abre el modal de login
- * y, al ingresar, ejecuta la acción pendiente (p. ej. agregar a favoritos).
+ * Ejecuta una acción que requiere cuenta. Sin sesión abre el modal de inicio
+ * de sesión y, al ingresar, ejecuta la acción pendiente (p. ej. agregar a favoritos).
  */
 export function useRequireAuth() {
   const { isAuthenticated } = useAuth()
-  const requestLogin = useContext(LoginPromptContext)
-  if (!requestLogin) {
-    throw new Error('useRequireAuth debe usarse dentro de <LoginPromptProvider>.')
-  }
+  const { openLogin } = useAuthModal()
 
   return useCallback(
-    (action) => (isAuthenticated ? action?.() : requestLogin(action)),
-    [isAuthenticated, requestLogin],
+    (action) => (isAuthenticated ? action?.() : openLogin({ action })),
+    [isAuthenticated, openLogin],
   )
 }

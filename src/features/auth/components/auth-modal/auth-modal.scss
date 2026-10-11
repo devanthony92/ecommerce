@@ -1,0 +1,59 @@
+.auth-modal {
+  display: grid;
+  gap: var(--space-4);
+
+  &__intro,
+  &__switch {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__switch {
+    text-align: center;
+  }
+
+  &__notice {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    background-color: var(--color-info-soft);
+  }
+
+  &__link {
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-primary-hover);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  }
+
+  &__success {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+    text-align: center;
+  }
+
+  &__success-icon {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    color: var(--color-success);
+    background-color: var(--color-success-soft);
+  }
+}

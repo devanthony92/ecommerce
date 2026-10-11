@@ -4,7 +4,7 @@ import { storage } from '@/services/storage/storage'
 import { seedOrders } from './fixtures/orders'
 
 const DB_KEY = 'mock-db'
-const DB_VERSION = 8
+const DB_VERSION = 9
 
 // Compra acumulada del mayorista semilla en 2026: pedidos de ejemplo + compras previas.
 const SEED_ACCUMULATED = 3450000
@@ -80,6 +80,8 @@ const seed = () => {
         },
       ],
     },
+    // Inspiraciones guardadas (fotos de Pexels): { [userId]: Inspiration[] }
+    inspirations: {},
     // Solicitudes mayoristas: { [userId]: WholesaleRequest }
     wholesaleRequests: {
       'u-wholesale': {
