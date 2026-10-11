@@ -40,10 +40,10 @@ La contraseña de ambos está en `src/services/api/mocks/db.js`. Para reiniciar 
 
 ## Variables de entorno
 
-| Variable              | Descripción                                                                                                                   |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `VITE_API_URL`        | URL base del backend (`/api/v1`)                                                                                              |
-| `VITE_USE_MOCKS`      | `true` usa el backend simulado de `src/services/api/mocks`. Debe ser `false` en producción.                                   |
+| Variable                   | Descripción                                                                                                                              |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_API_URL`             | URL base del backend (`/api/v1`)                                                                                                         |
+| `VITE_USE_MOCKS`           | `true` usa el backend simulado de `src/services/api/mocks`. Debe ser `false` en producción.                                              |
 | `VITE_UNSPLASH_ACCESS_KEY` | Access Key de [Unsplash](https://unsplash.com/developers) para la página Inspiración. Sin ella, la búsqueda muestra el mensaje de error. |
 
 ## Backend simulado

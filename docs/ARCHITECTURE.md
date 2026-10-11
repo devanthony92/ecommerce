@@ -147,7 +147,7 @@ Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Pat
 | `/catalogo/:categorySlug` | CatalogPage                                           |
 | `/producto/:slug`         | ProductPage                                           |
 | `/ofertas`                | PromotionsPage                                        |
-| `/inspiracion`            | InspirationPage (fotos de Unsplash, API de terceros)    |
+| `/inspiracion`            | InspirationPage (fotos de Unsplash, API de terceros)  |
 | `/buscar?q=`              | SearchPage                                            |
 | `/carrito`                | CartPage                                              |
 | `/mayoristas`             | WholesaleLandingPage (CTA "Convertirme en mayorista") |
