@@ -1,10 +1,10 @@
 import { getDb, save } from '../db'
 import { fail, ok, requireUser } from '../router'
 
-// Fotos de Pexels guardadas (mismo contrato que el backend real).
+// Fotos de Unsplash guardadas (mismo contrato que el backend real).
 const inspirationsOf = (user) => (getDb().inspirations[user.id] ??= [])
 
-const REQUIRED = ['keyword', 'pexelsId', 'photographer', 'photographerUrl', 'link', 'image']
+const REQUIRED = ['keyword', 'photoId', 'photographer', 'photographerUrl', 'link', 'image']
 
 export const inspirationHandlers = {
   'GET /inspirations': ({ user }) => requireUser(user) ?? ok(inspirationsOf(user)),
@@ -22,7 +22,7 @@ export const inspirationHandlers = {
       )
     }
     const inspirations = inspirationsOf(user)
-    if (inspirations.some((item) => item.pexelsId === body.pexelsId)) {
+    if (inspirations.some((item) => item.photoId === body.photoId)) {
       return fail(409, 'ALREADY_SAVED', 'Ya guardaste esta foto.')
     }
     const db = getDb()
@@ -30,7 +30,7 @@ export const inspirationHandlers = {
     const inspiration = {
       id: db.inspirationSequence,
       keyword: body.keyword,
-      pexelsId: body.pexelsId,
+      photoId: body.photoId,
       alt: body.alt ?? '',
       photographer: body.photographer,
       photographerUrl: body.photographerUrl,

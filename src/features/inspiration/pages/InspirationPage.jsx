@@ -52,9 +52,9 @@ export default function InspirationPage() {
   const { query, status, photos, hasMore, search, showMore } = useInspirationSearch()
   const { isAuthenticated } = useAuth()
   const { data: saved } = useSavedInspirations()
-  // Foto de Pexels → inspiración guardada (para pintar el icono de guardado).
+  // Foto de Unsplash → inspiración guardada (para pintar el icono de guardado).
   const savedByPhoto = useMemo(
-    () => new Map((saved ?? []).map((item) => [item.pexelsId, item])),
+    () => new Map((saved ?? []).map((item) => [item.photoId, item])),
     [saved],
   )
 

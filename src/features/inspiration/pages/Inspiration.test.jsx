@@ -135,9 +135,9 @@ describe('Inspiraciones guardadas (back-end propio)', () => {
       id: index + 1,
       alt: `Foto ${index + 1}`,
       photographer: 'Ana',
-      photographerUrl: 'https://www.pexels.com/@ana',
-      link: `https://www.pexels.com/photo/${index + 1}/`,
-      image: `https://images.pexels.com/photos/${index + 1}/a.jpeg`,
+      photographerUrl: 'https://unsplash.com/@ana',
+      link: `https://unsplash.com/photos/f${index + 1}`,
+      image: `https://images.unsplash.com/photo-${index + 1}`,
       createdAt: '2026-10-01T00:00:00Z',
       ...item,
     }))
@@ -162,7 +162,10 @@ describe('Inspiraciones guardadas (back-end propio)', () => {
     await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
 
     await waitFor(() => expect(getDb().inspirations['u-buyer']).toHaveLength(1))
-    expect(getDb().inspirations['u-buyer'][0]).toMatchObject({ keyword: 'denim', pexelsId: 1 })
+    expect(getDb().inspirations['u-buyer'][0]).toMatchObject({
+      keyword: 'denim',
+      photoId: 'foto-1',
+    })
     expect(
       await within(results()).findByRole('button', { name: 'Quitar de mis inspiraciones' }),
     ).toHaveAttribute('aria-pressed', 'true')
@@ -196,11 +199,11 @@ describe('Inspiraciones guardadas (back-end propio)', () => {
   it('lista las guardadas con su palabra clave, resume las palabras y permite borrar', async () => {
     const user = userEvent.setup()
     seedSaved('u-buyer', [
-      { keyword: 'Denim', pexelsId: 11 },
-      { keyword: 'Oficina', pexelsId: 12 },
-      { keyword: 'Denim', pexelsId: 13 },
-      { keyword: 'Verano', pexelsId: 14 },
-      { keyword: 'Noche', pexelsId: 15 },
+      { keyword: 'Denim', photoId: 'f11' },
+      { keyword: 'Oficina', photoId: 'f12' },
+      { keyword: 'Denim', photoId: 'f13' },
+      { keyword: 'Verano', photoId: 'f14' },
+      { keyword: 'Noche', photoId: 'f15' },
     ])
     renderApp('/inspiracion/guardadas', { as: 'buyer' })
 

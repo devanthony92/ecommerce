@@ -12,13 +12,13 @@ export const signin = ({ email, password }) => http.post('/signin', { email, pas
 // Usuario del token actual (correo, nombre, rol y permisos).
 export const getCurrentUser = () => http.get('/users/me')
 
-// Fotos de Pexels guardadas por el usuario, de la más reciente a la más antigua.
+// Fotos de Unsplash guardadas por el usuario, de la más reciente a la más antigua.
 export const getInspirations = () => http.get('/inspirations')
 
 export const saveInspiration = (photo) =>
   http.post('/inspirations', {
     keyword: photo.keyword,
-    pexelsId: photo.id,
+    photoId: photo.id,
     alt: photo.alt,
     photographer: photo.photographer,
     photographerUrl: photo.photographerUrl,

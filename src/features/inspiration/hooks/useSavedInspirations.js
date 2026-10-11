@@ -17,7 +17,7 @@ export function useSavedInspirations() {
 }
 
 /**
- * Guarda una foto de Pexels o, si ya estaba guardada, la quita.
+ * Guarda una foto de Unsplash o, si ya estaba guardada, la quita.
  * `saved`: la inspiración guardada correspondiente (o null).
  */
 export function useToggleInspiration() {
