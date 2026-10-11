@@ -147,7 +147,7 @@ Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Pat
 | `/catalogo/:categorySlug` | CatalogPage                                           |
 | `/producto/:slug`         | ProductPage                                           |
 | `/ofertas`                | PromotionsPage                                        |
-| `/inspiracion`            | InspirationPage (fotos de Pexels, API de terceros)    |
+| `/inspiracion`            | InspirationPage (fotos de Unsplash, API de terceros)    |
 | `/buscar?q=`              | SearchPage                                            |
 | `/carrito`                | CartPage                                              |
 | `/mayoristas`             | WholesaleLandingPage (CTA "Convertirme en mayorista") |
@@ -685,16 +685,16 @@ Solicitud mayorista (fase 10):
 | ------ | ------------------------------------------------------------------------------------------ |
 | GET    | `/promotions/active` → `[{ id, title, description, image, type, startsAt, endsAt, link }]` |
 
-### API de terceros: Pexels (página Inspiración)
+### API de terceros: Unsplash (página Inspiración)
 
-- Cliente en `src/utils/PexelsApi.js` con `fetch()` nativo: no pasa por `apiClient` (ese cliente es solo para el backend propio y sus mocks).
-- `GET https://api.pexels.com/v1/search?query=&per_page=30&orientation=portrait&locale=es-ES`, con la clave en el encabezado `Authorization` (`VITE_PEXELS_API_KEY`).
+- Cliente en `src/utils/UnsplashApi.js` con `fetch()` nativo: no pasa por `apiClient` (ese cliente es solo para el backend propio y sus mocks).
+- `GET https://api.unsplash.com/search/photos?query=&per_page=30&orientation=portrait&lang=es`, con la clave en el encabezado `Authorization: Client-ID …` (`VITE_UNSPLASH_ACCESS_KEY`). Se pasó de Pexels a Unsplash porque Pexels pausó la entrega de claves nuevas.
 - Se piden 30 fotos de una vez; la página muestra 3 y "Mostrar más" agrega 3 por clic hasta mostrarlas todas.
 - Estados del bloque de resultados (solo existe después de buscar): preloader, "No se ha encontrado nada", y el error "Lo sentimos, algo ha salido mal durante la solicitud…".
 - La palabra clave vacía no llama a la API: "Por favor, introduzca una palabra clave".
 - La última búsqueda (`{ query, photos }`) se guarda en `localStorage` (`trama.inspiration`) y se restaura al volver a la página.
-- Términos de Pexels: cada foto muestra su autor y la página enlaza a Pexels.
-- La clave queda en el bundle del frontend (es una variable `VITE_`). Pexels lo permite para apps cliente, pero cualquiera puede leerla: cuando exista el backend propio conviene pasar la llamada por él.
+- Directrices de Unsplash: las imágenes se muestran desde sus URLs (hotlinking, con tamaño recortado vía parámetros de imgix), cada foto dice "Foto de X en Unsplash" y los enlaces llevan `utm_source=trama&utm_medium=referral`.
+- La clave queda en el bundle del frontend (es una variable `VITE_`). Unsplash lo permite para apps cliente, pero cualquiera puede leerla: cuando exista el backend propio conviene pasar la llamada por él.
 
 ---
 

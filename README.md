@@ -14,7 +14,7 @@ La arquitectura, rutas, contrato de API, reglas comerciales y design system est�
 - **Checkout**: dirección, envío con total calculado por el backend, pago con Mercado Pago (Checkout Pro) o contra entrega, y confirmación.
 - **Cuenta**: dashboard, perfil, contraseña, direcciones, pedidos (filtros, detalle, cancelar, repetir), favoritos y listas de compra.
 - **Mayoristas**: solicitud con estados, pedido mínimo, panel con compra acumulada y beneficios, catálogo con todas las escalas, pedido rápido por referencia, productos habituales.
-- **Inspiración**: búsqueda de fotos de estilo en Pexels (API de terceros), de 3 en 3 con "Mostrar más"; la última búsqueda se guarda en el navegador.
+- **Inspiración**: búsqueda de fotos de estilo en Unsplash (API de terceros), de 3 en 3 con "Mostrar más"; la última búsqueda se guarda en el navegador.
 - **Accesibilidad**: navegación por teclado, foco gestionado en modales, drawers y pasos, contraste WCAG AA, auditoría axe en 20 páginas.
 
 ## Requisitos
@@ -44,7 +44,7 @@ La contraseña de ambos está en `src/services/api/mocks/db.js`. Para reiniciar 
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `VITE_API_URL`        | URL base del backend (`/api/v1`)                                                                                              |
 | `VITE_USE_MOCKS`      | `true` usa el backend simulado de `src/services/api/mocks`. Debe ser `false` en producción.                                   |
-| `VITE_PEXELS_API_KEY` | Clave de [Pexels](https://www.pexels.com/api/) para la página Inspiración. Sin ella, la búsqueda muestra el mensaje de error. |
+| `VITE_UNSPLASH_ACCESS_KEY` | Access Key de [Unsplash](https://unsplash.com/developers) para la página Inspiración. Sin ella, la búsqueda muestra el mensaje de error. |
 
 ## Backend simulado
 

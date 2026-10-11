@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { storage, STORAGE_KEYS } from '@/services/storage/storage'
-import { searchPhotos } from '@/utils/PexelsApi'
+import { searchPhotos } from '@/utils/UnsplashApi'
 
 export const PAGE_SIZE = 3
 
