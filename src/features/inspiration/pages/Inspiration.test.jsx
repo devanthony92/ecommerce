@@ -4,16 +4,18 @@ import { getDb, resetDb, save } from '@/services/api/mocks/db'
 import { storage, STORAGE_KEYS } from '@/services/storage/storage'
 import { renderApp } from '@/test/renderApp'
 
-// Respuesta de Pexels con `count` fotos.
-function pexelsPhotos(count) {
+// Respuesta de Unsplash con `count` fotos.
+function unsplashPhotos(count) {
   return Array.from({ length: count }, (_, index) => ({
-    id: index + 1,
-    url: `https://www.pexels.com/photo/${index + 1}/`,
-    alt: `Look ${index + 1}`,
-    photographer: `Autor ${index + 1}`,
-    photographer_url: `https://www.pexels.com/@autor${index + 1}`,
-    avg_color: '#8A7F72',
-    src: { portrait: `https://images.pexels.com/photos/${index + 1}/portrait.jpeg` },
+    id: `foto-${index + 1}`,
+    alt_description: `Look ${index + 1}`,
+    color: '#8A7F72',
+    links: { html: `https://unsplash.com/photos/foto-${index + 1}` },
+    urls: { raw: `https://images.unsplash.com/photo-${index + 1}?ixid=abc` },
+    user: {
+      name: `Autor ${index + 1}`,
+      links: { html: `https://unsplash.com/@autor${index + 1}` },
+    },
   }))
 }
 
@@ -26,7 +28,7 @@ function mockFetch(response) {
 const okResponse = (count) => ({
   ok: true,
   status: 200,
-  json: async () => ({ photos: pexelsPhotos(count) }),
+  json: async () => ({ total: count, results: unsplashPhotos(count) }),
 })
 
 const results = () => screen.getByRole('region', { name: /^Resultados/ })
@@ -39,7 +41,7 @@ async function searchFor(user, keyword) {
 beforeEach(() => resetDb())
 afterEach(() => vi.unstubAllGlobals())
 
-describe('Inspiración (Pexels)', () => {
+describe('Inspiración (Unsplash)', () => {
   it('sin palabra clave no busca y muestra el error', async () => {
     const user = userEvent.setup()
     const fetchMock = mockFetch(okResponse(3))
@@ -60,12 +62,20 @@ describe('Inspiración (Pexels)', () => {
     await searchFor(user, 'denim')
 
     const [url, options] = fetchMock.mock.calls[0]
-    expect(url).toContain('https://api.pexels.com/v1/search?')
+    expect(url).toContain('https://api.unsplash.com/search/photos?')
     expect(url).toContain('query=denim')
-    expect(options.headers.Authorization).toBe('test-pexels-key')
+    expect(options.headers.Authorization).toBe('Client-ID test-unsplash-key')
 
     expect(await within(results()).findAllByRole('figure')).toHaveLength(3)
-    expect(within(results()).getByText('Autor 1')).toBeInTheDocument()
+    // Crédito que exige Unsplash, con los parámetros de referencia.
+    expect(within(results()).getByRole('link', { name: 'Autor 1' })).toHaveAttribute(
+      'href',
+      'https://unsplash.com/@autor1?utm_source=trama&utm_medium=referral',
+    )
+    expect(within(results()).getAllByRole('img')[0]).toHaveAttribute(
+      'src',
+      'https://images.unsplash.com/photo-1?ixid=abc&w=600&h=900&fit=crop&auto=format&q=75',
+    )
 
     await user.click(screen.getByRole('button', { name: 'Mostrar más' }))
     expect(within(results()).getAllByRole('figure')).toHaveLength(6)

@@ -1,9 +1,10 @@
 import clsx from 'clsx'
 import { ResponsiveImage } from '@/components/ui'
+import { UNSPLASH_URL } from '@/utils/UnsplashApi'
 import './photo-card.scss'
 
 /**
- * Foto de Pexels con el crédito del autor (lo exigen sus términos de uso).
+ * Foto de Unsplash con el crédito "Foto de X en Unsplash" (lo exigen sus directrices).
  * `badge` va arriba a la izquierda (p. ej. la palabra clave) y `action` arriba
  * a la derecha (guardar o borrar).
  */
@@ -25,7 +26,7 @@ export function PhotoCard({ photo, linkRef, badge, action, className }) {
           ratio="2 / 3"
           className="photo-card__image"
         />
-        <span className="photo-card__hint"> (abre Pexels en otra pestaña)</span>
+        <span className="photo-card__hint"> (abre Unsplash en otra pestaña)</span>
       </a>
       <figcaption className="photo-card__caption">
         Foto de{' '}
@@ -36,6 +37,15 @@ export function PhotoCard({ photo, linkRef, badge, action, className }) {
           rel="noopener noreferrer"
         >
           {photo.photographer}
+        </a>{' '}
+        en{' '}
+        <a
+          className="photo-card__author"
+          href={UNSPLASH_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Unsplash
         </a>
       </figcaption>
     </figure>

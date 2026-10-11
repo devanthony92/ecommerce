@@ -7,6 +7,7 @@ import { paths } from '@/constants/paths'
 import { InspirationSearch } from '../components/inspiration-search/InspirationSearch'
 import { PhotoList } from '../components/photo-list/PhotoList'
 import { SavePhotoButton } from '../components/save-photo-button/SavePhotoButton'
+import { UNSPLASH_URL } from '@/utils/UnsplashApi'
 import { useInspirationSearch } from '../hooks/useInspirationSearch'
 import { useSavedInspirations } from '../hooks/useSavedInspirations'
 import './inspiration-page.scss'
@@ -44,7 +45,7 @@ function Results({ status, photos, query, hasMore, onShowMore, renderAction }) {
 }
 
 /**
- * Ideas de estilo con fotos de Pexels (API de terceros). La última búsqueda
+ * Ideas de estilo con fotos de Unsplash (API de terceros). La última búsqueda
  * se guarda en localStorage y se restaura al volver.
  */
 export default function InspirationPage() {
@@ -99,8 +100,8 @@ export default function InspirationPage() {
 
       <p className="inspiration-page__credit">
         Fotos de{' '}
-        <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer">
-          Pexels
+        <a href={UNSPLASH_URL} target="_blank" rel="noopener noreferrer">
+          Unsplash
         </a>
       </p>
     </div>
