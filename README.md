@@ -4,6 +4,8 @@ Frontend de una tienda de ropa con dos propuestas: **compra individual** y **com
 
 React 19 · Vite 8 · React Router 8 · TanStack Query · SCSS con BEM estricto · Vitest + Testing Library + axe-core.
 
+Tienda desplegada: https://devama.duckdns.org · API: https://api-devama.duckdns.org
+
 Backend: [ecommerce-backend](https://github.com/devanthony92/ecommerce-backend) (FastAPI + PostgreSQL).
 
 La arquitectura, rutas, contrato de API, reglas comerciales y design system están en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
