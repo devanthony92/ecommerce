@@ -16,6 +16,10 @@ export function PhotoCard({ photo, linkRef, className }) {
       >
         <ResponsiveImage
           src={photo.src}
+          srcSet={photo.srcSet}
+          sizes={
+            photo.srcSet ? '(min-width: 1024px) 33vw, (min-width: 480px) 50vw, 100vw' : undefined
+          }
           alt={photo.alt}
           ratio="2 / 3"
           className="photo-card__image"
