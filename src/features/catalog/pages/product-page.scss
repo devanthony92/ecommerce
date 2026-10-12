@@ -30,6 +30,10 @@
 
   &__info {
     display: grid;
+
+    // minmax(0, …): sin esto la columna toma el ancho de su contenido más ancho
+    // y la página se desborda en pantallas angostas.
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
   }
 
@@ -58,10 +62,15 @@
     }
   }
 
+  // Cantidad y botón apilados bajo sm; en una fila desde 480 px.
   &__purchase {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
+
+    @include mq(sm) {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
   }
 
   &__save {
