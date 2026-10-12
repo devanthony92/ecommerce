@@ -91,6 +91,21 @@
     margin-inline-end: var(--space-1);
   }
 
+  // Bajo md solo se ve el icono: con el texto, la primera fila del header no cabe en 320 px.
+  &__login-label {
+    @include visually-hidden;
+
+    @include mq(md) {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
+    }
+  }
+
   &__favorites {
     display: none;
 

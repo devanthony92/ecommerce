@@ -73,7 +73,8 @@ export function SiteHeader() {
               className="site-header__login"
               onClick={() => openLogin()}
             >
-              Iniciar sesión
+              {/* En pantallas angostas solo el icono; el texto sigue siendo el nombre accesible. */}
+              <span className="site-header__login-label">Iniciar sesión</span>
             </Button>
           )}
           <IconButton
