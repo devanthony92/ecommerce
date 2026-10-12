@@ -73,6 +73,26 @@ La contraseña es `Trama1234` (cuentas de prueba, sin datos reales). Con el back
 | `npm run test:coverage` | Cobertura (reporte HTML en `coverage/`)      |
 | `npm run format`        | Prettier                                     |
 
+## Verificación y entrega
+
+| Requisito                 | Evidencia                                                                                                                                                                        |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pull request              | [devanthony92/ecommerce#3](https://github.com/devanthony92/ecommerce/pull/3) (`stage-react-api` → `main`)                                                                        |
+| Front-End desplegado      | https://devama.duckdns.org (Inspiración: `/inspiracion`)                                                                                                                         |
+| Búsqueda real en Unsplash | Verificada en el sitio desplegado con la clave real: la búsqueda "denim" devuelve fotos, muestra 3 y "Mostrar más" agrega 3 por clic                                             |
+| Build, pruebas y linters  | `npm run lint` sin avisos · `npm test`: 122 pruebas pasan · `npm run build`: sin errores (JS inicial 248 kB, 77 kB gzip; cada página es un chunk aparte)                         |
+| Responsive desde 320 px   | Medido en el navegador a 320 px: sin desplazamiento horizontal (`scrollWidth` = 320) en inicio, catálogo, inspiración y las demás rutas públicas                                 |
+| Imágenes optimizadas      | `favicon.svg`: 167 B. Fotos de Unsplash recortadas 2:3 y recomprimidas en su CDN (AVIF/WebP): ~175 kB a 480 px frente a 2,3 MB la original; `srcSet` 480/800 px y carga diferida |
+
+La clave de Unsplash es la variable `VITE_UNSPLASH_ACCESS_KEY`: va en `.env.local` (fuera del repositorio) y en el build de despliegue. Como toda variable `VITE_`, queda en el JavaScript del navegador; Unsplash lo permite en apps web y limita el uso por clave.
+
+### Decisiones frente a la rúbrica
+
+- **Vite en lugar de Create React App.** CRA está descontinuado; Vite entrega la misma estructura (`src/`, JSX, rutas) con un build más rápido.
+- **Fuente Inter con `@fontsource-variable/inter`.** El paquete trae su `@font-face` y los archivos `woff2`, que Vite empaqueta con la aplicación: no hay CDN ni dependencia externa en tiempo de ejecución y la tipografía tiene alternativas de sistema.
+- **Solicitudes fuera de `App`.** Las peticiones viven en módulos de `utils/` y en hooks por funcionalidad, no dentro del componente `App`, siguiendo la recomendación de separarlas.
+- **`fetch` para la API de terceros, Axios solo para nuestro back-end.** `src/utils/UnsplashApi.js` usa `fetch` nativo, como pide la consigna. Axios se reserva para el cliente del back-end propio (`src/services/api`), donde aporta interceptores (JWT, errores uniformes) y el adaptador del backend simulado que usan las pruebas. Una regla del linter impide importarlo fuera de esa carpeta.
+
 ## Despliegue
 
 Es una SPA: el servidor debe responder `index.html` en cualquier ruta (fallback). Compilar con `VITE_USE_MOCKS=false` y `VITE_API_URL` apuntando al backend.

@@ -13,6 +13,10 @@ export const UNSPLASH_URL = `https://unsplash.com/?${UTM}`
 
 const withUtm = (url) => `${url}${url.includes('?') ? '&' : '?'}${UTM}`
 
+// Unsplash redimensiona y recomprime en su CDN (AVIF/WebP según el navegador).
+// Tarjeta vertical 2:3: ~175 KB a 480 px frente a 2,3 MB de la foto original.
+const imageUrl = (raw, width) => `${raw}&w=${width}&h=${width * 1.5}&fit=crop&auto=format&q=60`
+
 function toPhoto(photo) {
   return {
     id: photo.id,
@@ -21,9 +25,10 @@ function toPhoto(photo) {
     photographer: photo.user.name,
     photographerUrl: withUtm(photo.user.links.html),
     color: photo.color,
-    // Unsplash exige mostrar sus URLs (hotlinking). Se pide el tamaño justo
-    // para la tarjeta, recortado en vertical 2:3.
-    src: `${photo.urls.raw}&w=600&h=900&fit=crop&auto=format&q=75`,
+    // Unsplash exige mostrar sus URLs (hotlinking). `src` es la versión que se
+    // guarda; `srcSet` deja que pantallas densas pidan 800 px y móviles 480 px.
+    src: imageUrl(photo.urls.raw, 480),
+    srcSet: `${imageUrl(photo.urls.raw, 480)} 480w, ${imageUrl(photo.urls.raw, 800)} 800w`,
   }
 }
 

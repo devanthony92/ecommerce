@@ -74,7 +74,7 @@ describe('Inspiración (Unsplash)', () => {
     )
     expect(within(results()).getAllByRole('img')[0]).toHaveAttribute(
       'src',
-      'https://images.unsplash.com/photo-1?ixid=abc&w=600&h=900&fit=crop&auto=format&q=75',
+      'https://images.unsplash.com/photo-1?ixid=abc&w=480&h=720&fit=crop&auto=format&q=60',
     )
 
     await user.click(screen.getByRole('button', { name: 'Mostrar más' }))
