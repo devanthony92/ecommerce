@@ -144,7 +144,7 @@ describe('Inspiraciones guardadas (back-end propio)', () => {
     save()
   }
 
-  it('sin sesión el icono está inactivo y, al ingresar, guarda la foto', async () => {
+  it('sin sesión abre el registro; con "Iniciar sesión" ingresa y guarda la foto', async () => {
     const user = userEvent.setup()
     mockFetch(okResponse(3))
     renderApp('/inspiracion')
@@ -156,7 +156,14 @@ describe('Inspiraciones guardadas (back-end propio)', () => {
     expect(firstSave).not.toHaveAttribute('aria-pressed')
     await user.click(firstSave)
 
-    const dialog = await screen.findByRole('dialog', { name: 'Iniciar sesión' })
+    // Se ofrece crear la cuenta, con la opción de iniciar sesión.
+    let dialog = await screen.findByRole('dialog', { name: 'Registrarse' })
+    expect(
+      within(dialog).getByText('Para guardar esta foto necesitas una cuenta.'),
+    ).toBeInTheDocument()
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    dialog = await screen.findByRole('dialog', { name: 'Iniciar sesión' })
     await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
     await user.type(within(dialog).getByLabelText(/^Contraseña/), 'Trama1234')
     await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
@@ -169,6 +176,38 @@ describe('Inspiraciones guardadas (back-end propio)', () => {
     expect(
       await within(results()).findByRole('button', { name: 'Quitar de mis inspiraciones' }),
     ).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('sin cuenta: se registra, inicia sesión y la foto pendiente se guarda', async () => {
+    const user = userEvent.setup()
+    mockFetch(okResponse(3))
+    renderApp('/inspiracion')
+    await searchFor(user, 'denim')
+
+    const [, secondSave] = await within(results()).findAllByRole('button', {
+      name: 'Inicia sesión para guardar',
+    })
+    await user.click(secondSave)
+
+    let dialog = await screen.findByRole('dialog', { name: 'Registrarse' })
+    await user.type(within(dialog).getByLabelText(/^Nombre/), 'Ana Ruiz')
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'ana@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'trama2026')
+    await user.type(within(dialog).getByLabelText(/^Confirmar contraseña/), 'trama2026')
+    await user.click(within(dialog).getByRole('checkbox', { name: /Acepto los términos/ }))
+    await user.click(within(dialog).getByRole('button', { name: 'Registrarse' }))
+
+    dialog = await screen.findByRole('dialog', { name: 'Registro completado' })
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    dialog = await screen.findByRole('dialog', { name: 'Iniciar sesión' })
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'ana@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'trama2026')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    const ana = getDb().users.find((item) => item.email === 'ana@trama.test')
+    await waitFor(() => expect(getDb().inspirations[ana.id]).toHaveLength(1))
+    expect(getDb().inspirations[ana.id][0]).toMatchObject({ photoId: 'foto-2' })
   })
 
   it('con sesión guarda y quita; el contador del enlace se actualiza', async () => {

@@ -8,17 +8,20 @@ import { safeRedirectPath } from '@/constants/paths'
  * Modales de acceso globales. openLogin/openRegister aceptan:
  * - action: se ejecuta al iniciar sesión (p. ej. agregar a favoritos).
  * - next: ruta a la que se va al iniciar sesión (rutas protegidas).
+ * - notice: aviso sobre el formulario.
+ * La acción pendiente se conserva al pasar entre registro e inicio de sesión:
+ * tras registrarse e ingresar, se ejecuta igual.
  */
 export function AuthModalProvider({ children }) {
   const toast = useToast()
   const navigate = useNavigate()
   const { login, register } = useAuth()
-  const [state, setState] = useState({ view: null, action: null, next: null })
+  const [state, setState] = useState({ view: null, action: null, next: null, notice: null })
 
   const open = useCallback(
     (view) =>
-      ({ action = null, next = null } = {}) =>
-        setState({ view, action, next }),
+      ({ action = null, next = null, notice = null } = {}) =>
+        setState({ view, action, next, notice }),
     [],
   )
   const value = useMemo(
@@ -26,7 +29,7 @@ export function AuthModalProvider({ children }) {
     [open],
   )
 
-  const close = () => setState({ view: null, action: null, next: null })
+  const close = () => setState({ view: null, action: null, next: null, notice: null })
   const switchTo = (view) => setState((current) => ({ ...current, view }))
 
   async function handleLogin(credentials) {
@@ -48,7 +51,7 @@ export function AuthModalProvider({ children }) {
       {children}
       <AuthModal
         view={state.view}
-        notice={state.next ? 'Inicia sesión para continuar.' : null}
+        notice={state.notice ?? (state.next ? 'Inicia sesión para continuar.' : null)}
         onClose={close}
         onLogin={handleLogin}
         onRegister={handleRegister}

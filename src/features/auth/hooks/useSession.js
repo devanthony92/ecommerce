@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/feedback'
 import { setUnauthorizedHandler } from '@/services/api/interceptors'
 import { storage, STORAGE_KEYS } from '@/services/storage/storage'
+import { paths } from '@/constants/paths'
 import { SESSION_STATUS } from '@/constants/statuses'
 import { getCurrentUser, signin, signup } from '@/utils/MainApi'
 import { authApi } from '../api/authApi'
@@ -16,6 +17,7 @@ import { authKeys } from '../api/authKeys'
 export function useSession() {
   const queryClient = useQueryClient()
   const toast = useToast()
+  const navigate = useNavigate()
   const [token, setToken] = useState(() => storage.get(STORAGE_KEYS.token))
   const { pathname } = useLocation()
   const pathnameRef = useRef(pathname)
@@ -90,9 +92,11 @@ export function useSession() {
     } finally {
       clearSession()
       setSignedOutFrom(pathnameRef.current)
+      // Desde cualquier página (pública o privada), cerrar sesión lleva al inicio.
+      navigate(paths.home, { replace: true })
       toast.show({ title: 'Cerraste sesión' })
     }
-  }, [clearSession, toast])
+  }, [clearSession, navigate, toast])
 
   useEffect(() => {
     // 401 en cualquier request con sesión: el token venció o fue revocado.

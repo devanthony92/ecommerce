@@ -194,6 +194,18 @@ describe('Autorización', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
+  it('cerrar sesión desde una página pública también lleva al inicio', async () => {
+    const user = userEvent.setup()
+    renderApp('/inspiracion', { as: 'buyer' })
+    await user.click(await header().findByRole('button', { name: 'Cerrar sesión' }))
+
+    expect(await screen.findByText('Cerraste sesión')).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: 'Ropa para ti y para tu negocio', level: 1 }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
   it('después de cerrar sesión, otra ruta privada pide ingresar', async () => {
     const user = userEvent.setup()
     renderApp('/cuenta', { as: 'buyer' })

@@ -8,7 +8,8 @@ import './save-photo-button.scss'
 /**
  * Guardar una foto en "Mis inspiraciones".
  * - Sin sesión: icono inactivo; al pasar el cursor dice "Inicia sesión para
- *   guardar". Al hacer clic abre el inicio de sesión y luego la guarda.
+ *   guardar". Al hacer clic abre el registro (con acceso al inicio de sesión)
+ *   y, al ingresar, la guarda.
  * - Con sesión: guarda o quita; guardada se ve en azul y rellena.
  */
 export function SavePhotoButton({ photo, keyword, saved, className }) {
@@ -19,19 +20,23 @@ export function SavePhotoButton({ photo, keyword, saved, className }) {
   const isSaved = isAuthenticated && Boolean(saved)
 
   function handleClick() {
-    requireAuth(() =>
-      toggle.mutate(
-        // Tras un inicio de sesión en modal, la foto se guarda (no se alterna).
-        { photo, keyword, saved: isAuthenticated ? saved : null },
-        {
-          onError: (error) =>
-            toast.show({
-              tone: 'danger',
-              title: 'No pudimos actualizar tus inspiraciones',
-              description: error.message,
-            }),
-        },
-      ),
+    requireAuth(
+      () =>
+        toggle.mutate(
+          // Tras un inicio de sesión en modal, la foto se guarda (no se alterna).
+          { photo, keyword, saved: isAuthenticated ? saved : null },
+          {
+            onError: (error) =>
+              toast.show({
+                tone: 'danger',
+                title: 'No pudimos actualizar tus inspiraciones',
+                description: error.message,
+              }),
+          },
+        ),
+      // Sin cuenta se ofrece registrarse (con la opción de iniciar sesión); el
+      // guardado queda pendiente y se hace al ingresar.
+      { mode: 'register', notice: 'Para guardar esta foto necesitas una cuenta.' },
     )
   }
 

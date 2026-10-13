@@ -50,6 +50,7 @@ export function AuthModal({ view, notice, onClose, onLogin, onRegister, onSwitch
 
         {view === 'register' && (
           <>
+            {notice && <p className="auth-modal__notice">{notice}</p>}
             <p className="auth-modal__intro">
               Tu cuenta empieza como comprador. Si tienes un negocio, después puedes solicitar
               precios mayoristas.
