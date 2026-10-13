@@ -101,9 +101,10 @@ describe('Carrito', () => {
     seedGuestCart([{ variantId: variant.id, quantity: 2 }])
     renderApp('/ingresar?next=/carrito')
 
-    await user.type(await screen.findByLabelText(/^Correo/), 'comprador@trama.test')
-    await user.type(screen.getByLabelText(/^Contraseña/), 'Trama1234')
-    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Iniciar sesión' })
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'Trama1234')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
 
     expect(await screen.findByRole('link', { name: 'Gorra béisbol' })).toBeInTheDocument()
     expect(storage.get(STORAGE_KEYS.guestCart)).toEqual([])

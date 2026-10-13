@@ -7,6 +7,7 @@ import './stacked-form.scss'
 /**
  * Formulario en una columna: campos, error general y botón de envío.
  * `blockSubmit`: botón a todo el ancho (formularios de acceso).
+ * `submitDisabled`: botón inactivo mientras el formulario no sea válido.
  */
 export function StackedForm({
   onSubmit,
@@ -14,6 +15,7 @@ export function StackedForm({
   isSubmitting,
   submitLabel,
   blockSubmit = false,
+  submitDisabled = false,
   className,
   children,
 }) {
@@ -25,6 +27,7 @@ export function StackedForm({
         type="submit"
         block={blockSubmit}
         loading={isSubmitting}
+        disabled={submitDisabled}
         className="stacked-form__submit"
       >
         {submitLabel}

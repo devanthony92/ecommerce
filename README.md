@@ -4,6 +4,10 @@ Frontend de una tienda de ropa con dos propuestas: **compra individual** y **com
 
 React 19 · Vite 8 · React Router 8 · TanStack Query · SCSS con BEM estricto · Vitest + Testing Library + axe-core.
 
+Tienda desplegada: https://devama.duckdns.org · API: https://api-devama.duckdns.org
+
+Backend: [ecommerce-backend](https://github.com/devanthony92/ecommerce-backend) (FastAPI + PostgreSQL).
+
 La arquitectura, rutas, contrato de API, reglas comerciales y design system están en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Funcionalidades
@@ -14,7 +18,8 @@ La arquitectura, rutas, contrato de API, reglas comerciales y design system est�
 - **Checkout**: dirección, envío con total calculado por el backend, pago con Mercado Pago (Checkout Pro) o contra entrega, y confirmación.
 - **Cuenta**: dashboard, perfil, contraseña, direcciones, pedidos (filtros, detalle, cancelar, repetir), favoritos y listas de compra.
 - **Mayoristas**: solicitud con estados, pedido mínimo, panel con compra acumulada y beneficios, catálogo con todas las escalas, pedido rápido por referencia, productos habituales.
-- **Inspiración**: búsqueda de fotos de estilo en Unsplash (API de terceros), de 3 en 3 con "Mostrar más"; la última búsqueda se guarda en el navegador.
+- **Inspiración**: búsqueda de fotos de estilo en Unsplash (API de terceros), de 3 en 3 con "Mostrar más"; la última búsqueda se guarda en el navegador. Con sesión, las fotos se guardan en el backend y se ven en la página protegida "Inspiraciones guardadas".
+- **Autorización**: registro e inicio de sesión en modales con validación en cada tecla, JWT en `localStorage`, usuario global en `CurrentUserContext` y rutas protegidas que vuelven al inicio y abren el inicio de sesión.
 - **Accesibilidad**: navegación por teclado, foco gestionado en modales, drawers y pasos, contraste WCAG AA, auditoría axe en 20 páginas.
 
 ## Requisitos
@@ -23,32 +28,37 @@ La arquitectura, rutas, contrato de API, reglas comerciales y design system est�
 
 ## Inicio
 
-```bash
-npm install
-cp .env.example .env.local
-npm run dev
-```
+1. Levanta el backend ([ecommerce-backend](https://github.com/devanthony92/ecommerce-backend)): queda en `http://localhost:3000`.
+2. Frontend:
 
-## Usuarios de prueba (backend simulado)
+   ```bash
+   npm install
+   cp .env.example .env.local
+   npm run dev
+   ```
 
-| Perfil    | Correo                 |
-| --------- | ---------------------- |
-| Comprador | `comprador@trama.test` |
-| Mayorista | `mayorista@trama.test` |
+Sin backend, pon `VITE_USE_MOCKS=true` en `.env.local`: la app usa el backend simulado del navegador.
 
-La contraseña de ambos está en `src/services/api/mocks/db.js`. Para reiniciar los datos de la demo, borra la clave `trama.mock-db` de localStorage. En `/cuenta/solicitud-mayorista` hay un simulador para aprobar o rechazar solicitudes (solo con el backend simulado).
+## Usuarios de prueba
+
+| Perfil    | Con la API real (`python -m app seed --demo`) | Con el backend simulado |
+| --------- | --------------------------------------------- | ----------------------- |
+| Comprador | `comprador@demo.trama.co`                     | `comprador@trama.test`  |
+| Mayorista | `mayorista@demo.trama.co`                     | `mayorista@trama.test`  |
+
+La contraseña es `Trama1234` (cuentas de prueba, sin datos reales). Con el backend simulado, para reiniciar los datos borra la clave `trama.mock-db` de localStorage. En `/cuenta/solicitud-mayorista` hay un simulador para aprobar o rechazar solicitudes (fuera de producción).
 
 ## Variables de entorno
 
 | Variable                   | Descripción                                                                                                                              |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `VITE_API_URL`             | URL base del backend (`/api/v1`)                                                                                                         |
-| `VITE_USE_MOCKS`           | `true` usa el backend simulado de `src/services/api/mocks`. Debe ser `false` en producción.                                              |
+| `VITE_API_URL`             | URL base del backend (`http://localhost:3000` en desarrollo)                                                                             |
+| `VITE_USE_MOCKS`           | `true` usa el backend simulado de `src/services/api/mocks` (sin backend). `false`: API real. Debe ser `false` en producción.             |
 | `VITE_UNSPLASH_ACCESS_KEY` | Access Key de [Unsplash](https://unsplash.com/developers) para la página Inspiración. Sin ella, la búsqueda muestra el mensaje de error. |
 
 ## Backend simulado
 
-Mientras no existe el backend, `src/services/api/mocks` implementa el contrato de la API como un adapter de axios (con latencia, errores y reglas comerciales). Con `VITE_USE_MOCKS=false` no entra al bundle de producción. Al tener el backend real, se borra esa carpeta y la interfaz no cambia.
+`src/services/api/mocks` implementa el mismo contrato que la API real como un adapter de axios (con latencia, errores y reglas comerciales). Lo usan los tests (Vitest corre sin backend) y sirve para probar la interfaz sin levantar la API. Con `VITE_USE_MOCKS=false` no entra al bundle de producción.
 
 ## Scripts
 

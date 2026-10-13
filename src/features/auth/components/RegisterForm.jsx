@@ -2,10 +2,12 @@ import { Checkbox, PasswordField, TextField, StackedForm } from '@/components/ui
 import { useForm } from '@/hooks/useForm'
 import { PASSWORD_HINT, validateRegister } from '../utils/authValidation'
 
-export function RegisterForm({ onSubmit }) {
-  const { field, checkbox, formError, isSubmitting, handleSubmit } = useForm({
+// Misma validación en vivo que el ingreso: botón inactivo hasta que todo es válido.
+export function RegisterForm({ onSubmit, nameRef }) {
+  const { field, checkbox, formError, isSubmitting, isValid, handleSubmit } = useForm({
     initialValues: { name: '', email: '', password: '', confirmPassword: '', acceptTerms: false },
     validate: validateRegister,
+    validateOnChange: true,
     // confirmPassword es solo de UX: no se envía.
     onSubmit: ({ confirmPassword: _confirm, ...data }) => onSubmit(data),
   })
@@ -16,9 +18,10 @@ export function RegisterForm({ onSubmit }) {
       onSubmit={handleSubmit}
       formError={formError}
       isSubmitting={isSubmitting}
-      submitLabel="Crear cuenta"
+      submitDisabled={!isValid}
+      submitLabel="Registrarse"
     >
-      <TextField label="Nombre" autoComplete="name" required {...field('name')} />
+      <TextField ref={nameRef} label="Nombre" autoComplete="name" required {...field('name')} />
       <TextField
         label="Correo"
         type="email"

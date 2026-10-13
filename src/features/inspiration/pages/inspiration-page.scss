@@ -2,6 +2,11 @@
   display: grid;
   gap: var(--space-6);
 
+  &__saved-link {
+    justify-self: start;
+    font-weight: var(--font-weight-semibold);
+  }
+
   &__results {
     display: grid;
     gap: var(--space-4);

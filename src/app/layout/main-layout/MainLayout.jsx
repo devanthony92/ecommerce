@@ -19,6 +19,9 @@ function useRouteChangeFocus(mainRef) {
       return
     }
     window.scrollTo(0, 0)
+    // Con un modal abierto (p. ej. /ingresar abre el inicio de sesión sobre el
+    // inicio) el foco se queda en el modal.
+    if (document.activeElement?.closest('[role="dialog"]')) return
     mainRef.current?.focus({ preventScroll: true })
   }, [pathname, mainRef])
 }

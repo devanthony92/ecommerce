@@ -696,6 +696,16 @@ Solicitud mayorista (fase 10):
 - Directrices de Unsplash: las imágenes se muestran desde sus URLs (hotlinking, con tamaño recortado vía parámetros de imgix), cada foto dice "Foto de X en Unsplash" y los enlaces llevan `utm_source=trama&utm_medium=referral`.
 - La clave queda en el bundle del frontend (es una variable `VITE_`). Unsplash lo permite para apps cliente, pero cualquiera puede leerla: cuando exista el backend propio conviene pasar la llamada por él.
 
+### Autorización (etapa 3)
+
+- `src/utils/MainApi.js` reúne las solicitudes a nuestro back-end para autorización e inspiraciones: `signup` (`POST /signup`), `signin` (`POST /signin` → `{ token }`), `getCurrentUser` (`GET /users/me`) y `getInspirations` / `saveInspiration` / `deleteInspiration`.
+- La sesión vive en `useSession` (features/auth) y `App` la comparte con `CurrentUserContext.Provider`: `currentUser` (o `null`), `status`, `login`, `register`, `logout` y `refreshSession`. `useAuth()` la lee.
+- Al iniciar sesión, el token se guarda en `localStorage` y se pide `/users/me`. El registro no inicia sesión: muestra "Registro completado" con un botón para ingresar.
+- Registro e inicio de sesión son modales (`AuthModalProvider`). La validación corre en cada tecla: el error aparece bajo el campo en cuanto se modifica y el botón queda inactivo hasta que todo es válido. El error del servidor se muestra encima del botón.
+- `ProtectedRoute`: sin sesión, un enlace directo a una ruta protegida vuelve a `/` y abre el inicio de sesión con el aviso "Inicia sesión para continuar."; al ingresar, sigue a la ruta pedida. `/ingresar` y `/registro` abren el modal correspondiente sobre el inicio.
+- Header: sin sesión, botón "Iniciar sesión"; con sesión, "Mi cuenta" y "Cerrar sesión". "Guardadas" en la navegación solo aparece con sesión.
+- Inspiraciones guardadas: cada foto tiene un botón de guardar; sin sesión está inactivo ("Inicia sesión para guardar") y al hacer clic abre el inicio de sesión. Guardada se ve en azul. `/inspiracion/guardadas` (protegida) muestra cuántas hay, las palabras clave por popularidad ("Denim, Oficina y 2 más") y las tarjetas con su palabra clave y un botón para borrar.
+
 ---
 
 ## 8. Modelo de permisos

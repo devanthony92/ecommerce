@@ -1,16 +1,22 @@
+import { useMemo } from 'react'
+import { Link } from 'react-router'
 import { EmptyState, LoadingState } from '@/components/feedback'
 import { PageHeader } from '@/components/layout'
+import { useAuth } from '@/features/auth'
+import { paths } from '@/constants/paths'
 import { InspirationSearch } from '../components/inspiration-search/InspirationSearch'
 import { PhotoList } from '../components/photo-list/PhotoList'
+import { SavePhotoButton } from '../components/save-photo-button/SavePhotoButton'
 import { UNSPLASH_URL } from '@/utils/UnsplashApi'
 import { useInspirationSearch } from '../hooks/useInspirationSearch'
+import { useSavedInspirations } from '../hooks/useSavedInspirations'
 import './inspiration-page.scss'
 
 export const NOT_FOUND_MESSAGE = 'No se ha encontrado nada'
 export const REQUEST_ERROR_MESSAGE =
   'Lo sentimos, algo ha salido mal durante la solicitud. Es posible que haya un problema de conexión o que el servidor no funcione. Por favor, inténtalo más tarde'
 
-function Results({ status, photos, query, hasMore, onShowMore }) {
+function Results({ status, photos, query, hasMore, onShowMore, renderAction }) {
   if (status === 'loading') return <LoadingState label="Buscando fotos…" />
   if (status === 'error') {
     return (
@@ -28,7 +34,14 @@ function Results({ status, photos, query, hasMore, onShowMore }) {
       />
     )
   }
-  return <PhotoList photos={photos} hasMore={hasMore} onShowMore={onShowMore} />
+  return (
+    <PhotoList
+      photos={photos}
+      hasMore={hasMore}
+      onShowMore={onShowMore}
+      renderAction={renderAction}
+    />
+  )
 }
 
 /**
@@ -37,6 +50,13 @@ function Results({ status, photos, query, hasMore, onShowMore }) {
  */
 export default function InspirationPage() {
   const { query, status, photos, hasMore, search, showMore } = useInspirationSearch()
+  const { isAuthenticated } = useAuth()
+  const { data: saved } = useSavedInspirations()
+  // Foto de Unsplash → inspiración guardada (para pintar el icono de guardado).
+  const savedByPhoto = useMemo(
+    () => new Map((saved ?? []).map((item) => [item.photoId, item])),
+    [saved],
+  )
 
   return (
     <div className="inspiration-page">
@@ -44,6 +64,11 @@ export default function InspirationPage() {
         title="Inspiración"
         description="Ideas para combinar tus prendas. Busca un estilo, una prenda o un color."
       />
+      {isAuthenticated && (
+        <Link className="inspiration-page__saved-link" to={paths.savedInspirations}>
+          Ver mis inspiraciones guardadas{saved ? ` (${saved.length})` : ''}
+        </Link>
+      )}
       <InspirationSearch initialQuery={query} isLoading={status === 'loading'} onSearch={search} />
 
       {/* El bloque de resultados solo existe después de buscar. */}
@@ -62,6 +87,13 @@ export default function InspirationPage() {
             query={query}
             hasMore={hasMore}
             onShowMore={showMore}
+            renderAction={(photo) => (
+              <SavePhotoButton
+                photo={photo}
+                keyword={query}
+                saved={savedByPhoto.get(photo.id) ?? null}
+              />
+            )}
           />
         </section>
       )}

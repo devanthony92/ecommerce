@@ -21,6 +21,8 @@ const ICONS = {
     </>
   ),
   heart: <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z" />,
+  bookmark: <path d="M7 4h10v16l-5-4-5 4V4Z" />,
+  trash: <path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" />,
   search: (
     <>
       <circle cx="11" cy="11" r="6" />

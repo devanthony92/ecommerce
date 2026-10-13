@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { App } from '@/app/App'
+import { AppProviders } from '@/app/providers/AppProviders'
 import { createQueryClient } from '@/app/providers/queryClient'
 import { storage, STORAGE_KEYS } from '@/services/storage/storage'
 
@@ -19,7 +20,9 @@ export function renderApp(route = '/', { as } = {}) {
 
   return render(
     <MemoryRouter initialEntries={[route]}>
-      <App queryClient={createQueryClient()} />
+      <AppProviders queryClient={createQueryClient()}>
+        <App />
+      </AppProviders>
     </MemoryRouter>,
   )
 }

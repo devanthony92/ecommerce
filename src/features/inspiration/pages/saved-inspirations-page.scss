@@ -1,0 +1,36 @@
+.saved-inspirations {
+  display: grid;
+  gap: var(--space-5);
+
+  &__keywords {
+    color: var(--color-text-muted);
+  }
+
+  &__delete {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    background-color: rgb(255 255 255 / 92%);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: color var(--duration-fast);
+
+    &:hover {
+      color: var(--color-danger);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: progress;
+      opacity: 0.6;
+    }
+  }
+}

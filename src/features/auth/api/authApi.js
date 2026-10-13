@@ -1,10 +1,8 @@
 import { http } from '@/services/api/apiClient'
 
+// Registro, ingreso y usuario actual están en utils/MainApi.js.
 export const authApi = {
-  login: (credentials) => http.post('/auth/login', credentials),
-  register: (data) => http.post('/auth/register', data),
   logout: () => http.post('/auth/logout'),
-  getMe: () => http.get('/users/me'),
   forgotPassword: (email) => http.post('/auth/password/forgot', { email }),
   resetPassword: ({ token, password }) => http.post('/auth/password/reset', { token, password }),
 }

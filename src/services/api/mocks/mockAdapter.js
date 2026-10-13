@@ -62,7 +62,8 @@ export async function mockAdapter(config) {
   }
 
   const response = {
-    data: result.data ?? null,
+    // Copia, como un backend real: la caché nunca comparte objetos con la "base".
+    data: result.data == null ? null : structuredClone(result.data),
     status: result.status,
     statusText: STATUS_TEXT[result.status] ?? '',
     headers: {},
