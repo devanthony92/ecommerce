@@ -5,7 +5,9 @@
   --color-surface: #fff;
   --color-text: #1a1a1a;
   --color-text-muted: #5c5c5c;
-  --color-text-subtle: #767676;
+
+  // 4,6:1 sobre surface-muted y 5,1:1 sobre bg (AA para texto normal).
+  --color-text-subtle: #6b6b6b;
   --color-border: #e4e2dd;
   --color-border-strong: #8a867e;
   --color-surface-muted: #f1f0ec;
@@ -16,6 +18,7 @@
   --color-wholesale-hover: #944617;
   --color-wholesale-contrast: #fff;
   --color-success: #256b42;
+  --color-success-contrast: #fff;
   --color-success-soft: #e6f2ea;
   --color-warning: #8a5800;
   --color-warning-soft: #fbf0dc;
@@ -27,6 +30,8 @@
   --color-info-soft: #e7f0fa;
   --color-wholesale-soft: #f8ece4;
   --color-overlay: rgb(20 20 20 / 50%);
+  --color-surface-overlay: rgb(255 255 255 / 92%);
+  --color-shimmer: rgb(255 255 255 / 60%);
   --color-focus: #2f6fd6;
 
   // Tipografía

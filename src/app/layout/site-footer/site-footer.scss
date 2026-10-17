@@ -32,6 +32,10 @@
   }
 
   &__logo {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    min-height: 44px;
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
     text-decoration: none;
@@ -55,13 +59,22 @@
 
   &__list {
     display: grid;
-    gap: var(--space-1);
+
+    @include mq(md) {
+      gap: var(--space-1);
+    }
   }
 
+  // 44px de alto en móvil (objetivo táctil); desde md basta con 32px.
   &__link {
     display: inline-flex;
     align-items: center;
-    min-height: 32px;
+    min-height: 44px;
+
+    @include mq(md) {
+      min-height: 32px;
+    }
+
     font-size: var(--font-size-sm);
     text-decoration: none;
 

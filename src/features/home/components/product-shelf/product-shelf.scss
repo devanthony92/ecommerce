@@ -19,6 +19,9 @@
   }
 
   &__action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-size: var(--font-size-sm);
     color: var(--color-primary);
   }

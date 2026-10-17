@@ -9,9 +9,11 @@
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-lg);
+  animation: toast-enter var(--duration-base) ease-out;
 
-  @media (prefers-reduced-motion: no-preference) {
-    animation: toast-enter var(--duration-base) ease-out;
+  // Movimiento reducido: entra con un fundido, sin desplazarse.
+  @media (prefers-reduced-motion: reduce) {
+    animation-name: toast-fade;
   }
 
   &--info {
@@ -53,5 +55,11 @@
   from {
     opacity: 0;
     transform: translateY(0.5rem);
+  }
+}
+
+@keyframes toast-fade {
+  from {
+    opacity: 0;
   }
 }

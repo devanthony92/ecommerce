@@ -1,14 +1,7 @@
+@use '@/styles/abstracts' as *;
+
 .favorite-button {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  color: var(--color-text);
-  background-color: rgb(255 255 255 / 90%);
-  box-shadow: var(--shadow-sm);
-  transition: color var(--duration-fast);
+  @include overlay-icon-button;
 
   &:hover {
     color: var(--color-danger);

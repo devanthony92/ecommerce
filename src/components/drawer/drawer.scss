@@ -23,6 +23,13 @@
     &:focus {
       outline: none;
     }
+
+    // Movimiento reducido: el panel aparece con un fundido en lugar de deslizarse.
+    @media (prefers-reduced-motion: reduce) {
+      opacity: 0;
+      transform: none;
+      transition: opacity var(--duration-base);
+    }
   }
 
   // Posición
@@ -67,6 +74,15 @@
 
     @starting-style {
       transform: var(--drawer-hidden-transform);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      opacity: 1;
+
+      @starting-style {
+        opacity: 0;
+        transform: none;
+      }
     }
   }
 

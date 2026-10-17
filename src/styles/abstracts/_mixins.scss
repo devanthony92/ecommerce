@@ -28,6 +28,26 @@
   outline-offset: 2px;
 }
 
+// Botón de icono que flota sobre una imagen (favorito, guardar foto, eliminar).
+// Cada uso solo define el color de hover y de estado activo.
+@mixin overlay-icon-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  background-color: var(--color-surface-overlay);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: color var(--duration-fast);
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
 // Apariencia común de input, select y textarea.
 @mixin field-control {
   width: 100%;

@@ -1,3 +1,5 @@
+@use '@/styles/abstracts' as *;
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -28,11 +30,16 @@
     }
   }
 
-  // Tamaños: md cumple el mínimo táctil de 44px.
+  // Tamaños: md cumple el mínimo táctil de 44px. sm también en móvil, donde se
+  // toca con el dedo; desde md se compacta a 36px.
   &--sm {
-    min-height: 36px;
+    min-height: 44px;
     padding-inline: var(--space-3);
     font-size: var(--font-size-sm);
+
+    @include mq(md) {
+      min-height: 36px;
+    }
   }
 
   &--md {

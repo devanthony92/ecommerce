@@ -1,27 +1,14 @@
+@use '@/styles/abstracts' as *;
+
 .save-photo-button {
   position: relative;
   display: inline-grid;
 
   &__button {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border: 0;
-    border-radius: var(--radius-md);
-    color: var(--color-text);
-    background-color: rgb(255 255 255 / 92%);
-    box-shadow: var(--shadow-sm);
-    cursor: pointer;
-    transition: color var(--duration-fast);
+    @include overlay-icon-button;
 
     &:hover {
       color: var(--color-primary);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-focus);
-      outline-offset: 2px;
     }
 
     // Sin sesión: se ve apagado.
