@@ -27,7 +27,8 @@
 
   &__title {
     max-width: 20ch;
-    font-size: clamp(var(--font-size-3xl), 6vw, var(--font-size-4xl));
+    font-size: var(--font-size-display);
+    line-height: var(--line-height-display);
   }
 
   &__lead {
@@ -45,6 +46,10 @@
   &__section {
     display: grid;
     gap: var(--space-5);
+
+    > h2 {
+      font-size: var(--font-size-section);
+    }
   }
 
   &__steps {

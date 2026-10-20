@@ -2,12 +2,16 @@
 
 .home-hero {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-6);
+
+  @include mq(lg) {
+    gap: var(--space-8);
+  }
 
   &__title {
-    max-width: 18ch;
-    font-size: clamp(var(--font-size-3xl), 7vw, 3rem);
-    letter-spacing: -0.02em;
+    max-width: 14ch;
+    font-size: var(--font-size-display);
+    line-height: var(--line-height-display);
   }
 
   &__options {
@@ -31,12 +35,19 @@
       padding: var(--space-10) var(--space-8);
     }
 
+    // Cada propuesta es dueña de su color: buganvilla el detal, ladrillo el mayorista.
     &--retail {
-      background-color: var(--color-info-soft);
+      --hero-muted: var(--color-on-primary-muted);
+
+      color: var(--color-primary-contrast);
+      background-color: var(--color-primary);
     }
 
     &--wholesale {
-      background-color: var(--color-wholesale-soft);
+      --hero-muted: var(--color-on-wholesale-muted);
+
+      color: var(--color-wholesale-contrast);
+      background-color: var(--color-wholesale-hover);
     }
   }
 
@@ -45,19 +56,15 @@
     font-weight: var(--font-weight-semibold);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-primary);
-  }
-
-  &__option--wholesale &__eyebrow {
-    color: var(--color-wholesale-hover);
+    color: var(--color-highlight-soft);
   }
 
   &__option-title {
-    font-size: var(--font-size-2xl);
+    font-size: clamp(var(--font-size-2xl), 1.2rem + 1.4vw, 2.25rem);
   }
 
   &__text {
     max-width: 40ch;
-    color: var(--color-text-muted);
+    color: var(--hero-muted);
   }
 }

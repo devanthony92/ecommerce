@@ -839,20 +839,25 @@ Fuente de verdad: `src/styles/base/_tokens.scss`. Todos los pares texto/fondo cu
 
 | Token                                                | Uso                                     | Valor                                         |
 | ---------------------------------------------------- | --------------------------------------- | --------------------------------------------- |
-| `--color-bg` / `--color-surface`                     | fondo / cards                           | `#FAFAF8` / `#FFFFFF`                         |
-| `--color-text` / `-muted` / `-subtle`                | texto                                   | `#1A1A1A` / `#5C5C5C` / `#767676`             |
-| `--color-border`                                     | separadores decorativos                 | `#E4E2DD`                                     |
-| `--color-border-strong`                              | borde de inputs y botones secundarios   | `#8A867E`                                     |
-| `--color-primary`                                    | CTA compra individual                   | `#1F3A5F`                                     |
-| `--color-wholesale`                                  | todo lo mayorista                       | `#B4561E`                                     |
-| `--color-success` / `-warning` / `-danger` / `-info` | estados (con variante `-soft` de fondo) | `#256B42` / `#8A5800` / `#B3261E` / `#1F5FA8` |
+| `--color-bg` / `--color-surface`                     | fondo crema / cards                     | `#FBF6EC` / `#FFFDF8`                         |
+| `--color-text` / `-muted` / `-subtle`                | texto (tinta cálida)                    | `#1E1915` / `#5A5048` / `#6B5F54`             |
+| `--color-border`                                     | separadores decorativos                 | `#E8DDCB`                                     |
+| `--color-border-strong`                              | borde de inputs y botones secundarios   | `#8C7F6E`                                     |
+| `--color-primary`                                    | buganvilla: CTA compra individual       | `#B0155A`                                     |
+| `--color-wholesale`                                  | ladrillo: todo lo mayorista             | `#B7470D`                                     |
+| `--color-highlight`                                  | mango: destacados, "Más vendido"        | `#FFC21A` (texto en tinta)                    |
+| `--color-inverse`                                    | selva: bloques de cierre y footer       | `#12372A` (texto crema)                       |
+| `--color-success` / `-warning` / `-danger` / `-info` | estados (con variante `-soft` de fondo) | `#1E6B45` / `#8A5800` / `#B3261E` / `#1F5FA8` |
 
-Regla visual: **azul = compra individual, cobre = mayorista**. Así la home y las cards comunican las dos propuestas.
+Paleta de marca "mercado colombiano" en las primitivas `--brand-*`; los componentes usan solo los roles `--color-*`. Los colores de estado no se usan como decoración.
+
+Regla visual: **buganvilla = compra individual, ladrillo = mayorista**. Así la home y las cards comunican las dos propuestas. Sobre un fondo de color, el texto secundario se tiñe de ese fondo (`--color-on-primary-muted`, `--color-on-wholesale-muted`, `--color-inverse-muted`), nunca gris.
 
 ### Tipografía
 
-- Fuente: **Inter** (self-hosted con `@fontsource-variable/inter`, sin dependencias externas), fallback `system-ui`.
-- Escala (rem): `xs 0.75 · sm 0.875 · md 1 · lg 1.125 · xl 1.25 · 2xl 1.5 · 3xl 1.875 · 4xl 2.25`. Títulos con `clamp()` en hero.
+- Texto y UI: **Inter** (self-hosted con `@fontsource-variable/inter`), fallback `system-ui`.
+- Display: **Archivo** variable con eje de ancho (`@fontsource-variable/archivo/wdth.css`, de Omnibus-Type), angosta (`font-stretch: 82%`) y en peso 800, como los letreros pintados del mercado. Se usa en h1, h2, precios grandes (`lg`, `xl`) y en el logo, que va ancho (118%) y en peso 900. Mixin: `display-type($stretch)`. h3 y h4 siguen en Inter.
+- Escala (rem): `xs 0.75 · sm 0.875 · md 1 · lg 1.125 · xl 1.25 · 2xl 1.5 · 3xl 1.875 · 4xl 2.25`. Fluidas: `--font-size-section` (1.75 → 2.25, títulos de sección) y `--font-size-display` (2.75 → 5.5, hero y landing).
 - Precios con `font-variant-numeric: tabular-nums`.
 
 ### Espaciado, forma, profundidad

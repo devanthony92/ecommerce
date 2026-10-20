@@ -15,6 +15,16 @@
     background-color: var(--color-surface-muted);
   }
 
+  &--brand {
+    color: var(--color-primary-contrast);
+    background-color: var(--color-primary);
+  }
+
+  &--highlight {
+    color: var(--color-highlight-contrast);
+    background-color: var(--color-highlight);
+  }
+
   &--info {
     color: var(--color-info);
     background-color: var(--color-info-soft);

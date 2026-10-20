@@ -14,11 +14,15 @@
   }
 
   &--lg {
+    @include display-type(90%);
+
     font-size: var(--font-size-xl);
   }
 
   &--xl {
-    font-size: var(--font-size-3xl);
+    @include display-type(90%);
+
+    font-size: var(--font-size-4xl);
   }
 
   &--default {

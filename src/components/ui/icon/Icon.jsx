@@ -8,6 +8,12 @@ const ICONS = {
   minus: <path d="M5 12h14" />,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
   filter: <path d="M4 6h16M7 12h10M10 18h4" />,
+  tag: (
+    <>
+      <path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9z" />
+      <circle cx="7.5" cy="7.5" r="1.5" />
+    </>
+  ),
   bag: (
     <>
       <path d="M6 8h12l-1 12H7L6 8Z" />

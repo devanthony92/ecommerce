@@ -1,10 +1,12 @@
 @use '@/styles/abstracts' as *;
 
 .site-footer {
+  // Cierre en selva: la página termina con color, no con otra franja blanca.
+  --color-focus: var(--color-highlight);
+
   margin-block-start: var(--space-12);
-  color: var(--color-text-muted);
-  background-color: var(--color-surface);
-  border-block-start: 1px solid var(--color-border);
+  color: var(--color-inverse-muted);
+  background-color: var(--color-inverse);
 
   &__inner {
     display: grid;
@@ -36,10 +38,13 @@
     align-items: center;
     justify-self: start;
     min-height: 44px;
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-bold);
+
+    @include display-type(118%);
+
+    font-size: var(--font-size-2xl);
+    font-weight: 900;
     text-decoration: none;
-    color: var(--color-primary);
+    color: var(--color-highlight);
   }
 
   &__tagline {
@@ -54,7 +59,7 @@
 
   &__heading {
     font-size: var(--font-size-sm);
-    color: var(--color-text);
+    color: var(--color-inverse-text);
   }
 
   &__list {
@@ -79,8 +84,10 @@
     text-decoration: none;
 
     &:hover {
-      color: var(--color-text);
+      color: var(--color-inverse-text);
       text-decoration: underline;
+      text-decoration-color: var(--color-highlight);
+      text-underline-offset: 0.2em;
     }
   }
 
@@ -94,7 +101,7 @@
 
   &__copyright {
     padding: var(--space-4) var(--gutter);
-    border-block-start: 1px solid var(--color-border);
+    border-block-start: 1px solid rgb(200 220 207 / 20%);
     font-size: var(--font-size-xs);
     text-align: center;
   }

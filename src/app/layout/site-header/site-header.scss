@@ -41,9 +41,11 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+
+    @include display-type(118%);
+
     font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
-    letter-spacing: -0.02em;
+    font-weight: 900;
     text-decoration: none;
     color: var(--color-primary);
   }

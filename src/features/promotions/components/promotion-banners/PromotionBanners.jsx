@@ -4,7 +4,7 @@ import { Icon } from '@/components/ui'
 import { usePromotions } from '../../hooks/usePromotions'
 import './promotion-banners.scss'
 
-const ICONS = { SEASON: 'filter', VOLUME: 'bag', SHIPPING: 'check' }
+const ICONS = { SEASON: 'tag', VOLUME: 'bag', SHIPPING: 'check' }
 
 // Promociones vigentes. Si fallan o no hay, no ocupan espacio (no son críticas).
 export function PromotionBanners({ exclude, className }) {

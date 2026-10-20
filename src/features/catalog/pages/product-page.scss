@@ -55,10 +55,10 @@
   }
 
   &__title {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-3xl);
 
     @include mq(md) {
-      font-size: var(--font-size-3xl);
+      font-size: 2.75rem;
     }
   }
 

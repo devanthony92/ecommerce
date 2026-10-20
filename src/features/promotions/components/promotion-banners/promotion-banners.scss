@@ -18,10 +18,10 @@
     border-radius: var(--radius-md);
     text-decoration: none;
     color: var(--color-text);
-    background-color: var(--color-info-soft);
+    background-color: var(--color-primary-soft);
 
     &--season {
-      background-color: var(--color-danger-soft);
+      background-color: var(--color-highlight);
     }
 
     &--volume {
@@ -39,6 +39,19 @@
 
   &__icon {
     margin-block-start: 2px;
+    color: var(--color-primary);
+  }
+
+  &__item--season &__icon {
+    color: var(--color-text);
+  }
+
+  &__item--volume &__icon {
+    color: var(--color-wholesale-hover);
+  }
+
+  &__item--shipping &__icon {
+    color: var(--color-success);
   }
 
   &__text {
@@ -53,5 +66,10 @@
   &__description {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
+  }
+
+  // Sobre mango el gris tibio pierde contraste: el texto secundario usa la tinta.
+  &__item--season &__description {
+    color: var(--color-text);
   }
 }

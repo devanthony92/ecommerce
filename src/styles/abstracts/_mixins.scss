@@ -23,6 +23,14 @@
   border: 0;
 }
 
+// Voz de marca: títulos, logo y precios grandes.
+@mixin display-type($stretch: var(--font-stretch-display)) {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-display);
+  font-stretch: $stretch;
+  letter-spacing: -0.005em;
+}
+
 @mixin focus-ring {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;

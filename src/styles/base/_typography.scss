@@ -18,11 +18,19 @@ h4 {
   text-wrap: balance;
 }
 
+// h1 y h2 llevan la voz de la marca; h3 y h4 (tarjetas, formularios) siguen en Inter.
+h1,
+h2 {
+  @include display-type;
+
+  line-height: 1.05;
+}
+
 h1 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
 
   @include mq(md) {
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-4xl);
   }
 }
 
@@ -36,4 +44,15 @@ a {
 
 :focus-visible {
   @include focus-ring;
+}
+
+// Superficies del navegador con la paleta de la marca.
+:root {
+  accent-color: var(--color-primary);
+  caret-color: var(--color-primary);
+}
+
+::selection {
+  color: var(--color-highlight-contrast);
+  background-color: var(--color-highlight);
 }

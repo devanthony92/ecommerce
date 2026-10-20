@@ -66,6 +66,14 @@
     &:hover:not(:disabled, [aria-disabled='true']) {
       background-color: var(--color-primary-hover);
     }
+
+    // El texto del botón deshabilitado guía ("Elige una talla"): debe leerse.
+    &:disabled:not(.button--loading),
+    &[aria-disabled='true']:not(.button--loading) {
+      opacity: 1;
+      color: var(--color-primary-hover);
+      background-color: var(--color-primary-soft);
+    }
   }
 
   &--wholesale {
@@ -74,6 +82,16 @@
 
     &:hover:not(:disabled, [aria-disabled='true']) {
       background-color: var(--color-wholesale-hover);
+    }
+  }
+
+  // Sobre superficies de color (hero, bloques de marca).
+  &--inverse {
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--color-highlight);
     }
   }
 

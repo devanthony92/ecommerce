@@ -20,7 +20,7 @@ export function HomeHero() {
           <p className="home-hero__text">
             Camisetas, jeans y más con envío a todo el país. Gratis desde $120.000.
           </p>
-          <Button as={Link} to={paths.catalog} size="lg">
+          <Button as={Link} to={paths.catalog} variant="inverse" size="lg">
             Ver catálogo
           </Button>
         </article>
@@ -30,7 +30,7 @@ export function HomeHero() {
           <p className="home-hero__text">
             Precios por volumen desde media docena, pedidos rápidos y recompra en un clic.
           </p>
-          <Button as={Link} to={wholesaleCta.to} variant="wholesale" size="lg">
+          <Button as={Link} to={wholesaleCta.to} variant="inverse" size="lg">
             {wholesaleCta.label}
           </Button>
         </article>
