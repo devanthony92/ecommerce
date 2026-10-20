@@ -4,8 +4,9 @@
   align-items: start;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+
+  // El tono lo llevan el icono y el título; sin franja lateral de color.
   border: 1px solid var(--color-border);
-  border-inline-start: 4px solid var(--toast-accent);
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-lg);
@@ -43,6 +44,16 @@
 
   &__title {
     font-weight: var(--font-weight-semibold);
+  }
+
+  &__action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-underline-offset: 0.2em;
   }
 
   &__description {

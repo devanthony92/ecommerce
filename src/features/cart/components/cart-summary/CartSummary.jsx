@@ -62,6 +62,9 @@ export function CartSummary({ summary, minimumOrder, className }) {
           Finalizar compra
         </Button>
       )}
+      <p className="cart-summary__assurance">
+        Paga con Mercado Pago o contra entrega. Tienes 30 días para cambios.
+      </p>
     </section>
   )
 }

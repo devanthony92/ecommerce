@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { EmptyState, ErrorState, Skeleton, useToast } from '@/components/feedback'
 import { Breadcrumbs } from '@/components/layout'
-import { Button, QuantityStepper } from '@/components/ui'
+import { Button, Icon, QuantityStepper } from '@/components/ui'
 import { useRequireAuth } from '@/features/auth'
 import { useCart } from '@/features/cart'
 import { FavoriteButton } from '@/features/favorites'
@@ -53,9 +53,14 @@ function ProductDetail({ product, initialColor }) {
         tone: 'success',
         title: 'Agregado al carrito',
         description: `${product.name} · ${selection.color} / ${selection.size} × ${effectiveQuantity}`,
+        action: { label: 'Ver carrito', to: paths.cart },
       })
     } catch (error) {
-      toast.show({ tone: 'danger', title: 'No pudimos agregarlo', description: error.message })
+      toast.show({
+        tone: 'danger',
+        title: 'No pudimos agregarlo al carrito',
+        description: error.userMessage ?? error.message,
+      })
     } finally {
       setIsAdding(false)
     }
@@ -113,6 +118,21 @@ function ProductDetail({ product, initialColor }) {
             Guardar en lista
           </Button>
         </div>
+        {/* Las dudas de comprar ropa en línea, resueltas junto al botón. */}
+        <ul className="product-page__assurances" role="list">
+          <li className="product-page__assurance">
+            <Icon name="bag" size="sm" />
+            Envío gratis desde $120.000
+          </li>
+          <li className="product-page__assurance">
+            <Icon name="refresh" size="sm" />
+            30 días para cambios
+          </li>
+          <li className="product-page__assurance">
+            <Icon name="check" size="sm" />
+            Paga con Mercado Pago o contra entrega
+          </li>
+        </ul>
         {variant && (
           <AddToListModal
             open={isSavingToList}
