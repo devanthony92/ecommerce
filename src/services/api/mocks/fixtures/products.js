@@ -410,7 +410,12 @@ export const products = RAW.map(
             : Math.floor(random() * 150) + 5
         return {
           id: `${slug}-${color.key}-${size}`.toLowerCase(),
-          sku: `${slug.slice(0, 8).toUpperCase()}-${color.key.slice(0, 3).toUpperCase()}-${size}`,
+          // 3 letras por palabra del slug: único entre productos (igual que el backend).
+          sku: `${slug
+            .split('-')
+            .map((word) => word.slice(0, 3))
+            .join('')
+            .toUpperCase()}-${color.key.slice(0, 3).toUpperCase()}-${size}`,
           attributes: { size, color: color.name },
           stock,
           available: stock > 0,

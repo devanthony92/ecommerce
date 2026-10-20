@@ -1,13 +1,14 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderApp } from '@/test/renderApp'
 
 // Credenciales semilla del backend simulado (src/services/api/mocks/db.js).
-async function loginAs(email) {
+async function loginAs(email, password = 'Trama1234') {
   const user = userEvent.setup()
-  await user.type(await screen.findByLabelText(/^Correo/), email)
-  await user.type(screen.getByLabelText(/^Contraseña/), 'Trama1234')
-  await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+  const dialog = await screen.findByRole('dialog', { name: 'Iniciar sesión' })
+  await user.type(within(dialog).getByLabelText(/^Correo/), email)
+  await user.type(within(dialog).getByLabelText(/^Contraseña/), password)
+  await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
 }
 
 describe('App', () => {
@@ -23,10 +24,8 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'Página no encontrada' })).toBeInTheDocument()
   })
 
-  it('redirige al login y vuelve a la ruta protegida tras ingresar', async () => {
+  it('pide iniciar sesión y vuelve a la ruta protegida tras ingresar', async () => {
     renderApp('/cuenta')
-    expect(await screen.findByRole('heading', { name: 'Ingresar' })).toBeInTheDocument()
-
     await loginAs('comprador@trama.test')
 
     expect(await screen.findByRole('heading', { name: /Hola, Laura/ })).toBeInTheDocument()
@@ -34,10 +33,7 @@ describe('App', () => {
 
   it('muestra error con credenciales inválidas', async () => {
     renderApp('/ingresar')
-    const user = userEvent.setup()
-    await user.type(await screen.findByLabelText(/^Correo/), 'nadie@trama.test')
-    await user.type(screen.getByLabelText(/^Contraseña/), 'incorrecta')
-    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+    await loginAs('nadie@trama.test', 'incorrecta')
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Correo o contraseña incorrectos.')
   })
@@ -52,10 +48,13 @@ describe('App', () => {
     expect(screen.getByRole('link', { name: 'Solicitar cuenta mayorista' })).toBeInTheDocument()
   })
 
-  it('lleva al mayorista a su panel', async () => {
+  it('el mayorista con sesión ve el acceso a su panel', async () => {
+    const user = userEvent.setup()
     renderApp('/ingresar')
     await loginAs('mayorista@trama.test')
 
+    const header = within(document.querySelector('.site-header'))
+    await user.click(await header.findByRole('link', { name: /Mi panel/ }))
     expect(await screen.findByRole('heading', { name: 'Hola, Carlos' })).toBeInTheDocument()
   })
 })

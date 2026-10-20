@@ -21,8 +21,10 @@ export function CategoryTiles() {
                   ratio="1 / 1"
                   className="category-tiles__image"
                 />
-                <span className="category-tiles__name">{category.name}</span>
-                <span className="category-tiles__count">{category.productCount} productos</span>
+                <span className="category-tiles__label">
+                  <span className="category-tiles__name">{category.name}</span>
+                  <span className="category-tiles__count">{category.productCount} productos</span>
+                </span>
               </Link>
             </li>
           ))}

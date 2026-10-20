@@ -15,8 +15,9 @@ describe('Home', () => {
       screen.getByRole('heading', { name: 'Precios mayoristas para tu tienda' }),
     ).toBeInTheDocument()
 
+    // Envío y volumen ya están en el hero: en la home solo queda la oferta de temporada.
     const promotions = await screen.findByRole('list', { name: 'Promociones' })
-    expect(within(promotions).getAllByRole('link')).toHaveLength(3)
+    expect(within(promotions).getByRole('link')).toHaveAttribute('href', '/ofertas')
 
     expect(
       await within(section('Categorías')).findAllByRole('link', { name: /productos$/ }),
@@ -24,7 +25,10 @@ describe('Home', () => {
     expect(await within(section('Destacados')).findAllByRole('article')).toHaveLength(4)
     // Las escalas por cantidad son solo para mayoristas.
     expect(screen.queryByRole('region', { name: 'Compra más, paga menos' })).not.toBeInTheDocument()
-    expect(await within(section('Los más vendidos')).findAllByRole('article')).toHaveLength(4)
+    // Los más vendidos cuelgan en el puesto del hero, cada uno con su precio.
+    const stall = await screen.findByRole('list', { name: 'Lo más vendido' })
+    expect(within(stall).getAllByRole('link', { name: /\$/ })).toHaveLength(4)
+    expect(screen.queryByRole('region', { name: 'Los más vendidos' })).not.toBeInTheDocument()
     expect(section('Beneficios')).toBeInTheDocument()
 
     // Visitante: la invitación lleva a crear cuenta y volver a la solicitud.

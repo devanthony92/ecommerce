@@ -11,7 +11,54 @@ function passwordError(password) {
   return null
 }
 
+// Mismas reglas que /auth/register, sin términos ni sesión (contrato del backend real).
+function validateSignup(body) {
+  const details = {}
+  const name = body?.name?.trim()
+  const email = body?.email?.trim().toLowerCase()
+  if (!name || name.length < 2) details.name = 'Ingresa tu nombre.'
+  if (!EMAIL_RE.test(email ?? '')) details.email = 'Ingresa un correo válido.'
+  const invalidPassword = passwordError(body?.password ?? '')
+  if (invalidPassword) details.password = invalidPassword
+  return { details, name, email }
+}
+
 export const authHandlers = {
+  // Rutas del backend real (TripleTen): registro sin sesión e inicio con solo el token.
+  'POST /signup': ({ body }) => {
+    const { details, name, email } = validateSignup(body)
+    if (Object.keys(details).length) {
+      return fail(400, 'VALIDATION_ERROR', 'Revisa los datos enviados.', details)
+    }
+    const db = getDb()
+    if (db.users.some((u) => u.email === email)) {
+      return fail(409, 'EMAIL_TAKEN', 'Ya existe una cuenta con ese correo.', {
+        email: 'Ya existe una cuenta con ese correo. ¿Quieres ingresar?',
+      })
+    }
+    const user = {
+      id: `u-${Date.now()}`,
+      name,
+      email,
+      password: body.password,
+      phone: null,
+      role: 'BUYER',
+      wholesale: { requestStatus: null },
+    }
+    db.users.push(user)
+    save()
+    return ok({ id: user.id, email: user.email, name: user.name }, 201)
+  },
+
+  'POST /signin': ({ body }) => {
+    const email = body?.email?.trim().toLowerCase()
+    const user = getDb().users.find((u) => u.email === email)
+    if (!user || user.password !== body?.password) {
+      return fail(401, 'INVALID_CREDENTIALS', 'Correo o contraseña incorrectos.')
+    }
+    return ok({ token: tokenFor(user) })
+  },
+
   'POST /auth/login': ({ body }) => {
     const email = body?.email?.trim().toLowerCase()
     const user = getDb().users.find((u) => u.email === email)

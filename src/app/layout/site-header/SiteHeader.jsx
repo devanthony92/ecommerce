@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
-import { Badge, IconButton } from '@/components/ui'
-import { Can, useAuth, useRequireAuth } from '@/features/auth'
+import { Badge, Button, IconButton } from '@/components/ui'
+import { Can, useAuth, useAuthModal } from '@/features/auth'
 import { CART_DRAWER_ID, useCart } from '@/features/cart'
 import { PERMISSIONS } from '@/constants/permissions'
 import { PANELS, useUi } from '@/hooks/useUi'
@@ -16,10 +16,10 @@ function cartLabel(count) {
 }
 
 export function SiteHeader() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, logout } = useAuth()
+  const { openLogin } = useAuthModal()
   const { itemsCount } = useCart()
   const { open, isOpen } = useUi()
-  const requireAuth = useRequireAuth()
 
   return (
     <header className="site-header">
@@ -50,22 +50,32 @@ export function SiteHeader() {
 
           <IconButton
             as={Link}
-            // Sin sesión, RequireAuth redirige al login y vuelve aquí.
+            // Sin sesión, la ruta protegida abre el inicio de sesión.
             to={paths.favorites}
             icon="heart"
             label="Favoritos"
             className="site-header__favorites"
           />
           {isAuthenticated ? (
-            <IconButton as={Link} to={paths.account} icon="user" label="Mi cuenta" />
+            <>
+              <IconButton as={Link} to={paths.account} icon="user" label="Mi cuenta" />
+              <Button variant="ghost" size="sm" className="site-header__logout" onClick={logout}>
+                Cerrar sesión
+              </Button>
+            </>
           ) : (
-            // Sin sesión: login en modal, sin perder la página actual.
-            <IconButton
-              icon="user"
-              label="Ingresar a mi cuenta"
+            // Sin sesión: inicio de sesión en modal, sin perder la página actual.
+            <Button
+              variant="secondary"
+              size="sm"
+              iconStart="user"
               aria-haspopup="dialog"
-              onClick={() => requireAuth()}
-            />
+              className="site-header__login"
+              onClick={() => openLogin()}
+            >
+              {/* En pantallas angostas solo el icono; el texto sigue siendo el nombre accesible. */}
+              <span className="site-header__login-label">Iniciar sesión</span>
+            </Button>
           )}
           <IconButton
             icon="bag"

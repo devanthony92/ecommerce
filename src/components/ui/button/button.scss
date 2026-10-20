@@ -1,3 +1,5 @@
+@use '@/styles/abstracts' as *;
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -28,11 +30,16 @@
     }
   }
 
-  // Tamaños: md cumple el mínimo táctil de 44px.
+  // Tamaños: md cumple el mínimo táctil de 44px. sm también en móvil, donde se
+  // toca con el dedo; desde md se compacta a 36px.
   &--sm {
-    min-height: 36px;
+    min-height: 44px;
     padding-inline: var(--space-3);
     font-size: var(--font-size-sm);
+
+    @include mq(md) {
+      min-height: 36px;
+    }
   }
 
   &--md {
@@ -59,6 +66,14 @@
     &:hover:not(:disabled, [aria-disabled='true']) {
       background-color: var(--color-primary-hover);
     }
+
+    // El texto del botón deshabilitado guía ("Elige una talla"): debe leerse.
+    &:disabled:not(.button--loading),
+    &[aria-disabled='true']:not(.button--loading) {
+      opacity: 1;
+      color: var(--color-primary-hover);
+      background-color: var(--color-primary-soft);
+    }
   }
 
   &--wholesale {
@@ -67,6 +82,16 @@
 
     &:hover:not(:disabled, [aria-disabled='true']) {
       background-color: var(--color-wholesale-hover);
+    }
+  }
+
+  // Sobre superficies de color (hero, bloques de marca).
+  &--inverse {
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--color-highlight);
     }
   }
 

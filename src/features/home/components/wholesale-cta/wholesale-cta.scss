@@ -7,16 +7,20 @@
   padding: var(--space-10) var(--space-5);
   border-radius: var(--radius-lg);
   text-align: center;
-  color: var(--color-primary-contrast);
-  background-color: var(--color-primary);
+
+  // Bloque de cierre en selva: el botón ladrillo marca la acción mayorista.
+  --color-focus: var(--color-highlight);
+
+  color: var(--color-inverse-text);
+  background-color: var(--color-inverse);
 
   &__title {
-    font-size: clamp(var(--font-size-2xl), 5vw, var(--font-size-3xl));
+    font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem);
   }
 
   &__text {
     max-width: 44ch;
-    opacity: 0.9;
+    color: var(--color-inverse-muted);
   }
 
   &__actions {

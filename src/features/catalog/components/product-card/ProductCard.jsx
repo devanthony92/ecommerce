@@ -8,8 +8,8 @@ import { usePrefetchProduct } from '../../hooks/usePrefetchProduct'
 import './product-card.scss'
 
 const TAG_BADGES = {
-  new: { label: 'Nuevo', tone: 'info' },
-  bestseller: { label: 'Más vendido', tone: 'neutral' },
+  new: { label: 'Nuevo', tone: 'brand' },
+  bestseller: { label: 'Más vendido', tone: 'highlight' },
 }
 
 const MAX_SWATCHES = 4

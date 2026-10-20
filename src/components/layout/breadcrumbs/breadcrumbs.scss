@@ -20,7 +20,11 @@
     }
   }
 
+  // El área táctil crece hacia arriba y abajo sin cambiar el texto.
   &__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: var(--color-text-muted);
 
     &:hover {

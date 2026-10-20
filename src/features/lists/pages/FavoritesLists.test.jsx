@@ -13,10 +13,10 @@ describe('Favoritos', () => {
     await user.click(
       await screen.findByRole('button', { name: 'Agregar Gorra béisbol a favoritos' }),
     )
-    const dialog = screen.getByRole('dialog', { name: 'Ingresa a tu cuenta' })
+    const dialog = screen.getByRole('dialog', { name: 'Iniciar sesión' })
     await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
     await user.type(within(dialog).getByLabelText(/^Contraseña/), 'Trama1234')
-    await user.click(within(dialog).getByRole('button', { name: 'Ingresar' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
 
     expect(
       await screen.findByRole('button', { name: 'Quitar Gorra béisbol de favoritos' }),

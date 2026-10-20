@@ -14,7 +14,7 @@ const ITEMS = [
 ]
 
 export function WholesaleLayout() {
-  const { user } = useAuth()
+  const { currentUser: user } = useAuth()
 
   return (
     <div className="wholesale-layout">

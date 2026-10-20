@@ -20,7 +20,7 @@ export function WholesaleCta() {
         <Button as={Link} to={cta.to} variant="wholesale" size="lg">
           {cta.kind === 'apply' ? 'Convertirme en mayorista' : cta.label}
         </Button>
-        <Button as={Link} to={paths.wholesaleLanding} variant="secondary" size="lg">
+        <Button as={Link} to={paths.wholesaleLanding} variant="inverse" size="lg">
           Cómo funciona
         </Button>
       </div>

@@ -33,8 +33,8 @@ const PAGES = [
   { name: 'ofertas', route: '/ofertas', ready: 'Ofertas' },
   { name: 'inspiración', route: '/inspiracion', ready: 'Inspiración' },
   { name: 'mayoristas', route: '/mayoristas', ready: 'Compra por mayor y gana más en tu negocio' },
-  { name: 'login', route: '/ingresar', ready: 'Ingresar' },
-  { name: 'registro', route: '/registro', ready: 'Crear cuenta' },
+  { name: 'login', route: '/ingresar', ready: 'Iniciar sesión' },
+  { name: 'registro', route: '/registro', ready: 'Registrarse' },
   { name: 'carrito', route: '/carrito', ready: 'Carrito', as: 'wholesale', seedCart: true },
   {
     name: 'checkout',

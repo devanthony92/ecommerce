@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { Drawer } from '@/components/drawer'
 import { Skeleton } from '@/components/feedback'
 import { Button } from '@/components/ui'
-import { Can, useAuth } from '@/features/auth'
+import { Can, useAuth, useAuthModal } from '@/features/auth'
 import { useCategories } from '@/features/catalog'
 import { PERMISSIONS } from '@/constants/permissions'
 import { PANELS, useUi } from '@/hooks/useUi'
@@ -29,6 +29,7 @@ function MenuSection({ title, children }) {
 export function MobileMenu() {
   const { isOpen, close } = useUi()
   const { isAuthenticated, logout } = useAuth()
+  const { openLogin, openRegister } = useAuthModal()
   const { data: categories, isPending } = useCategories()
 
   return (
@@ -47,11 +48,24 @@ export function MobileMenu() {
         ) : (
           // El footer del Drawer ya apila los botones.
           <>
-            <Button as={Link} to={paths.login} block>
-              Ingresar
+            <Button
+              block
+              onClick={() => {
+                close()
+                openLogin()
+              }}
+            >
+              Iniciar sesión
             </Button>
-            <Button as={Link} to={paths.register} variant="secondary" block>
-              Crear cuenta
+            <Button
+              variant="secondary"
+              block
+              onClick={() => {
+                close()
+                openRegister()
+              }}
+            >
+              Registrarse
             </Button>
           </>
         )

@@ -8,7 +8,7 @@ import './photo-list.scss'
  * Fotos en filas de tres (menos columnas en pantallas chicas). "Mostrar más"
  * agrega las siguientes y desaparece cuando ya se ven todas.
  */
-export function PhotoList({ photos, hasMore, onShowMore, className }) {
+export function PhotoList({ photos, hasMore, onShowMore, renderBadge, renderAction, className }) {
   const links = useRef([])
   const focusIndex = useRef(null)
 
@@ -26,6 +26,8 @@ export function PhotoList({ photos, hasMore, onShowMore, className }) {
           <li key={photo.id}>
             <PhotoCard
               photo={photo}
+              badge={renderBadge?.(photo)}
+              action={renderAction?.(photo)}
               linkRef={(element) => {
                 links.current[index] = element
               }}

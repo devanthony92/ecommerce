@@ -39,8 +39,9 @@ export function toApiError(error) {
 export function handleResponseError(error) {
   const apiError = toApiError(error)
 
-  // Un 401 en /auth/* es "credenciales inválidas", no una sesión vencida.
-  const isAuthEndpoint = error.config?.url?.startsWith('/auth/')
+  // Un 401 al ingresar es "credenciales inválidas", no una sesión vencida.
+  const url = error.config?.url ?? ''
+  const isAuthEndpoint = url.startsWith('/auth/') || url === '/signin' || url === '/signup'
   if (apiError.status === 401 && !isAuthEndpoint && unauthorizedHandler) {
     unauthorizedHandler()
   }

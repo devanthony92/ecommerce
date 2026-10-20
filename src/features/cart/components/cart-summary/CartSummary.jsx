@@ -2,6 +2,7 @@ import { useId } from 'react'
 import { Link } from 'react-router'
 import clsx from 'clsx'
 import { Button, Price } from '@/components/ui'
+import { unitsLabel } from '@/features/pricing'
 import { paths } from '@/constants/paths'
 import { formatMoney } from '@/utils/formatMoney'
 import { MinimumOrderNotice } from '../minimum-order-notice/MinimumOrderNotice'
@@ -20,7 +21,7 @@ export function CartSummary({ summary, minimumOrder, className }) {
 
       <dl className="cart-summary__rows">
         <div className="cart-summary__row">
-          <dt>Subtotal ({summary.itemsCount} unidades)</dt>
+          <dt>Subtotal ({unitsLabel(summary.itemsCount)})</dt>
           <dd>
             <Price amount={summary.subtotal} size="sm" />
           </dd>
@@ -61,6 +62,9 @@ export function CartSummary({ summary, minimumOrder, className }) {
           Finalizar compra
         </Button>
       )}
+      <p className="cart-summary__assurance">
+        Paga con Mercado Pago o contra entrega. Tienes 30 días para cambios.
+      </p>
     </section>
   )
 }

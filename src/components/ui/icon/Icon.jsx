@@ -8,6 +8,12 @@ const ICONS = {
   minus: <path d="M5 12h14" />,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
   filter: <path d="M4 6h16M7 12h10M10 18h4" />,
+  tag: (
+    <>
+      <path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9z" />
+      <circle cx="7.5" cy="7.5" r="1.5" />
+    </>
+  ),
   bag: (
     <>
       <path d="M6 8h12l-1 12H7L6 8Z" />
@@ -21,6 +27,8 @@ const ICONS = {
     </>
   ),
   heart: <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z" />,
+  bookmark: <path d="M7 4h10v16l-5-4-5 4V4Z" />,
+  trash: <path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" />,
   search: (
     <>
       <circle cx="11" cy="11" r="6" />

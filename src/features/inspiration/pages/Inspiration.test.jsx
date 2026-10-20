@@ -1,5 +1,6 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { getDb, resetDb, save } from '@/services/api/mocks/db'
 import { storage, STORAGE_KEYS } from '@/services/storage/storage'
 import { renderApp } from '@/test/renderApp'
 
@@ -37,6 +38,7 @@ async function searchFor(user, keyword) {
   await user.click(screen.getByRole('button', { name: 'Buscar fotos' }))
 }
 
+beforeEach(() => resetDb())
 afterEach(() => vi.unstubAllGlobals())
 
 describe('Inspiración (Unsplash)', () => {
@@ -124,5 +126,138 @@ describe('Inspiración (Unsplash)', () => {
     expect(within(results()).getAllByRole('figure')).toHaveLength(3)
     expect(screen.getByLabelText('Estilo, prenda o color')).toHaveValue('oficina')
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+})
+
+describe('Inspiraciones guardadas (back-end propio)', () => {
+  function seedSaved(userId, items) {
+    getDb().inspirations[userId] = items.map((item, index) => ({
+      id: index + 1,
+      alt: `Foto ${index + 1}`,
+      photographer: 'Ana',
+      photographerUrl: 'https://unsplash.com/@ana',
+      link: `https://unsplash.com/photos/f${index + 1}`,
+      image: `https://images.unsplash.com/photo-${index + 1}`,
+      createdAt: '2026-10-01T00:00:00Z',
+      ...item,
+    }))
+    save()
+  }
+
+  it('sin sesión abre el registro; con "Iniciar sesión" ingresa y guarda la foto', async () => {
+    const user = userEvent.setup()
+    mockFetch(okResponse(3))
+    renderApp('/inspiracion')
+    await searchFor(user, 'denim')
+
+    const [firstSave] = await within(results()).findAllByRole('button', {
+      name: 'Inicia sesión para guardar',
+    })
+    expect(firstSave).not.toHaveAttribute('aria-pressed')
+    await user.click(firstSave)
+
+    // Se ofrece crear la cuenta, con la opción de iniciar sesión.
+    let dialog = await screen.findByRole('dialog', { name: 'Registrarse' })
+    expect(
+      within(dialog).getByText('Para guardar esta foto necesitas una cuenta.'),
+    ).toBeInTheDocument()
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    dialog = await screen.findByRole('dialog', { name: 'Iniciar sesión' })
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'Trama1234')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    await waitFor(() => expect(getDb().inspirations['u-buyer']).toHaveLength(1))
+    expect(getDb().inspirations['u-buyer'][0]).toMatchObject({
+      keyword: 'denim',
+      photoId: 'foto-1',
+    })
+    expect(
+      await within(results()).findByRole('button', { name: 'Quitar de mis inspiraciones' }),
+    ).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('sin cuenta: se registra, inicia sesión y la foto pendiente se guarda', async () => {
+    const user = userEvent.setup()
+    mockFetch(okResponse(3))
+    renderApp('/inspiracion')
+    await searchFor(user, 'denim')
+
+    const [, secondSave] = await within(results()).findAllByRole('button', {
+      name: 'Inicia sesión para guardar',
+    })
+    await user.click(secondSave)
+
+    let dialog = await screen.findByRole('dialog', { name: 'Registrarse' })
+    await user.type(within(dialog).getByLabelText(/^Nombre/), 'Ana Ruiz')
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'ana@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'trama2026')
+    await user.type(within(dialog).getByLabelText(/^Confirmar contraseña/), 'trama2026')
+    await user.click(within(dialog).getByRole('checkbox', { name: /Acepto los términos/ }))
+    await user.click(within(dialog).getByRole('button', { name: 'Registrarse' }))
+
+    dialog = await screen.findByRole('dialog', { name: 'Registro completado' })
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    dialog = await screen.findByRole('dialog', { name: 'Iniciar sesión' })
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'ana@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'trama2026')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    const ana = getDb().users.find((item) => item.email === 'ana@trama.test')
+    await waitFor(() => expect(getDb().inspirations[ana.id]).toHaveLength(1))
+    expect(getDb().inspirations[ana.id][0]).toMatchObject({ photoId: 'foto-2' })
+  })
+
+  it('con sesión guarda y quita; el contador del enlace se actualiza', async () => {
+    const user = userEvent.setup()
+    mockFetch(okResponse(3))
+    renderApp('/inspiracion', { as: 'buyer' })
+    await searchFor(user, 'oficina')
+
+    const [firstSave] = await within(results()).findAllByRole('button', {
+      name: 'Guardar en mis inspiraciones',
+    })
+    await user.click(firstSave)
+    expect(
+      await screen.findByRole('link', { name: 'Ver mis inspiraciones guardadas (1)' }),
+    ).toBeInTheDocument()
+
+    await user.click(within(results()).getByRole('button', { name: 'Quitar de mis inspiraciones' }))
+    expect(
+      await screen.findByRole('link', { name: 'Ver mis inspiraciones guardadas (0)' }),
+    ).toBeInTheDocument()
+  })
+
+  it('la página de guardadas es protegida', async () => {
+    renderApp('/inspiracion/guardadas')
+    expect(await screen.findByRole('dialog', { name: 'Iniciar sesión' })).toBeInTheDocument()
+  })
+
+  it('lista las guardadas con su palabra clave, resume las palabras y permite borrar', async () => {
+    const user = userEvent.setup()
+    seedSaved('u-buyer', [
+      { keyword: 'Denim', photoId: 'f11' },
+      { keyword: 'Oficina', photoId: 'f12' },
+      { keyword: 'Denim', photoId: 'f13' },
+      { keyword: 'Verano', photoId: 'f14' },
+      { keyword: 'Noche', photoId: 'f15' },
+    ])
+    renderApp('/inspiracion/guardadas', { as: 'buyer' })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Inspiraciones guardadas', level: 1 }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Laura, tienes 5 inspiraciones guardadas.')).toBeInTheDocument()
+    expect(screen.getByText('Denim, Oficina y 2 más')).toBeInTheDocument()
+
+    const cards = screen.getAllByRole('figure')
+    expect(cards).toHaveLength(3)
+    expect(within(cards[0]).getByText('Denim')).toBeInTheDocument()
+
+    await user.click(within(cards[0]).getByRole('button', { name: /^Eliminar Foto 1/ }))
+    expect(await screen.findByText('Laura, tienes 4 inspiraciones guardadas.')).toBeInTheDocument()
+    expect(getDb().inspirations['u-buyer'].map((item) => item.id)).not.toContain(1)
   })
 })

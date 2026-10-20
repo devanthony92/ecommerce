@@ -1,0 +1,23 @@
+@use '@/styles/abstracts' as *;
+
+.saved-inspirations {
+  display: grid;
+  gap: var(--space-5);
+
+  &__keywords {
+    color: var(--color-text-muted);
+  }
+
+  &__delete {
+    @include overlay-icon-button;
+
+    &:hover {
+      color: var(--color-danger);
+    }
+
+    &:disabled {
+      cursor: progress;
+      opacity: 0.6;
+    }
+  }
+}
