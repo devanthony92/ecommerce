@@ -214,7 +214,7 @@ Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Pat
 ### Layout
 
 - `components/layout` (genéricos): `PageHeader`, `SectionNav` (pestañas en móvil; `orientation="auto"` pasa a sidebar desde lg).
-- `app/layout` (shell, compone features): `MainLayout` (skip link, foco y scroll al navegar, error boundary por ruta), `SiteHeader`, `HeaderSearch`, `CategoryNav`, `MobileMenu` (Drawer izquierdo), `SiteFooter`, `AccountLayout` (sidebar en desktop / pestañas en móvil), `WholesaleLayout` (banda cobre + pestañas).
+- `app/layout` (shell, compone features): `MainLayout` (skip link, foco y scroll al navegar, error boundary por ruta), `SiteHeader`, `HeaderSearch`, `CategoryNav`, `MobileMenu` (Drawer izquierdo), `SiteFooter`, `AccountLayout` (sidebar en desktop / pestañas en móvil), `WholesaleLayout` (banda ladrillo + pestañas).
 - `CartDrawer` vive en `features/cart` y lo monta `MainLayout`.
 
 ### `components/modal`

@@ -193,6 +193,8 @@
 
   // Cierre: la invitación vuelve después de resolver las dudas.
   &__closing {
+    --color-focus: var(--color-highlight);
+
     display: grid;
     justify-items: start;
     gap: var(--space-4);

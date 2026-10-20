@@ -57,7 +57,9 @@
   --color-overlay: rgb(20 20 20 / 50%);
   --color-surface-overlay: rgb(255 255 255 / 92%);
   --color-shimmer: rgb(255 255 255 / 60%);
-  --color-focus: #2f6fd6;
+
+  // Foco en selva: contrasta sobre crema y superficies claras (12:1) y es de la marca.
+  --color-focus: var(--brand-selva);
 
   // Tipografía
   --font-family-base: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;

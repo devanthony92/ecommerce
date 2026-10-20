@@ -169,6 +169,9 @@
       repeating-linear-gradient(90deg, rgb(255 255 255 / 4%) 0 1px, transparent 1px 5px),
       repeating-linear-gradient(0deg, rgb(0 0 0 / 5%) 0 1px, transparent 1px 5px);
 
+    // El azul de foco no contrasta sobre buganvilla ni ladrillo; mango sí (≥ 4:1).
+    --color-focus: var(--color-highlight);
+
     // Cada propuesta es dueña de su color: buganvilla el detal, ladrillo el mayorista.
     &--retail {
       --hero-muted: var(--color-on-primary-muted);
