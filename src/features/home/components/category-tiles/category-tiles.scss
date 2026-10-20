@@ -73,7 +73,7 @@
 
   // La categoría destacada llena su doble alto.
   @include mq(lg) {
-    > li:first-child &__image {
+    > li:first-child .category-tiles__image {
       aspect-ratio: auto !important;
     }
   }
@@ -91,7 +91,7 @@
     line-height: 1.05;
   }
 
-  > li:first-child &__name {
+  > li:first-child .category-tiles__name {
     @include mq(lg) {
       font-size: var(--font-size-section);
     }
