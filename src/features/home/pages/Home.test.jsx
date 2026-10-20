@@ -15,8 +15,9 @@ describe('Home', () => {
       screen.getByRole('heading', { name: 'Precios mayoristas para tu tienda' }),
     ).toBeInTheDocument()
 
+    // Envío y volumen ya están en el hero: en la home solo queda la oferta de temporada.
     const promotions = await screen.findByRole('list', { name: 'Promociones' })
-    expect(within(promotions).getAllByRole('link')).toHaveLength(3)
+    expect(within(promotions).getByRole('link')).toHaveAttribute('href', '/ofertas')
 
     expect(
       await within(section('Categorías')).findAllByRole('link', { name: /productos$/ }),

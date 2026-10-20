@@ -50,7 +50,8 @@ export default function HomePage() {
       />
 
       <div className="home-page__offers">
-        <PromotionBanners />
+        {/* Envío gratis y precio por volumen ya están en el hero y en la banda de garantías. */}
+        <PromotionBanners exclude={['VOLUME', 'SHIPPING']} />
         {/* Las escalas por cantidad solo existen para cuentas mayoristas. */}
         <Can permission={PERMISSIONS.WHOLESALE_ACCESS}>
           <VolumeOffers />

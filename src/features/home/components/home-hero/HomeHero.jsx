@@ -21,7 +21,7 @@ export function HomeHero() {
         <article className="home-hero__option home-hero__option--retail">
           <h2 className="home-hero__option-title">Desde una sola prenda</h2>
           <p className="home-hero__text">
-            Camisetas, jeans y más con envío a todo el país. Gratis desde $120.000.
+            Camisetas, jeans, camisas y chaquetas para el día a día.
           </p>
           <Button as={Link} to={paths.catalog} variant="inverse" size="lg">
             Ver catálogo

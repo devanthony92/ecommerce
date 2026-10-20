@@ -42,6 +42,19 @@
     color: var(--color-primary);
   }
 
+  // La temporada es la única oferta real: se anuncia como letrero.
+  &__item--season {
+    align-items: center;
+    padding: var(--space-5) var(--space-6);
+  }
+
+  &__item--season &__title {
+    @include display-type;
+
+    font-size: clamp(var(--font-size-xl), 1rem + 1.6vw, var(--font-size-3xl));
+    line-height: 1.05;
+  }
+
   &__item--season &__icon {
     color: var(--color-text);
   }
