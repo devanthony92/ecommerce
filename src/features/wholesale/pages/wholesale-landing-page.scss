@@ -4,10 +4,10 @@
   display: grid;
   gap: var(--space-12);
 
+  // Promesa a la izquierda; a la derecha, la prueba: cómo baja el precio.
   &__hero {
     display: grid;
-    justify-items: start;
-    gap: var(--space-4);
+    gap: var(--space-8);
     padding: var(--space-8) var(--space-5);
     border-radius: var(--radius-lg);
     background-color: var(--color-wholesale-soft);
@@ -15,19 +15,88 @@
     @include mq(md) {
       padding: var(--space-12) var(--space-10);
     }
+
+    @include mq(lg) {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      align-items: end;
+      gap: var(--space-12);
+    }
   }
 
-  &__eyebrow {
+  &__intro {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-4);
+  }
+
+  // Escalera: cada escalón más bajo, como el precio al sumar unidades.
+  &__scale {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  &__scale-title {
+    @include display-type;
+
+    font-size: var(--font-size-xl);
+  }
+
+  &__scale-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: end;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  &__scale-step {
+    display: grid;
+    align-content: start;
+    gap: var(--space-1);
+    min-height: 11rem;
+    padding: var(--space-3) var(--space-2);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    color: var(--color-wholesale-contrast);
+    background-color: var(--color-wholesale-hover);
+
+    &:nth-child(2) {
+      min-height: 9rem;
+    }
+
+    &:nth-child(3) {
+      min-height: 7rem;
+    }
+
+    &:nth-child(4) {
+      min-height: 5.5rem;
+      color: var(--color-highlight-contrast);
+      background-color: var(--color-highlight);
+    }
+  }
+
+  &__scale-qty {
+    @include display-type(88%);
+
+    font-size: var(--font-size-md);
+    line-height: 1.1;
+  }
+
+  &__scale-text {
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
+  }
+
+  &__scale-note {
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-wholesale-hover);
+    color: var(--color-text-muted);
   }
 
   &__title {
     max-width: 20ch;
-    font-size: var(--font-size-display);
+
+    // Comparte fila con la escalera: un paso por debajo del display de la home.
+    font-size: clamp(2.75rem, 1.5rem + 3.4vw, 4.5rem);
     line-height: var(--line-height-display);
   }
 
@@ -47,9 +116,19 @@
     display: grid;
     gap: var(--space-5);
 
-    > h2 {
+    h2 {
       font-size: var(--font-size-section);
     }
+  }
+
+  &__section-header {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  &__section-text {
+    max-width: 60ch;
+    color: var(--color-text-muted);
   }
 
   &__steps {
@@ -65,6 +144,7 @@
 
   &__step {
     display: grid;
+    align-content: start;
     justify-items: start;
     gap: var(--space-2);
   }
@@ -109,5 +189,29 @@
   &__answer {
     padding: 0 var(--space-4) var(--space-4);
     color: var(--color-text-muted);
+  }
+
+  // Cierre: la invitación vuelve después de resolver las dudas.
+  &__closing {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-4);
+    padding: var(--space-10) var(--space-5);
+    border-radius: var(--radius-lg);
+    color: var(--color-wholesale-contrast);
+    background-color: var(--color-wholesale-hover);
+
+    @include mq(md) {
+      padding: var(--space-12) var(--space-10);
+    }
+  }
+
+  &__closing-title {
+    font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem);
+  }
+
+  &__closing-text {
+    max-width: 50ch;
+    color: var(--color-on-wholesale-muted);
   }
 }

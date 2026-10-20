@@ -24,7 +24,10 @@ describe('Home', () => {
     expect(await within(section('Destacados')).findAllByRole('article')).toHaveLength(4)
     // Las escalas por cantidad son solo para mayoristas.
     expect(screen.queryByRole('region', { name: 'Compra más, paga menos' })).not.toBeInTheDocument()
-    expect(await within(section('Los más vendidos')).findAllByRole('article')).toHaveLength(4)
+    // Los más vendidos cuelgan en el puesto del hero, cada uno con su precio.
+    const stall = await screen.findByRole('list', { name: 'Lo más vendido' })
+    expect(within(stall).getAllByRole('link', { name: /\$/ })).toHaveLength(4)
+    expect(screen.queryByRole('region', { name: 'Los más vendidos' })).not.toBeInTheDocument()
     expect(section('Beneficios')).toBeInTheDocument()
 
     // Visitante: la invitación lleva a crear cuenta y volver a la solicitud.

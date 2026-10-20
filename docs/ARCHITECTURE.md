@@ -256,7 +256,7 @@ Helper `QueryBoundary`: recibe `{ isLoading, isError, error, refetch, isEmpty }`
 | `lists`      | `PurchaseList`, `PurchaseListItem`, `ListCard`, `CreateListModal`, `AddToListModal`                                                                                          | `useLists`, `useList`, `useListMutations`, `useAddListToCart`                                                                            |
 | `wholesale`  | `WholesaleSummaryCard`, `ProgramBenefits`, `WholesaleRequestForm`, `WholesaleRequestStatus`, `WholesaleRequestModal`, `QuickOrder`, `FrequentProducts`, `WholesaleDashboard` | `useWholesaleProfile`, `useWholesaleProgram`, `useWholesaleRequest`, `useSubmitWholesaleRequest`, `useFrequentProducts`, `useQuickOrder` |
 | `promotions` | `PromotionBanner`, `VolumeOffers`                                                                                                                                            | `usePromotions`                                                                                                                          |
-| `home`       | `HomeHero` (dos CTAs: individual / mayorista), `FeaturedProducts`, `BestSellers`, `BenefitsStrip`, `WholesaleCta`                                                            | — (usa hooks de otros features)                                                                                                          |
+| `home`       | `HomeHero` + `HeroStall` (puesto con los más vendidos y dos CTAs), `CategoryTiles`, `ProductShelf`, `BenefitsStrip`, `WholesaleCta`                                          | — (usa hooks de otros features)                                                                                                          |
 
 `PurchaseProgress` de la spec queda cubierto por `QuantityTierProgress` + `FreeShippingProgress`, ambos sobre `ProgressBar`.
 
@@ -649,7 +649,7 @@ No hay niveles: todos los mayoristas aprobados tienen las mismas condiciones.
 Home y promociones (fase 14):
 
 - `GET /promotions/active` → `[{ id, type: SEASON | VOLUME | SHIPPING, title, description, link, startsAt, endsAt }]`. El backend filtra por vigencia (el mock devuelve todas para que la demo no dependa de la fecha).
-- La home solo compone secciones (hero con las dos propuestas, promociones, categorías, destacados, "Compra más, paga menos" con escalas reales (solo para mayoristas), más vendidos, beneficios e invitación mayorista); cada sección pide sus datos y maneja sus estados.
+- La home solo compone secciones, en este orden: hero (título, puesto de mercado con los 4 más vendidos colgados con su letrero de precio y las dos propuestas) con la banda de beneficios pegada; categorías; destacados; ofertas (promociones y "Compra más, paga menos" con escalas reales, solo para mayoristas); invitación mayorista. Los más vendidos no se repiten en una vitrina aparte. Ritmo: bloques internos juntos (`space-6/8`), capítulos separados por `space-16/24`. Cada sección pide sus datos y maneja sus estados.
 - `CatalogView` acepta `baseParams` (filtros fijos, p. ej. `{ onSale: true }`) e `intro`.
 
 Favoritos y listas (fase 13):

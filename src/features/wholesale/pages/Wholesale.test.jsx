@@ -81,19 +81,20 @@ describe('Programa mayorista', () => {
     expect(
       await screen.findByRole('heading', { name: 'Compra por mayor y gana más en tu negocio' }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Crear cuenta y solicitar' })).toHaveAttribute(
-      'href',
-      '/registro?next=%2Fcuenta%2Fsolicitud-mayorista',
-    )
+    // La invitación abre la página y la cierra, después de las preguntas frecuentes.
+    const invitations = screen.getAllByRole('link', { name: 'Crear cuenta y solicitar' })
+    expect(invitations).toHaveLength(2)
+    for (const link of invitations) {
+      expect(link).toHaveAttribute('href', '/registro?next=%2Fcuenta%2Fsolicitud-mayorista')
+    }
+    expect(screen.getByRole('figure', { name: 'Así baja tu precio' })).toBeInTheDocument()
     expect(await screen.findByText('Precios por volumen desde media docena')).toBeInTheDocument()
     expect(screen.getByText(/^Pedido mínimo:/)).toHaveTextContent(/120\.000/)
   })
 
   it('el mayorista ve su solicitud aprobada y su panel en la invitación', async () => {
     renderApp('/mayoristas', { as: 'wholesale' })
-    expect(await screen.findByRole('link', { name: 'Ir a mi panel mayorista' })).toHaveAttribute(
-      'href',
-      '/mayorista',
-    )
+    const links = await screen.findAllByRole('link', { name: 'Ir a mi panel mayorista' })
+    for (const link of links) expect(link).toHaveAttribute('href', '/mayorista')
   })
 })
