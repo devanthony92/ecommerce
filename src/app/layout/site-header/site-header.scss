@@ -96,6 +96,18 @@
     margin-inline-end: var(--space-1);
   }
 
+  // Bajo md es solo un icono: sin caja, al mismo peso que el carrito.
+  &__login.button {
+    min-width: 44px;
+    padding-inline: 0;
+    border-color: transparent;
+
+    @include mq(md) {
+      padding-inline: var(--space-3);
+      border-color: var(--color-border-strong);
+    }
+  }
+
   // Bajo md solo se ve el icono: con el texto, la primera fila del header no cabe en 320 px.
   &__login-label {
     @include visually-hidden;

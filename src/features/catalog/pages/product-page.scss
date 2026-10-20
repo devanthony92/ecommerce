@@ -62,6 +62,44 @@
     }
   }
 
+  // Barra fija inferior solo en una columna (bajo lg), en la zona del pulgar.
+  &__sticky-buy {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: var(--z-header);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--gutter) max(var(--space-3), env(safe-area-inset-bottom));
+    border-block-start: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    box-shadow: 0 -6px 16px rgb(70 35 10 / 10%);
+    animation: sticky-buy-enter var(--duration-base) cubic-bezier(0.22, 1, 0.36, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+
+    @include mq(lg) {
+      display: none;
+    }
+  }
+
+  &__sticky-info {
+    display: grid;
+    min-width: 0;
+  }
+
+  &__sticky-name {
+    overflow: hidden;
+    font-size: var(--font-size-sm);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--color-text-muted);
+  }
+
   &__assurances {
     display: grid;
     gap: var(--space-2);
@@ -133,5 +171,20 @@
   &__subtitle {
     font-size: var(--font-size-md);
     color: var(--color-text);
+  }
+}
+
+// Con la barra fija visible, el final de la página (footer) no queda debajo de ella.
+body:has(.product-page__sticky-buy) {
+  padding-block-end: 4.5rem;
+
+  @include mq(lg) {
+    padding-block-end: 0;
+  }
+}
+
+@keyframes sticky-buy-enter {
+  from {
+    transform: translateY(100%);
   }
 }
