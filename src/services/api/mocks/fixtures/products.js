@@ -1,6 +1,7 @@
 // Catálogo simulado. Determinista: mismo resultado en cada carga.
 import { categories } from './categories'
 import { productImage } from './productImage'
+import { productPhoto } from './productPhotos'
 
 const COLORS = {
   negro: { name: 'Negro', hex: '#1a1a1a' },
@@ -436,13 +437,16 @@ export const products = RAW.map(
       colors,
       sizes,
       variants,
-      images: colors.map((color) => ({
-        url: productImage(shape, color.hex),
-        alt: `${name} color ${color.name.toLowerCase()}`,
-        color: color.name,
-        width: 400,
-        height: 500,
-      })),
+      images: colors.map((color) => {
+        const photo = productPhoto(slug, color.name)
+        return {
+          url: photo ?? productImage(shape, color.hex),
+          alt: `${name} color ${color.name.toLowerCase()}`,
+          color: color.name,
+          width: photo ? 800 : 400,
+          height: photo ? 1000 : 500,
+        }
+      }),
       description: `${name} confeccionada en Colombia. Ideal para venta al detal o para surtir tu tienda con precios por volumen.`,
       createdAt: new Date(NOW - Math.floor(random() * 120) * DAY).toISOString(),
       sold: Math.floor(random() * 900),
