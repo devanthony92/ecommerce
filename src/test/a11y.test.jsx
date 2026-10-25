@@ -27,7 +27,7 @@ async function audit() {
 }
 
 const PAGES = [
-  { name: 'home', route: '/', ready: 'Ropa para ti y para tu negocio' },
+  { name: 'home', route: '/', ready: 'Destacados' },
   { name: 'catálogo', route: '/catalogo', ready: 'Catálogo' },
   { name: 'producto', route: '/producto/camiseta-basica', ready: 'Camiseta básica' },
   { name: 'ofertas', route: '/ofertas', ready: 'Ofertas' },

@@ -62,6 +62,11 @@ const ICONS = {
       <path d="M4 13h5l1 2h4l1-2h5" />
     </>
   ),
+  chat: (
+    <path d="M5 5h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8l-5 4v-4H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1ZM8 10h8M8 13h5" />
+  ),
+  pause: <path d="M9 6v12M15 6v12" />,
+  play: <path d="M8 5.5v13l10.5-6.5L8 5.5Z" />,
   refresh: <path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5" />,
   eye: (
     <>
