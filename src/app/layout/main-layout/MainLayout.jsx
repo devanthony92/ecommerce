@@ -2,6 +2,7 @@ import { Suspense, useEffect, useRef } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { LoadingState, RouteErrorBoundary } from '@/components/feedback'
 import { CartDrawer } from '@/features/cart'
+import { ChatWidget } from '@/features/chat'
 import { MobileMenu } from '../mobile-menu/MobileMenu'
 import { SiteFooter } from '../site-footer/SiteFooter'
 import { SiteHeader } from '../site-header/SiteHeader'
@@ -51,6 +52,7 @@ export function MainLayout() {
       <SiteFooter />
       <MobileMenu />
       <CartDrawer />
+      <ChatWidget />
     </div>
   )
 }

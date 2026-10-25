@@ -2,6 +2,7 @@ import { addressHandlers } from './handlers/addressHandlers'
 import { authHandlers } from './handlers/authHandlers'
 import { cartHandlers } from './handlers/cartHandlers'
 import { catalogHandlers } from './handlers/catalogHandlers'
+import { chatHandlers } from './handlers/chatHandlers'
 import { inspirationHandlers } from './handlers/inspirationHandlers'
 import { listHandlers } from './handlers/listHandlers'
 import { orderHandlers } from './handlers/orderHandlers'
@@ -22,4 +23,5 @@ export const routes = defineRoutes({
   ...listHandlers,
   ...promotionHandlers,
   ...inspirationHandlers,
+  ...chatHandlers,
 })
