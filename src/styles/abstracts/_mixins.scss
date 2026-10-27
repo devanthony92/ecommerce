@@ -23,12 +23,19 @@
   border: 0;
 }
 
-// Voz de marca: títulos, logo y precios grandes.
+// Voz de marca: títulos brutalistas, logo y precios grandes.
 @mixin display-type($stretch: var(--font-stretch-display)) {
   font-family: var(--font-family-display);
   font-weight: var(--font-weight-display);
   font-stretch: $stretch;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.02em;
+}
+
+// Capa neumórfica sutil sobre obsidiana con bisel superior especular.
+@mixin neumorphic-surface {
+  border: 1px solid var(--color-border);
+  background: linear-gradient(165deg, rgb(22 27 38 / 92%) 0%, rgb(11 13 18 / 96%) 100%);
+  box-shadow: var(--shadow-sm);
 }
 
 @mixin focus-ring {
@@ -43,13 +50,17 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 0;
+  border: 1px solid rgb(255 255 255 / 12%);
   border-radius: var(--radius-pill);
   color: var(--color-text);
   background-color: var(--color-surface-overlay);
+  backdrop-filter: blur(10px);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition: color var(--duration-fast);
+  transition:
+    color var(--duration-fast),
+    border-color var(--duration-fast),
+    transform var(--duration-fast);
 
   &:focus-visible {
     @include focus-ring;

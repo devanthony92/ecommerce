@@ -1,10 +1,11 @@
 @use '@/styles/abstracts' as *;
 
 .site-footer {
-  // Cierre en selva: la página termina con color, no con otra franja blanca.
+  // Cierre en obsidiana con borde superior arquitectónico.
   --color-focus: var(--color-highlight);
 
-  margin-block-start: var(--space-12);
+  margin-block-start: var(--space-16);
+  border-block-start: 1px solid var(--color-border);
   color: var(--color-inverse-muted);
   background-color: var(--color-inverse);
 

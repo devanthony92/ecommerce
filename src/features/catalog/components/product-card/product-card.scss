@@ -1,20 +1,22 @@
 @use '@/styles/abstracts' as *;
 
 .product-card {
+  @include neumorphic-surface;
+
   position: relative;
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
-  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background-color: var(--color-surface);
   transition:
-    box-shadow var(--duration-fast),
+    transform var(--duration-base) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--duration-base) cubic-bezier(0.22, 1, 0.36, 1),
     border-color var(--duration-fast);
 
   &:hover {
-    border-color: var(--color-border-strong);
-    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
   }
 
   // El foco del enlace se muestra en toda la tarjeta.
@@ -27,26 +29,46 @@
     border-block-start: 3px solid var(--color-wholesale);
   }
 
+  &__image {
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  &:hover &__image {
+    transform: scale(1.05);
+  }
+
   &--out-of-stock &__image {
-    opacity: 0.55;
+    opacity: 0.45;
   }
 
   &__media {
     position: relative;
+    overflow: hidden;
+    background-color: var(--color-surface-muted);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0;
+      height: 38%;
+      background: linear-gradient(to top, rgb(5 5 7 / 65%), transparent);
+      pointer-events: none;
+    }
   }
 
   // Por encima del enlace que cubre la tarjeta.
   &__favorite {
     position: absolute;
-    inset-block-start: var(--space-2);
-    inset-inline-end: var(--space-2);
+    inset-block-start: var(--space-3);
+    inset-inline-end: var(--space-3);
     z-index: 1;
   }
 
   &__badges {
     position: absolute;
-    inset-block-start: var(--space-2);
-    inset-inline-start: var(--space-2);
+    inset-block-start: var(--space-3);
+    inset-inline-start: var(--space-3);
+    z-index: 1;
     display: flex;
     gap: var(--space-1);
   }
@@ -55,18 +77,23 @@
     display: grid;
     align-content: start;
     gap: var(--space-2);
-    padding: var(--space-3);
+    padding: var(--space-4);
+    border-block-start: 1px solid rgb(255 255 255 / 5%);
   }
 
   &__category {
     font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-primary);
   }
 
   &__title {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-md);
     font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-tight);
+    color: var(--color-text);
   }
 
   &__link {
@@ -91,7 +118,7 @@
   &__swatches {
     display: flex;
     align-items: center;
-    gap: var(--space-1);
+    gap: var(--space-2);
     padding: 0;
     list-style: none;
   }
@@ -101,6 +128,7 @@
     height: 0.875rem;
     border: 1px solid var(--color-border-strong);
     border-radius: 50%;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);
   }
 
   &__swatch-more {

@@ -1,74 +1,76 @@
 // Design tokens. Cambiar la marca = cambiar este archivo.
 :root {
-  // Paleta de marca: mercado colombiano. Buganvilla para el detal, ladrillo
-  // para el mayorista, mango para destacar y selva para cerrar las páginas.
-  --brand-buganvilla: #b0155a;
-  --brand-buganvilla-deep: #8e0f48;
-  --brand-buganvilla-soft: #fde3ee;
-  --brand-ladrillo: #b7470d;
-  --brand-ladrillo-deep: #a33d08;
-  --brand-ladrillo-soft: #fce9da;
-  --brand-mango: #ffc21a;
-  --brand-mango-soft: #fff1c7;
-  --brand-selva: #12372a;
-  --brand-selva-soft: #ddefe3;
-  --brand-crema: #fbf6ec;
+  // Paleta de marca: Streetwear Editorial Nocturno.
+  // Negro abisal, capas neumórficas en obsidiana, blanco puro y cian eléctrico para conversión.
+  --brand-buganvilla: #00e5ff;
+  --brand-buganvilla-deep: #33ecff;
+  --brand-buganvilla-soft: #06252d;
+  --brand-ladrillo: #22d3ee;
+  --brand-ladrillo-deep: #67e8f9;
+  --brand-ladrillo-soft: #08232c;
+  --brand-mango: #00e5ff;
+  --brand-mango-soft: #072830;
+  --brand-selva: #080a0f;
+  --brand-selva-soft: #07291e;
+  --brand-crema: #050507;
 
   // Color (roles)
   --color-bg: var(--brand-crema);
-  --color-surface: #fffdf8;
-  --color-text: #1e1915;
-  --color-text-muted: #5a5048;
+  --color-surface: #0d0f14;
+  --color-text: #f8fafc;
+  --color-text-muted: #9ba3b0;
 
-  // 5,2:1 sobre surface-muted y 5,7:1 sobre bg (AA para texto normal).
-  --color-text-subtle: #6b5f54;
-  --color-border: #e8ddcb;
-  --color-border-strong: #8c7f6e;
-  --color-surface-muted: #f3eadb;
+  // Contraste AA sobre surface-muted y bg en modo oscuro.
+  --color-text-subtle: #7d8694;
+  --color-border: #1b202b;
+
+  // Bordes de campos y botones: ≥3:1 sobre bg, surface y surface-muted (WCAG 1.4.11).
+  --color-border-strong: #5e687c;
+  --color-surface-muted: #141821;
   --color-primary: var(--brand-buganvilla);
   --color-primary-hover: var(--brand-buganvilla-deep);
-  --color-primary-contrast: #fff;
+  --color-primary-contrast: #040608;
   --color-primary-soft: var(--brand-buganvilla-soft);
 
   // Texto secundario sobre un fondo de color: se tiñe del fondo, no es gris.
-  --color-on-primary-muted: #fde3ee;
+  --color-on-primary-muted: #062028;
   --color-wholesale: var(--brand-ladrillo);
   --color-wholesale-hover: var(--brand-ladrillo-deep);
-  --color-wholesale-contrast: #fff;
-  --color-on-wholesale-muted: #ffe6d4;
+  --color-wholesale-contrast: #040608;
+  --color-on-wholesale-muted: #07212b;
   --color-highlight: var(--brand-mango);
   --color-highlight-soft: var(--brand-mango-soft);
-  --color-highlight-contrast: var(--color-text);
+  --color-highlight-contrast: #040608;
   --color-inverse: var(--brand-selva);
-  --color-inverse-text: var(--brand-crema);
-  --color-inverse-muted: #c8dccf;
-  --color-success: #1e6b45;
-  --color-success-contrast: #fff;
+  --color-inverse-text: #f8fafc;
+  --color-inverse-muted: #9ba3b0;
+  --color-success: #34d399;
+  --color-success-contrast: #040608;
   --color-success-soft: var(--brand-selva-soft);
-  --color-warning: #8a5800;
-  --color-warning-soft: #fbf0dc;
-  --color-danger: #b3261e;
-  --color-danger-hover: #8f1e18;
-  --color-danger-contrast: #fff;
-  --color-danger-soft: #fbe9e8;
-  --color-info: #1f5fa8;
-  --color-info-soft: #e7f0fa;
+  --color-warning: #fbbf24;
+  --color-warning-soft: #291d05;
+  --color-danger: #f87171;
+  --color-danger-hover: #fca5a5;
+  --color-danger-contrast: #040608;
+  --color-danger-soft: #2c0b0e;
+  --color-info: #38bdf8;
+  --color-info-soft: #082338;
   --color-wholesale-soft: var(--brand-ladrillo-soft);
-  --color-overlay: rgb(20 20 20 / 50%);
-  --color-surface-overlay: rgb(255 255 255 / 92%);
-  --color-shimmer: rgb(255 255 255 / 60%);
+  --color-overlay: rgb(2 4 8 / 78%);
+  --color-surface-overlay: rgb(13 15 20 / 88%);
+  --color-shimmer: rgb(255 255 255 / 8%);
 
-  // Foco en selva: contrasta sobre crema y superficies claras (12:1) y es de la marca.
-  --color-focus: var(--brand-selva);
+  // Foco en cian eléctrico: contraste >13:1 sobre superficies oscuras.
+  --color-focus: var(--brand-buganvilla);
 
   // Tipografía
   --font-family-base: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  // Display: Archivo angosta y pesada, como los letreros pintados del mercado.
-  // Solo títulos, logo y precios grandes; la UI y el texto siguen en Inter.
+  // Display: Archivo brutalista y contundente para titulares editoriales;
+  // la interfaz y lectura usan geometría limpia en Inter.
   --font-family-display: 'Archivo Variable', 'Arial Narrow', 'Roboto Condensed', sans-serif;
-  --font-stretch-display: 82%;
-  --font-weight-display: 800;
+  --font-stretch-display: 112%;
+  --font-weight-display: 900;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-md: 1rem;
@@ -79,14 +81,14 @@
   --font-size-4xl: 2.25rem;
 
   // Escala de display: fluida en títulos de marketing.
-  --font-size-section: clamp(1.75rem, 1.35rem + 1.6vw, 2.25rem);
-  --font-size-display: clamp(2.75rem, 1.6rem + 5.4vw, 5.5rem);
+  --font-size-section: clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem);
+  --font-size-display: clamp(2.75rem, 1.6rem + 5.4vw, 5.75rem);
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --line-height-display: 0.95;
-  --line-height-tight: 1.2;
+  --line-height-display: 0.92;
+  --line-height-tight: 1.15;
   --line-height-base: 1.5;
 
   // Espaciado (base 4px)
@@ -103,14 +105,17 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
-  // Forma y profundidad
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
+  // Forma y profundidad neumórfica sutil sobre negro
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
   --radius-pill: 999px;
-  --shadow-sm: 0 1px 2px rgb(70 35 10 / 8%);
-  --shadow-md: 0 6px 16px rgb(70 35 10 / 10%);
-  --shadow-lg: 0 14px 36px rgb(70 35 10 / 14%);
+  --shadow-sm: inset 0 1px 0 rgb(255 255 255 / 6%), 0 4px 12px rgb(0 0 0 / 60%);
+  --shadow-md:
+    inset 0 1px 0 rgb(255 255 255 / 8%), 0 12px 28px rgb(0 0 0 / 72%),
+    -2px -2px 10px rgb(255 255 255 / 2%);
+  --shadow-lg:
+    inset 0 1px 0 rgb(0 229 255 / 24%), 0 20px 48px rgb(0 0 0 / 85%), 0 0 28px rgb(0 229 255 / 12%);
 
   // Capas
   --z-header: 100;
@@ -119,10 +124,10 @@
   --z-toast: 400;
 
   // Movimiento
-  --duration-fast: 150ms;
-  --duration-base: 250ms;
+  --duration-fast: 160ms;
+  --duration-base: 280ms;
 
   // Layout
-  --container-max: 1280px;
+  --container-max: 1360px;
   --gutter: var(--space-4);
 }

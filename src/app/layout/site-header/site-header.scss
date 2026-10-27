@@ -7,7 +7,9 @@
   inset-block-start: 0;
   z-index: var(--z-header);
   border-block-end: 1px solid var(--color-border);
-  background-color: var(--color-surface);
+  background-color: rgb(8 10 15 / 84%);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 55%);
 
   &__bar {
     display: grid;
@@ -23,7 +25,7 @@
     @include mq(lg) {
       grid-template: 'brand search actions' auto / auto minmax(0, 36rem) 1fr;
       gap: var(--space-8);
-      padding-block: var(--space-3);
+      padding-block: var(--space-4);
     }
   }
 
@@ -40,14 +42,26 @@
     grid-area: brand;
     display: inline-flex;
     align-items: center;
+    gap: var(--space-1);
     min-height: 44px;
 
     @include display-type(118%);
 
     font-size: var(--font-size-2xl);
     font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     text-decoration: none;
-    color: var(--color-primary);
+    color: var(--color-text);
+
+    &::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--color-primary);
+      box-shadow: 0 0 10px var(--color-primary);
+    }
   }
 
   &__search {

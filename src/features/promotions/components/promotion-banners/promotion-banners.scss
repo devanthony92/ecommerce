@@ -3,60 +3,82 @@
 .promotion-banners {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-3);
+  gap: var(--space-4);
 
   @include mq(md) {
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   }
 
   &__item {
+    @include neumorphic-surface;
+
+    position: relative;
     display: flex;
     align-items: flex-start;
-    gap: var(--space-3);
+    gap: var(--space-4);
     height: 100%;
-    padding: var(--space-4);
-    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    overflow: hidden;
+    border-radius: var(--radius-lg);
     text-decoration: none;
     color: var(--color-text);
-    background-color: var(--color-primary-soft);
+    transition:
+      border-color var(--duration-base),
+      box-shadow var(--duration-base),
+      transform var(--duration-base);
 
     &--season {
-      background-color: var(--color-highlight);
+      border-color: rgb(0 229 255 / 35%);
+      background:
+        radial-gradient(circle at 92% 20%, rgb(0 229 255 / 18%), transparent 55%),
+        linear-gradient(155deg, #101722 0%, #090b10 100%);
     }
 
     &--volume {
-      background-color: var(--color-wholesale-soft);
+      border-color: rgb(34 211 238 / 28%);
+      background: linear-gradient(155deg, #0d1822 0%, #090c12 100%);
     }
 
     &--shipping {
-      background-color: var(--color-success-soft);
+      border-color: rgb(52 211 153 / 28%);
+      background: linear-gradient(155deg, #0a1b17 0%, #090c10 100%);
     }
 
     &:hover {
-      box-shadow: var(--shadow-md);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
     }
   }
 
   &__icon {
-    margin-block-start: 2px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid rgb(0 229 255 / 30%);
+    border-radius: var(--radius-md);
     color: var(--color-primary);
+    background-color: var(--color-primary-soft);
   }
 
-  // La temporada es la única oferta real: se anuncia como letrero.
+  // La temporada es la oferta principal: se anuncia como manifiesto editorial.
   &__item--season {
     align-items: center;
-    padding: var(--space-5) var(--space-6);
+    padding: var(--space-6) var(--space-8);
   }
 
   &__item--season &__title {
     @include display-type;
 
     font-size: clamp(var(--font-size-xl), 1rem + 1.6vw, var(--font-size-3xl));
-    line-height: 1.05;
+    line-height: 1.02;
+    text-transform: uppercase;
   }
 
   &__item--season &__icon {
-    color: var(--color-text);
+    color: var(--color-primary);
   }
 
   &__item--volume &__icon {
@@ -74,6 +96,7 @@
 
   &__title {
     font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
   }
 
   &__description {
@@ -81,8 +104,7 @@
     color: var(--color-text-muted);
   }
 
-  // Sobre mango el gris tibio pierde contraste: el texto secundario usa la tinta.
   &__item--season &__description {
-    color: var(--color-text);
+    color: var(--color-text-muted);
   }
 }

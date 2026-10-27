@@ -13,6 +13,271 @@
     @include visually-hidden;
   }
 
+  // Hero editorial asimétrico: manifiesto de conversión (7 cols) + lifestyle video reel (5 cols).
+  &__showcase {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: stretch;
+
+    @include mq(lg) {
+      grid-template-columns: 7fr 5fr;
+      gap: var(--space-8);
+    }
+  }
+
+  &__manifesto {
+    @include neumorphic-surface;
+
+    position: relative;
+    display: grid;
+
+    // minmax(0, 1fr): sin esto la columna crece al ancho de la palabra más larga
+    // ("ARQUITECTURA") y el overflow la recorta.
+    grid-template-columns: minmax(0, 1fr);
+    align-content: space-between;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    overflow: hidden;
+
+    // El titular se dimensiona con el ancho de la tarjeta (cqi), no con el de la ventana.
+    container-type: inline-size;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at 0% 0%, rgb(0 229 255 / 12%), transparent 48%),
+      linear-gradient(160deg, #111621 0%, #080a0f 100%);
+
+    @include mq(md) {
+      padding: var(--space-10);
+    }
+  }
+
+  &__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    gap: var(--space-2);
+    max-width: 100%;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid rgb(0 229 255 / 32%);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    background-color: var(--color-primary-soft);
+  }
+
+  &__pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    box-shadow: 0 0 12px var(--color-primary);
+  }
+
+  &__display {
+    @include display-type;
+
+    // "ARQUITECTURA" mide ~9,6 veces el tamaño de letra (Archivo al 112%, peso 900):
+    // con 10cqi la palabra más larga siempre cabe en la tarjeta.
+    font-size: min(var(--font-size-display), 10cqi);
+    line-height: var(--line-height-display);
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  &__display-accent {
+    display: block;
+    color: var(--color-primary);
+    text-shadow: 0 0 36px rgb(0 229 255 / 28%);
+  }
+
+  &__lead {
+    max-width: 54ch;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+  }
+
+  &__funnel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  &__telemetry {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+    padding-block-start: var(--space-5);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  &__telemetry-item {
+    display: grid;
+    gap: 2px;
+  }
+
+  &__telemetry-label {
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  &__telemetry-value {
+    @include display-type;
+
+    // Tres columnas en una tarjeta angosta: el tamaño sigue al ancho de la tarjeta.
+    font-size: min(var(--font-size-xl), 4.6cqi);
+    color: var(--color-text);
+  }
+
+  // Contenedor de lifestyle video placeholder con HUD neumórfico.
+  &__reel {
+    position: relative;
+    display: grid;
+    align-content: space-between;
+    min-height: 24rem;
+    padding: var(--space-5);
+    overflow: hidden;
+    border: 1px solid rgb(0 229 255 / 28%);
+    border-radius: var(--radius-lg);
+    background-color: #07090e;
+    box-shadow: var(--shadow-lg);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgb(5 5 7 / 55%) 0%, transparent 35%, rgb(5 5 7 / 88%) 100%),
+        repeating-linear-gradient(
+          0deg,
+          rgb(255 255 255 / 2%) 0,
+          rgb(255 255 255 / 2%) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      pointer-events: none;
+    }
+  }
+
+  &__reel-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.12) saturate(0.82);
+    transition:
+      transform 6s ease-out,
+      filter var(--duration-base);
+  }
+
+  &__reel--playing &__reel-media {
+    filter: contrast(1.15) saturate(0.95);
+    transform: scale(1.06);
+  }
+
+  &__reel-hud {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  &__reel-badge {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid rgb(255 255 255 / 16%);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08em;
+    color: var(--color-text);
+    background-color: rgb(8 10 15 / 78%);
+    backdrop-filter: blur(10px);
+  }
+
+  &__reel-time {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid rgb(0 229 255 / 40%);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    background-color: rgb(6 37 45 / 82%);
+  }
+
+  &__reel-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  &__reel-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding-inline: var(--space-4);
+    border: 1px solid rgb(0 229 255 / 45%);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    background-color: rgb(8 12 18 / 88%);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast),
+      color var(--duration-fast);
+
+    &:hover {
+      color: var(--color-primary-contrast);
+      background-color: var(--color-primary);
+    }
+  }
+
+  &__reel-spotlight {
+    display: grid;
+    gap: 2px;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgb(255 255 255 / 14%);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--color-text);
+    background-color: rgb(10 13 20 / 86%);
+    backdrop-filter: blur(12px);
+    transition: border-color var(--duration-fast);
+
+    &:hover {
+      border-color: var(--color-primary);
+    }
+  }
+
+  &__reel-kicker {
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+  }
+
+  &__reel-product {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
   // Carrusel de categorías y garantías: un solo bloque, separados apenas.
   &__intro {
     display: grid;
@@ -30,14 +295,25 @@
 
   &__section {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--space-5);
   }
 
   &__section-header {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
-    gap: var(--space-2);
+    gap: var(--space-3);
+    padding-block-end: var(--space-4);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  &__section-kicker {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
   }
 
   &__section-title {
@@ -48,7 +324,25 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    font-size: var(--font-size-sm);
+    padding-inline: var(--space-4);
+    border: 1px solid rgb(0 229 255 / 35%);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
     color: var(--color-primary);
+    background-color: var(--color-primary-soft);
+    transition:
+      background-color var(--duration-fast),
+      color var(--duration-fast),
+      box-shadow var(--duration-fast);
+
+    &:hover {
+      color: var(--color-primary-contrast);
+      background-color: var(--color-primary);
+      box-shadow: 0 0 20px rgb(0 229 255 / 35%);
+    }
   }
 }
