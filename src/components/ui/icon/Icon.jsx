@@ -8,6 +8,12 @@ const ICONS = {
   minus: <path d="M5 12h14" />,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
   filter: <path d="M4 6h16M7 12h10M10 18h4" />,
+  tag: (
+    <>
+      <path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9z" />
+      <circle cx="7.5" cy="7.5" r="1.5" />
+    </>
+  ),
   bag: (
     <>
       <path d="M6 8h12l-1 12H7L6 8Z" />
@@ -21,6 +27,8 @@ const ICONS = {
     </>
   ),
   heart: <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z" />,
+  bookmark: <path d="M7 4h10v16l-5-4-5 4V4Z" />,
+  trash: <path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" />,
   search: (
     <>
       <circle cx="11" cy="11" r="6" />
@@ -54,6 +62,11 @@ const ICONS = {
       <path d="M4 13h5l1 2h4l1-2h5" />
     </>
   ),
+  chat: (
+    <path d="M5 5h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8l-5 4v-4H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1ZM8 10h8M8 13h5" />
+  ),
+  pause: <path d="M9 6v12M15 6v12" />,
+  play: <path d="M8 5.5v13l10.5-6.5L8 5.5Z" />,
   refresh: <path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5" />,
   eye: (
     <>

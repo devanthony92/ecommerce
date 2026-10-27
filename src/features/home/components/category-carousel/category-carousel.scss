@@ -1,0 +1,245 @@
+@use '@/styles/abstracts' as *;
+
+$ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+// Coverflow: la categoría activa queda centrada y de frente; las vecinas giran
+// hacia ella. Móvil: una y asomos a los lados; desde lg, cinco a la vista.
+.category-carousel {
+  --per-view: 1.6;
+  --gap: var(--space-2);
+
+  display: grid;
+  gap: var(--space-4);
+
+  // Medidas en cqi: el padding de la pista no altera el ancho de las diapositivas.
+  container-type: inline-size;
+
+  @include mq(sm) {
+    --per-view: 2.2;
+  }
+
+  @include mq(md) {
+    --per-view: 3;
+  }
+
+  @include mq(lg) {
+    --per-view: 5;
+  }
+
+  // Con este padding lateral, la categoría n queda centrada en scrollLeft = n * paso.
+  &__track {
+    --slide: calc((100cqi - var(--gap) * (var(--per-view) - 1)) / var(--per-view));
+
+    display: flex;
+    gap: var(--gap);
+    padding-block: var(--space-4);
+    padding-inline: calc((100cqi - var(--slide)) / 2);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    // Con mouse se arrastra (ver useMouseDrag); el táctil usa el scroll nativo.
+    @media (hover: hover) and (pointer: fine) {
+      cursor: grab;
+
+      .category-carousel__link {
+        cursor: inherit;
+      }
+    }
+
+    // Sin snap mientras se arrastra o dura la inercia: si no, frenaría el gesto.
+    &--dragging {
+      cursor: grabbing;
+      user-select: none;
+      scroll-snap-type: none;
+    }
+  }
+
+  &__slide {
+    --label: #0c0f16;
+    --label-text: var(--color-text);
+    --accent: var(--color-primary);
+
+    display: grid;
+    flex: 0 0 var(--slide);
+    scroll-snap-align: center;
+
+    // Tono por posición en la lista: superficies oscuras neumórficas con acento cian.
+    &--tone-1 {
+      --label: #101520;
+      --label-text: var(--color-text);
+      --accent: var(--color-wholesale);
+    }
+
+    &--tone-2 {
+      --label: #0a141c;
+      --label-text: var(--color-text);
+      --accent: var(--color-primary);
+    }
+
+    &--tone-3 {
+      --label: #121722;
+      --label-text: var(--color-text);
+      --accent: var(--color-wholesale-hover);
+    }
+  }
+
+  &__link {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--label-text);
+    background-color: var(--label);
+    box-shadow: var(--shadow-md);
+    transition:
+      box-shadow var(--duration-base) $ease-out,
+      border-color var(--duration-base) $ease-out;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        border-color: var(--accent);
+        box-shadow: var(--shadow-lg);
+      }
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  &__image {
+    height: 100%;
+    filter: contrast(1.06) saturate(0.88);
+    transition:
+      transform 360ms $ease-out,
+      filter 360ms $ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &__link:hover &__image {
+      filter: contrast(1.1) saturate(1.08);
+      transform: scale(1.05);
+    }
+  }
+
+  &__link:focus-visible &__image {
+    transform: scale(1.05);
+  }
+
+  &__label {
+    display: grid;
+    gap: 4px;
+    padding: var(--space-4);
+    border-block-start: 1px solid rgb(255 255 255 / 8%);
+    background: linear-gradient(180deg, rgb(18 23 33 / 92%) 0%, rgb(10 12 18 / 98%) 100%);
+  }
+
+  &__name {
+    @include display-type;
+
+    font-size: var(--font-size-xl);
+    line-height: 1.02;
+    text-transform: uppercase;
+  }
+
+  &__count {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+
+  // Giro 3D ligado al desplazamiento (scroll-driven animation, mejora
+  // progresiva): sin soporte o con movimiento reducido, el carrusel queda plano.
+  // Se anima el enlace y no la diapositiva: transformarla movería el punto de snap.
+  // En `cover` 50 % la categoría está centrada; con cinco a la vista, las
+  // vecinas caen cerca de 33/67 % y las de los extremos de 17/83 %.
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      &__track {
+        overflow-y: hidden;
+      }
+
+      &__link {
+        transform-origin: center;
+        animation: category-carousel-coverflow linear both;
+        animation-timeline: view(inline);
+        animation-range: cover;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__link,
+    &__image {
+      transition: none;
+    }
+
+    &__link:hover &__image,
+    &__link:focus-visible &__image {
+      transform: none;
+    }
+  }
+}
+
+// Reserva el alto real del carrusel mientras cargan las categorías (sin saltos).
+// Doble clase para ganarle a `.skeleton--rect` sin depender del orden del CSS.
+.category-carousel__skeleton.skeleton--rect {
+  block-size: 27rem;
+
+  @include mq(lg) {
+    block-size: 25rem;
+  }
+}
+
+// Entra por la derecha mirando al centro, queda de frente y sale girando al
+// otro lado. La meseta (46–54 %) deja quieta la categoría activa al asentarse.
+@keyframes category-carousel-coverflow {
+  0% {
+    opacity: 0.5;
+    transform: perspective(1000px) rotateY(-55deg) scale(0.7);
+  }
+
+  46%,
+  54% {
+    opacity: 1;
+    transform: perspective(1000px) rotateY(0) scale(1);
+  }
+
+  100% {
+    opacity: 0.5;
+    transform: perspective(1000px) rotateY(55deg) scale(0.7);
+  }
+}
+
+// El nombre de la tarjeta viaja hasta el título de la página de categoría.
+// Solo existe mientras dura la View Transition que inicia el carrusel.
+::view-transition-group(category-title) {
+  animation-duration: 450ms;
+  animation-timing-function: $ease-out;
+}
+
+// Texto: se escala por alto y se ancla a la izquierda, sin deformarse.
+::view-transition-old(category-title),
+::view-transition-new(category-title) {
+  width: auto;
+  height: 100%;
+  object-fit: none;
+  object-position: left center;
+}

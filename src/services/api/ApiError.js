@@ -12,4 +12,11 @@ export class ApiError extends Error {
   get isNetworkError() {
     return this.status === 0
   }
+
+  // Los 4xx traen un mensaje de negocio pensado para la persona ("Sin stock").
+  // Un 5xx o un error sin mensaje no se muestra tal cual.
+  get userMessage() {
+    if (this.isNetworkError || (this.status >= 400 && this.status < 500)) return this.message
+    return 'Tuvimos un problema de nuestro lado. Intenta de nuevo en un momento.'
+  }
 }

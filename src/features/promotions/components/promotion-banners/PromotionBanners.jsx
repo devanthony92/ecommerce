@@ -4,12 +4,14 @@ import { Icon } from '@/components/ui'
 import { usePromotions } from '../../hooks/usePromotions'
 import './promotion-banners.scss'
 
-const ICONS = { SEASON: 'filter', VOLUME: 'bag', SHIPPING: 'check' }
+const ICONS = { SEASON: 'tag', VOLUME: 'bag', SHIPPING: 'check' }
 
 // Promociones vigentes. Si fallan o no hay, no ocupan espacio (no son críticas).
-export function PromotionBanners({ exclude, className }) {
+// `exclude`: un tipo o una lista de tipos que la página ya comunica por su cuenta.
+export function PromotionBanners({ exclude = [], className }) {
   const { data: promotions = [] } = usePromotions()
-  const visible = promotions.filter((promo) => promo.type !== exclude)
+  const excluded = [exclude].flat()
+  const visible = promotions.filter((promo) => !excluded.includes(promo.type))
   if (!visible.length) return null
 
   return (

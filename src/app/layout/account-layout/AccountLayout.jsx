@@ -11,12 +11,13 @@ const BASE_ITEMS = [
   { to: paths.orders, label: 'Pedidos', icon: 'bag' },
   { to: paths.favorites, label: 'Favoritos', icon: 'heart' },
   { to: paths.lists, label: 'Listas de compra', icon: 'inbox' },
+  { to: paths.savedInspirations, label: 'Inspiraciones guardadas', icon: 'bookmark' },
   { to: paths.addresses, label: 'Direcciones', icon: 'info' },
   { to: paths.profile, label: 'Perfil', icon: 'user' },
 ]
 
 export function AccountLayout() {
-  const { logout, user } = useAuth()
+  const { logout, currentUser: user } = useAuth()
   // Compradores: acceso a su solicitud (o a pedirla). El mayorista tiene su propio panel.
   const requestLabel = user.wholesale?.requestStatus ? 'Solicitud mayorista' : 'Ser mayorista'
   const items =

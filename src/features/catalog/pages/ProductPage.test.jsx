@@ -50,6 +50,7 @@ describe('Detalle de producto', () => {
 
     await user.click(screen.getByRole('button', { name: 'Agregar al carrito' }))
     expect(await screen.findByText('Agregado al carrito')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Ver carrito' })).toHaveAttribute('href', '/carrito')
     expect(screen.getByRole('button', { name: 'Carrito, 1 producto' })).toBeInTheDocument()
   })
 

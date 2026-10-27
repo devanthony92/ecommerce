@@ -6,6 +6,7 @@ export const paths = Object.freeze({
   product: (slug) => `/producto/${slug}`,
   promotions: '/ofertas',
   inspiration: '/inspiracion',
+  savedInspirations: '/inspiracion/guardadas',
   search: '/buscar',
   cart: '/carrito',
   wholesaleLanding: '/mayoristas',

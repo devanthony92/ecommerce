@@ -1,17 +1,20 @@
 .product-shelf {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-6);
 
   &__header {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
-    gap: var(--space-2);
+    gap: var(--space-3);
+    padding-block-end: var(--space-4);
+    border-block-end: 1px solid var(--color-border);
   }
 
   &__title {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-section);
+    letter-spacing: -0.02em;
   }
 
   &__description {
@@ -19,7 +22,29 @@
   }
 
   &__action {
-    font-size: var(--font-size-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding-inline: var(--space-4);
+    border: 1px solid rgb(0 229 255 / 35%);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
     color: var(--color-primary);
+    background-color: var(--color-primary-soft);
+    transition:
+      background-color var(--duration-fast),
+      color var(--duration-fast),
+      box-shadow var(--duration-fast);
+
+    &:hover {
+      color: var(--color-primary-contrast);
+      background-color: var(--color-primary);
+      box-shadow: 0 0 20px rgb(0 229 255 / 35%);
+    }
   }
 }

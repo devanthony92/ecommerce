@@ -5,7 +5,7 @@ import { ProfileForm } from '../components/ProfileForm'
 import './profile-page.scss'
 
 export default function ProfilePage() {
-  const { user } = useAuth()
+  const { currentUser: user } = useAuth()
 
   return (
     <div className="profile-page">

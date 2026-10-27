@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/layout'
 import { Button, Pagination, SelectField } from '@/components/ui'
 import { paths } from '@/constants/paths'
 import { PANELS, useUi } from '@/hooks/useUi'
+import { CATEGORY_TITLE_TRANSITION } from '../../constants/viewTransitions'
 import { useCatalogFilters } from '../../hooks/useCatalogFilters'
 import { useProducts } from '../../hooks/useProducts'
 import { SORT_OPTIONS, toProductsQuery } from '../../utils/catalogFilters'
@@ -60,7 +61,11 @@ export function CatalogView({
 
   return (
     <div className="catalog-view">
-      <PageHeader title={title} description={description} />
+      <PageHeader
+        title={title}
+        description={description}
+        viewTransitionName={categorySlug ? CATEGORY_TITLE_TRANSITION : undefined}
+      />
       {intro}
 
       <div className="catalog-view__toolbar">

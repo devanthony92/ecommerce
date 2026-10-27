@@ -1,11 +1,13 @@
 @use '@/styles/abstracts' as *;
 
 .volume-offers {
+  @include neumorphic-surface;
+
   display: grid;
   gap: var(--space-5);
   padding: var(--space-6) var(--space-5);
+  border-color: rgb(34 211 238 / 28%);
   border-radius: var(--radius-lg);
-  background-color: var(--color-wholesale-soft);
 
   @include mq(md) {
     padding: var(--space-8);
@@ -17,7 +19,7 @@
   }
 
   &__title {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-section);
   }
 
   &__text {
@@ -27,7 +29,7 @@
   &__list {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-3);
+    gap: var(--space-4);
 
     @include mq(lg) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -40,8 +42,15 @@
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-3);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     background-color: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--duration-fast);
+
+    &:hover {
+      border-color: var(--color-wholesale);
+    }
   }
 
   &__image {

@@ -7,7 +7,9 @@
   inset-block-start: 0;
   z-index: var(--z-header);
   border-block-end: 1px solid var(--color-border);
-  background-color: var(--color-surface);
+  background-color: rgb(8 10 15 / 84%);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 55%);
 
   &__bar {
     display: grid;
@@ -23,7 +25,7 @@
     @include mq(lg) {
       grid-template: 'brand search actions' auto / auto minmax(0, 36rem) 1fr;
       gap: var(--space-8);
-      padding-block: var(--space-3);
+      padding-block: var(--space-4);
     }
   }
 
@@ -38,11 +40,28 @@
 
   &__brand {
     grid-area: brand;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 44px;
+
+    @include display-type(118%);
+
     font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
-    letter-spacing: -0.02em;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     text-decoration: none;
-    color: var(--color-primary);
+    color: var(--color-text);
+
+    &::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--color-primary);
+      box-shadow: 0 0 10px var(--color-primary);
+    }
   }
 
   &__search {
@@ -75,6 +94,46 @@
 
     @include mq(md) {
       display: inline;
+    }
+  }
+
+  // En móvil cerrar sesión está en el menú lateral.
+  &__logout {
+    display: none;
+
+    @include mq(md) {
+      display: inline-flex;
+    }
+  }
+
+  &__login {
+    margin-inline-end: var(--space-1);
+  }
+
+  // Bajo md es solo un icono: sin caja, al mismo peso que el carrito.
+  &__login.button {
+    min-width: 44px;
+    padding-inline: 0;
+    border-color: transparent;
+
+    @include mq(md) {
+      padding-inline: var(--space-3);
+      border-color: var(--color-border-strong);
+    }
+  }
+
+  // Bajo md solo se ve el icono: con el texto, la primera fila del header no cabe en 320 px.
+  &__login-label {
+    @include visually-hidden;
+
+    @include mq(md) {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
     }
   }
 

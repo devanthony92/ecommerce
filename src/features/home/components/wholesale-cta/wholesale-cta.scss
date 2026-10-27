@@ -1,29 +1,90 @@
 @use '@/styles/abstracts' as *;
 
 .wholesale-cta {
+  --color-focus: var(--color-highlight);
+
+  position: relative;
   display: grid;
-  justify-items: center;
-  gap: var(--space-3);
-  padding: var(--space-10) var(--space-5);
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-6);
+  overflow: hidden;
+  border: 1px solid rgb(0 229 255 / 32%);
   border-radius: var(--radius-lg);
-  text-align: center;
-  color: var(--color-primary-contrast);
-  background-color: var(--color-primary);
+  color: var(--color-inverse-text);
+  background:
+    radial-gradient(circle at 88% 18%, rgb(0 229 255 / 18%), transparent 50%),
+    linear-gradient(145deg, #0f1520 0%, #07090e 100%);
+  box-shadow: var(--shadow-lg);
+
+  @include mq(lg) {
+    grid-template-columns: 1.3fr 1fr;
+    align-items: center;
+    padding: var(--space-12) var(--space-10);
+  }
+
+  &__copy {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  &__eyebrow {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
 
   &__title {
-    font-size: clamp(var(--font-size-2xl), 5vw, var(--font-size-3xl));
+    font-size: clamp(2rem, 1.3rem + 3vw, 3.5rem);
+    line-height: 0.96;
   }
 
   &__text {
-    max-width: 44ch;
-    opacity: 0.9;
+    max-width: 48ch;
+    color: var(--color-inverse-muted);
+  }
+
+  &__panel {
+    display: grid;
+    gap: var(--space-5);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background-color: rgb(5 7 11 / 72%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%);
+  }
+
+  &__metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+    padding-block-end: var(--space-4);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  &__metric {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__metric-label {
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  &__metric-value {
+    @include display-type;
+
+    font-size: var(--font-size-2xl);
+    color: var(--color-primary);
   }
 
   &__actions {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: var(--space-3);
-    margin-block-start: var(--space-2);
   }
 }

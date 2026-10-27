@@ -4,6 +4,7 @@ export const PANELS = Object.freeze({
   CART: 'cart',
   MOBILE_MENU: 'mobile-menu',
   FILTERS: 'filters',
+  CHAT: 'chat',
 })
 
 export const UiContext = createContext(null)

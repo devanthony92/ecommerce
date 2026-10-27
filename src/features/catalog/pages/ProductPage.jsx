@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { EmptyState, ErrorState, Skeleton, useToast } from '@/components/feedback'
 import { Breadcrumbs } from '@/components/layout'
-import { Button, QuantityStepper } from '@/components/ui'
+import { Button, Icon, Price, QuantityStepper } from '@/components/ui'
 import { useRequireAuth } from '@/features/auth'
 import { useCart } from '@/features/cart'
 import { FavoriteButton } from '@/features/favorites'
@@ -17,6 +17,7 @@ import {
 import { paths } from '@/constants/paths'
 import { ProductGallery } from '../components/product-gallery/ProductGallery'
 import { VariantSelector } from '../components/variant-selector/VariantSelector'
+import { useIsOffscreen } from '../hooks/useIsOffscreen'
 import { useProduct } from '../hooks/useProduct'
 import { useVariantSelection } from '../hooks/useVariantSelection'
 import './product-page.scss'
@@ -32,6 +33,8 @@ function ProductDetail({ product, initialColor }) {
   const [isAdding, setIsAdding] = useState(false)
   const [isSavingToList, setIsSavingToList] = useState(false)
   const requireAuth = useRequireAuth()
+  const purchaseRef = useRef(null)
+  const showStickyBar = useIsOffscreen(purchaseRef)
 
   // El precio no depende de la talla: sin talla elegida se cotiza con cualquier variante.
   const { pricing, isUpdating } = usePriceQuote({
@@ -45,6 +48,14 @@ function ProductDetail({ product, initialColor }) {
   const colorHexes = Object.fromEntries(product.colors.map((color) => [color.name, color.hex]))
   const canAdd = Boolean(variant?.available)
 
+  // Sin talla, la barra fija lleva al selector en vez de quedar deshabilitada.
+  function goToSizes() {
+    purchaseRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    document.querySelector('.variant-selector__size input:not(:disabled)')?.focus({
+      preventScroll: true,
+    })
+  }
+
   async function handleAddToCart() {
     setIsAdding(true)
     try {
@@ -53,9 +64,14 @@ function ProductDetail({ product, initialColor }) {
         tone: 'success',
         title: 'Agregado al carrito',
         description: `${product.name} · ${selection.color} / ${selection.size} × ${effectiveQuantity}`,
+        action: { label: 'Ver carrito', to: paths.cart },
       })
     } catch (error) {
-      toast.show({ tone: 'danger', title: 'No pudimos agregarlo', description: error.message })
+      toast.show({
+        tone: 'danger',
+        title: 'No pudimos agregarlo al carrito',
+        description: error.userMessage ?? error.message,
+      })
     } finally {
       setIsAdding(false)
     }
@@ -86,7 +102,7 @@ function ProductDetail({ product, initialColor }) {
 
         <VariantSelector selection={selection} colorHexes={colorHexes} />
 
-        <div className="product-page__purchase">
+        <div className="product-page__purchase" ref={purchaseRef}>
           <QuantityStepper
             value={effectiveQuantity}
             onChange={setQuantity}
@@ -113,6 +129,21 @@ function ProductDetail({ product, initialColor }) {
             Guardar en lista
           </Button>
         </div>
+        {/* Las dudas de comprar ropa en línea, resueltas junto al botón. */}
+        <ul className="product-page__assurances" role="list">
+          <li className="product-page__assurance">
+            <Icon name="bag" size="sm" />
+            Envío gratis desde $120.000
+          </li>
+          <li className="product-page__assurance">
+            <Icon name="refresh" size="sm" />
+            30 días para cambios
+          </li>
+          <li className="product-page__assurance">
+            <Icon name="check" size="sm" />
+            Paga con Mercado Pago o contra entrega
+          </li>
+        </ul>
         {variant && (
           <AddToListModal
             open={isSavingToList}
@@ -141,6 +172,28 @@ function ProductDetail({ product, initialColor }) {
             ¿Compras para tu negocio? Con cuenta mayorista pagas menos desde media docena.{' '}
             <Link to={paths.wholesaleLanding}>Conoce el programa</Link>
           </p>
+        )}
+
+        {/* Móvil: precio y botón siguen a la mano cuando el botón principal sale de vista. */}
+        {showStickyBar && (
+          <div className="product-page__sticky-buy">
+            <div className="product-page__sticky-info">
+              <span className="product-page__sticky-name">{product.name}</span>
+              <Price amount={pricing.unitPrice} size="md" />
+            </div>
+            {selection.size ? (
+              <Button
+                iconStart="bag"
+                disabled={!canAdd}
+                loading={isAdding}
+                onClick={handleAddToCart}
+              >
+                Agregar
+              </Button>
+            ) : (
+              <Button onClick={goToSizes}>Elige una talla</Button>
+            )}
+          </div>
         )}
 
         <section className="product-page__description" aria-labelledby="product-description">

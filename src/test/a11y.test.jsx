@@ -27,14 +27,14 @@ async function audit() {
 }
 
 const PAGES = [
-  { name: 'home', route: '/', ready: 'Ropa para ti y para tu negocio' },
+  { name: 'home', route: '/', ready: 'Destacados' },
   { name: 'catálogo', route: '/catalogo', ready: 'Catálogo' },
   { name: 'producto', route: '/producto/camiseta-basica', ready: 'Camiseta básica' },
   { name: 'ofertas', route: '/ofertas', ready: 'Ofertas' },
   { name: 'inspiración', route: '/inspiracion', ready: 'Inspiración' },
   { name: 'mayoristas', route: '/mayoristas', ready: 'Compra por mayor y gana más en tu negocio' },
-  { name: 'login', route: '/ingresar', ready: 'Ingresar' },
-  { name: 'registro', route: '/registro', ready: 'Crear cuenta' },
+  { name: 'login', route: '/ingresar', ready: 'Iniciar sesión' },
+  { name: 'registro', route: '/registro', ready: 'Registrarse' },
   { name: 'carrito', route: '/carrito', ready: 'Carrito', as: 'wholesale', seedCart: true },
   {
     name: 'checkout',

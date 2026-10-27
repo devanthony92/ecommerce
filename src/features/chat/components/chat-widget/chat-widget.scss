@@ -1,0 +1,171 @@
+@use '@/styles/abstracts' as *;
+
+.chat-launcher {
+  position: fixed;
+  inset-inline-end: var(--gutter);
+  inset-block-end: max(var(--space-4), env(safe-area-inset-bottom));
+  z-index: var(--z-header);
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: 48px;
+  padding: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--color-primary-contrast);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--color-primary);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  transition: background-color var(--duration-fast);
+
+  &:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  @include mq(md) {
+    padding-inline: var(--space-4) var(--space-5);
+  }
+
+  // La ficha de producto tiene una barra de compra fija abajo (bajo lg): el botón sube.
+  body:has(.product-page__sticky-buy) & {
+    inset-block-end: calc(5.5rem + env(safe-area-inset-bottom));
+
+    @include mq(lg) {
+      inset-block-end: max(var(--space-4), env(safe-area-inset-bottom));
+    }
+  }
+
+  // En móvil solo el icono; el texto sigue siendo el nombre accesible.
+  &__label {
+    @include visually-hidden;
+
+    @include mq(md) {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip-path: none;
+    }
+  }
+}
+
+.chat-panel {
+  .drawer__body {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  &__intro {
+    display: grid;
+    gap: var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__suggestion {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    background-color: var(--color-surface);
+    cursor: pointer;
+    transition: border-color var(--duration-fast);
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-primary);
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  &__messages {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__typing {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__form {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  &__label {
+    @include visually-hidden;
+  }
+
+  &__compose {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-end;
+  }
+
+  &__input {
+    @include field-control;
+
+    flex: 1;
+    resize: none;
+  }
+
+  &__advisor {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    justify-self: start;
+    min-height: 44px;
+    border-radius: var(--radius-sm);
+    color: var(--color-success);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--color-text);
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  &__sr {
+    @include visually-hidden;
+  }
+
+  &__counter,
+  &__disclaimer {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+}

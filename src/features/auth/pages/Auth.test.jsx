@@ -4,66 +4,106 @@ import { resetDb } from '@/services/api/mocks/db'
 import { storage, STORAGE_KEYS } from '@/services/storage/storage'
 import { renderApp } from '@/test/renderApp'
 
-const submit = (name) => screen.getByRole('button', { name })
+const loginDialog = () => screen.findByRole('dialog', { name: 'Iniciar sesión' })
+const header = () => within(document.querySelector('.site-header'))
 
 beforeEach(() => resetDb())
 
-describe('Autenticación', () => {
-  it('login: valida antes de enviar y enfoca el primer error', async () => {
-    const user = userEvent.setup()
-    renderApp('/ingresar')
-    await user.click(await screen.findByRole('button', { name: 'Ingresar' }))
+describe('Autorización', () => {
+  it('sin sesión el header ofrece iniciar sesión; con sesión, cerrarla', async () => {
+    const { unmount } = renderApp('/')
+    expect(await header().findByRole('button', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(header().queryByRole('button', { name: 'Cerrar sesión' })).not.toBeInTheDocument()
+    unmount()
 
-    expect(screen.getByText('Ingresa tu correo.')).toBeInTheDocument()
-    expect(screen.getByText('Ingresa tu contraseña.')).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Correo/)).toHaveFocus()
+    renderApp('/', { as: 'buyer' })
+    expect(await header().findByRole('button', { name: 'Cerrar sesión' })).toBeInTheDocument()
+    expect(header().queryByRole('button', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
   })
 
-  it('login: credenciales inválidas no se confunden con sesión vencida', async () => {
+  it('inicio de sesión: valida en cada tecla y el botón espera a que todo sea válido', async () => {
     const user = userEvent.setup()
     renderApp('/ingresar')
-    await user.type(await screen.findByLabelText(/^Correo/), 'comprador@trama.test')
-    await user.type(screen.getByLabelText(/^Contraseña/), 'otraClave1')
-    await user.click(submit('Ingresar'))
+    const dialog = await loginDialog()
+    const submit = within(dialog).getByRole('button', { name: 'Iniciar sesión' })
+    expect(submit).toBeDisabled()
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('Correo o contraseña incorrectos.')
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'laura@')
+    expect(within(dialog).getByText('Ingresa un correo válido.')).toBeInTheDocument()
+    // La contraseña aún no se toca: todavía no muestra error.
+    expect(within(dialog).queryByText('Ingresa tu contraseña.')).not.toBeInTheDocument()
+
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'trama.test')
+    expect(within(dialog).queryByText('Ingresa un correo válido.')).not.toBeInTheDocument()
+    expect(submit).toBeDisabled()
+
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'x')
+    expect(submit).toBeEnabled()
+  })
+
+  it('credenciales inválidas: error encima del botón, sin confundirlo con sesión vencida', async () => {
+    const user = userEvent.setup()
+    renderApp('/ingresar')
+    const dialog = await loginDialog()
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'otraClave1')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent(
+      'Correo o contraseña incorrectos.',
+    )
     expect(screen.queryByText('Tu sesión expiró')).not.toBeInTheDocument()
   })
 
   it('el campo de contraseña se puede mostrar', async () => {
     const user = userEvent.setup()
     renderApp('/ingresar')
-    const password = await screen.findByLabelText(/^Contraseña/)
+    const dialog = await loginDialog()
+    const password = within(dialog).getByLabelText(/^Contraseña/)
     expect(password).toHaveAttribute('type', 'password')
-    await user.click(screen.getByRole('button', { name: 'Mostrar contraseña' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Mostrar contraseña' }))
     expect(password).toHaveAttribute('type', 'text')
   })
 
-  it('registro: errores del cliente y del backend por campo, luego crea la cuenta', async () => {
+  it('registro: valida en vivo, muestra el error del backend y ofrece iniciar sesión', async () => {
     const user = userEvent.setup()
     renderApp('/registro')
+    let dialog = await screen.findByRole('dialog', { name: 'Registrarse' })
+    const submit = within(dialog).getByRole('button', { name: 'Registrarse' })
 
-    await user.type(await screen.findByLabelText(/^Nombre/), 'Ana Ruiz')
-    await user.type(screen.getByLabelText(/^Correo/), 'comprador@trama.test')
-    await user.type(screen.getByLabelText(/^Contraseña/), 'trama2026')
-    await user.type(screen.getByLabelText(/^Confirmar contraseña/), 'trama2027')
-    await user.click(submit('Crear cuenta'))
-    expect(screen.getByText('Las contraseñas no coinciden.')).toBeInTheDocument()
-    expect(screen.getByText('Debes aceptar los términos para crear la cuenta.')).toBeInTheDocument()
+    await user.type(within(dialog).getByLabelText(/^Nombre/), 'Ana Ruiz')
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'trama2026')
+    await user.type(within(dialog).getByLabelText(/^Confirmar contraseña/), 'trama2027')
+    expect(within(dialog).getByText('Las contraseñas no coinciden.')).toBeInTheDocument()
+    expect(submit).toBeDisabled()
 
-    await user.clear(screen.getByLabelText(/^Confirmar contraseña/))
-    await user.type(screen.getByLabelText(/^Confirmar contraseña/), 'trama2026')
-    await user.click(screen.getByRole('checkbox', { name: /Acepto los términos/ }))
-    await user.click(submit('Crear cuenta'))
+    await user.clear(within(dialog).getByLabelText(/^Confirmar contraseña/))
+    await user.type(within(dialog).getByLabelText(/^Confirmar contraseña/), 'trama2026')
+    await user.click(within(dialog).getByRole('checkbox', { name: /Acepto los términos/ }))
+    expect(submit).toBeEnabled()
+    await user.click(submit)
 
     // El backend rechaza el correo y el error queda junto al campo, con foco.
-    expect(await screen.findByText(/Ya existe una cuenta con ese correo/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Correo/)).toHaveFocus()
+    expect(
+      await within(dialog).findByText(/Ya existe una cuenta con ese correo/),
+    ).toBeInTheDocument()
+    expect(within(dialog).getByLabelText(/^Correo/)).toHaveFocus()
 
-    await user.clear(screen.getByLabelText(/^Correo/))
-    await user.type(screen.getByLabelText(/^Correo/), 'ana@trama.test')
-    await user.click(submit('Crear cuenta'))
-    expect(await screen.findByRole('heading', { name: 'Hola, Ana Ruiz' })).toBeInTheDocument()
+    await user.clear(within(dialog).getByLabelText(/^Correo/))
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'ana@trama.test')
+    await user.click(submit)
+
+    // El registro no inicia sesión: un aviso ofrece ingresar.
+    dialog = await screen.findByRole('dialog', { name: 'Registro completado' })
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    dialog = await loginDialog()
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'ana@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'trama2026')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+    expect(await screen.findByText('Hola, Ana')).toBeInTheDocument()
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('recuperar y restablecer la contraseña', async () => {
@@ -71,7 +111,7 @@ describe('Autenticación', () => {
     renderApp('/recuperar-contrasena')
 
     await user.type(await screen.findByLabelText(/^Correo de tu cuenta/), 'comprador@trama.test')
-    await user.click(submit('Enviar enlace'))
+    await user.click(screen.getByRole('button', { name: 'Enviar enlace' }))
     expect(await screen.findByRole('heading', { name: 'Revisa tu correo' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('link', { name: 'abrir el enlace de restablecimiento' }))
@@ -80,36 +120,65 @@ describe('Autenticación', () => {
       'nueva2026',
     )
     await user.type(screen.getByLabelText(/^Confirmar contraseña/), 'nueva2026')
-    await user.click(submit('Guardar contraseña'))
+    await user.click(screen.getByRole('button', { name: 'Guardar contraseña' }))
 
     expect(await screen.findByText('Contraseña actualizada')).toBeInTheDocument()
-    await user.type(await screen.findByLabelText(/^Correo/), 'comprador@trama.test')
-    await user.type(screen.getByLabelText(/^Contraseña/), 'nueva2026')
-    await user.click(submit('Ingresar'))
-    expect(await screen.findByRole('heading', { name: /Hola, Laura/ })).toBeInTheDocument()
+    const dialog = await loginDialog()
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'nueva2026')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+    expect(await screen.findByText('Hola, Laura')).toBeInTheDocument()
   })
 
-  it('el login en modal no saca al usuario de la página', async () => {
+  it('iniciar sesión desde el header no saca al usuario de la página', async () => {
     const user = userEvent.setup()
     renderApp('/catalogo')
-    await user.click(screen.getByRole('button', { name: 'Ingresar a mi cuenta' }))
+    await user.click(await header().findByRole('button', { name: 'Iniciar sesión' }))
 
-    const dialog = screen.getByRole('dialog', { name: 'Ingresa a tu cuenta' })
+    const dialog = await loginDialog()
     await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
     await user.type(within(dialog).getByLabelText(/^Contraseña/), 'Trama1234')
-    await user.click(within(dialog).getByRole('button', { name: 'Ingresar' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
 
     expect(await screen.findByText('Hola, Laura')).toBeInTheDocument()
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
     expect(screen.getByRole('heading', { name: 'Catálogo' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Mi cuenta' })).toBeInTheDocument()
+    expect(header().getByRole('link', { name: 'Mi cuenta' })).toBeInTheDocument()
+  })
+
+  it('una ruta protegida sin sesión vuelve al inicio, abre el modal y luego sigue', async () => {
+    const user = userEvent.setup()
+    renderApp('/cuenta/pedidos')
+
+    const dialog = await loginDialog()
+    expect(within(dialog).getByText('Inicia sesión para continuar.')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Ropa para ti y para tu negocio', level: 1 }),
+    ).toBeInTheDocument()
+
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'Trama1234')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+    expect(await screen.findByRole('heading', { name: 'Pedidos', level: 1 })).toBeInTheDocument()
+  })
+
+  it('el token se guarda en localStorage al iniciar sesión', async () => {
+    const user = userEvent.setup()
+    renderApp('/ingresar')
+    const dialog = await loginDialog()
+    await user.type(within(dialog).getByLabelText(/^Correo/), 'comprador@trama.test')
+    await user.type(within(dialog).getByLabelText(/^Contraseña/), 'Trama1234')
+    await user.click(within(dialog).getByRole('button', { name: 'Iniciar sesión' }))
+
+    await screen.findByText('Hola, Laura')
+    expect(storage.get(STORAGE_KEYS.token)).toBe('mock-token-u-buyer')
   })
 
   it('con un token vencido avisa y pide ingresar de nuevo', async () => {
     storage.set(STORAGE_KEYS.token, 'mock-token-u-borrado')
     renderApp('/cuenta')
     expect(await screen.findByText('Tu sesión expiró')).toBeInTheDocument()
-    expect(await screen.findByRole('heading', { name: 'Ingresar' })).toBeInTheDocument()
+    expect(await loginDialog()).toBeInTheDocument()
   })
 
   it('cerrar sesión lleva al inicio', async () => {
@@ -122,6 +191,19 @@ describe('Autenticación', () => {
     expect(
       await screen.findByRole('heading', { name: 'Ropa para ti y para tu negocio', level: 1 }),
     ).toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('cerrar sesión desde una página pública también lleva al inicio', async () => {
+    const user = userEvent.setup()
+    renderApp('/inspiracion', { as: 'buyer' })
+    await user.click(await header().findByRole('button', { name: 'Cerrar sesión' }))
+
+    expect(await screen.findByText('Cerraste sesión')).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: 'Ropa para ti y para tu negocio', level: 1 }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('después de cerrar sesión, otra ruta privada pide ingresar', async () => {
@@ -131,10 +213,8 @@ describe('Autenticación', () => {
     await user.click(within(account.parentElement).getByRole('button', { name: 'Cerrar sesión' }))
     await screen.findByRole('heading', { name: 'Ropa para ti y para tu negocio', level: 1 })
 
-    // El acceso a favoritos del header (el footer tiene otro enlace con el mismo nombre).
-    await user.click(
-      within(document.querySelector('.site-header')).getByRole('link', { name: 'Favoritos' }),
-    )
-    expect(await screen.findByText('Ingresa a tu cuenta para continuar.')).toBeInTheDocument()
+    await user.click(header().getByRole('link', { name: 'Favoritos' }))
+    const dialog = await loginDialog()
+    expect(within(dialog).getByText('Inicia sesión para continuar.')).toBeInTheDocument()
   })
 })

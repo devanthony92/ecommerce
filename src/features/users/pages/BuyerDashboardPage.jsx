@@ -90,7 +90,7 @@ function FavoritesCard() {
 }
 
 export default function BuyerDashboardPage() {
-  const { user } = useAuth()
+  const { currentUser: user } = useAuth()
   const recommended = useProducts(RECOMMENDED)
 
   return (

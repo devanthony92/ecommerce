@@ -1,0 +1,49 @@
+@use '@/styles/abstracts' as *;
+
+.save-photo-button {
+  position: relative;
+  display: inline-grid;
+
+  &__button {
+    @include overlay-icon-button;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+
+    // Sin sesión: se ve apagado.
+    &--inactive {
+      color: var(--color-text-muted);
+    }
+
+    &--saved {
+      color: var(--color-primary);
+    }
+  }
+
+  &__button--saved &__icon {
+    fill: currentcolor;
+  }
+
+  &__tooltip {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: calc(100% + var(--space-2));
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: opacity var(--duration-fast);
+  }
+
+  &:hover &__tooltip,
+  &:focus-within &__tooltip {
+    opacity: 1;
+  }
+}

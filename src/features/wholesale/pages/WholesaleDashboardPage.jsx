@@ -29,7 +29,7 @@ function LastOrderCard() {
 }
 
 export default function WholesaleDashboardPage() {
-  const { user } = useAuth()
+  const { currentUser: user } = useAuth()
   const query = useWholesaleProfile()
 
   return (

@@ -214,7 +214,7 @@ Todas las páginas con `React.lazy` + `Suspense` (fallback: `PageSkeleton`). Pat
 ### Layout
 
 - `components/layout` (genéricos): `PageHeader`, `SectionNav` (pestañas en móvil; `orientation="auto"` pasa a sidebar desde lg).
-- `app/layout` (shell, compone features): `MainLayout` (skip link, foco y scroll al navegar, error boundary por ruta), `SiteHeader`, `HeaderSearch`, `CategoryNav`, `MobileMenu` (Drawer izquierdo), `SiteFooter`, `AccountLayout` (sidebar en desktop / pestañas en móvil), `WholesaleLayout` (banda cobre + pestañas).
+- `app/layout` (shell, compone features): `MainLayout` (skip link, foco y scroll al navegar, error boundary por ruta), `SiteHeader`, `HeaderSearch`, `CategoryNav`, `MobileMenu` (Drawer izquierdo), `SiteFooter`, `AccountLayout` (sidebar en desktop / pestañas en móvil), `WholesaleLayout` (banda ladrillo + pestañas).
 - `CartDrawer` vive en `features/cart` y lo monta `MainLayout`.
 
 ### `components/modal`
@@ -256,7 +256,7 @@ Helper `QueryBoundary`: recibe `{ isLoading, isError, error, refetch, isEmpty }`
 | `lists`      | `PurchaseList`, `PurchaseListItem`, `ListCard`, `CreateListModal`, `AddToListModal`                                                                                          | `useLists`, `useList`, `useListMutations`, `useAddListToCart`                                                                            |
 | `wholesale`  | `WholesaleSummaryCard`, `ProgramBenefits`, `WholesaleRequestForm`, `WholesaleRequestStatus`, `WholesaleRequestModal`, `QuickOrder`, `FrequentProducts`, `WholesaleDashboard` | `useWholesaleProfile`, `useWholesaleProgram`, `useWholesaleRequest`, `useSubmitWholesaleRequest`, `useFrequentProducts`, `useQuickOrder` |
 | `promotions` | `PromotionBanner`, `VolumeOffers`                                                                                                                                            | `usePromotions`                                                                                                                          |
-| `home`       | `HomeHero` (dos CTAs: individual / mayorista), `FeaturedProducts`, `BestSellers`, `BenefitsStrip`, `WholesaleCta`                                                            | — (usa hooks de otros features)                                                                                                          |
+| `home`       | `HomeHero` + `HeroStall` (puesto con los más vendidos y dos CTAs), `CategoryTiles`, `ProductShelf`, `BenefitsStrip`, `WholesaleCta`                                          | — (usa hooks de otros features)                                                                                                          |
 
 `PurchaseProgress` de la spec queda cubierto por `QuantityTierProgress` + `FreeShippingProgress`, ambos sobre `ProgressBar`.
 
@@ -649,7 +649,7 @@ No hay niveles: todos los mayoristas aprobados tienen las mismas condiciones.
 Home y promociones (fase 14):
 
 - `GET /promotions/active` → `[{ id, type: SEASON | VOLUME | SHIPPING, title, description, link, startsAt, endsAt }]`. El backend filtra por vigencia (el mock devuelve todas para que la demo no dependa de la fecha).
-- La home solo compone secciones (hero con las dos propuestas, promociones, categorías, destacados, "Compra más, paga menos" con escalas reales (solo para mayoristas), más vendidos, beneficios e invitación mayorista); cada sección pide sus datos y maneja sus estados.
+- La home solo compone secciones, en este orden: hero (título, puesto de mercado con los 4 más vendidos colgados con su letrero de precio y las dos propuestas) con la banda de beneficios pegada; categorías; destacados; ofertas (promociones y "Compra más, paga menos" con escalas reales, solo para mayoristas); invitación mayorista. Los más vendidos no se repiten en una vitrina aparte. Ritmo: bloques internos juntos (`space-6/8`), capítulos separados por `space-16/24`. Cada sección pide sus datos y maneja sus estados.
 - `CatalogView` acepta `baseParams` (filtros fijos, p. ej. `{ onSale: true }`) e `intro`.
 
 Favoritos y listas (fase 13):
@@ -695,6 +695,16 @@ Solicitud mayorista (fase 10):
 - La última búsqueda (`{ query, photos }`) se guarda en `localStorage` (`trama.inspiration`) y se restaura al volver a la página.
 - Directrices de Unsplash: las imágenes se muestran desde sus URLs (hotlinking, con tamaño recortado vía parámetros de imgix), cada foto dice "Foto de X en Unsplash" y los enlaces llevan `utm_source=trama&utm_medium=referral`.
 - La clave queda en el bundle del frontend (es una variable `VITE_`). Unsplash lo permite para apps cliente, pero cualquiera puede leerla: cuando exista el backend propio conviene pasar la llamada por él.
+
+### Autorización (etapa 3)
+
+- `src/utils/MainApi.js` reúne las solicitudes a nuestro back-end para autorización e inspiraciones: `signup` (`POST /signup`), `signin` (`POST /signin` → `{ token }`), `getCurrentUser` (`GET /users/me`) y `getInspirations` / `saveInspiration` / `deleteInspiration`.
+- La sesión vive en `useSession` (features/auth) y `App` la comparte con `CurrentUserContext.Provider`: `currentUser` (o `null`), `status`, `login`, `register`, `logout` y `refreshSession`. `useAuth()` la lee.
+- Al iniciar sesión, el token se guarda en `localStorage` y se pide `/users/me`. El registro no inicia sesión: muestra "Registro completado" con un botón para ingresar.
+- Registro e inicio de sesión son modales (`AuthModalProvider`). La validación corre en cada tecla: el error aparece bajo el campo en cuanto se modifica y el botón queda inactivo hasta que todo es válido. El error del servidor se muestra encima del botón.
+- `ProtectedRoute`: sin sesión, un enlace directo a una ruta protegida vuelve a `/` y abre el inicio de sesión con el aviso "Inicia sesión para continuar."; al ingresar, sigue a la ruta pedida. `/ingresar` y `/registro` abren el modal correspondiente sobre el inicio.
+- Header: sin sesión, botón "Iniciar sesión"; con sesión, "Mi cuenta" y "Cerrar sesión". "Guardadas" en la navegación solo aparece con sesión.
+- Inspiraciones guardadas: cada foto tiene un botón de guardar; sin sesión está inactivo ("Inicia sesión para guardar") y al hacer clic abre el inicio de sesión. Guardada se ve en azul. `/inspiracion/guardadas` (protegida) muestra cuántas hay, las palabras clave por popularidad ("Denim, Oficina y 2 más") y las tarjetas con su palabra clave y un botón para borrar.
 
 ---
 
@@ -829,20 +839,25 @@ Fuente de verdad: `src/styles/base/_tokens.scss`. Todos los pares texto/fondo cu
 
 | Token                                                | Uso                                     | Valor                                         |
 | ---------------------------------------------------- | --------------------------------------- | --------------------------------------------- |
-| `--color-bg` / `--color-surface`                     | fondo / cards                           | `#FAFAF8` / `#FFFFFF`                         |
-| `--color-text` / `-muted` / `-subtle`                | texto                                   | `#1A1A1A` / `#5C5C5C` / `#767676`             |
-| `--color-border`                                     | separadores decorativos                 | `#E4E2DD`                                     |
-| `--color-border-strong`                              | borde de inputs y botones secundarios   | `#8A867E`                                     |
-| `--color-primary`                                    | CTA compra individual                   | `#1F3A5F`                                     |
-| `--color-wholesale`                                  | todo lo mayorista                       | `#B4561E`                                     |
-| `--color-success` / `-warning` / `-danger` / `-info` | estados (con variante `-soft` de fondo) | `#256B42` / `#8A5800` / `#B3261E` / `#1F5FA8` |
+| `--color-bg` / `--color-surface`                     | fondo crema / cards                     | `#FBF6EC` / `#FFFDF8`                         |
+| `--color-text` / `-muted` / `-subtle`                | texto (tinta cálida)                    | `#1E1915` / `#5A5048` / `#6B5F54`             |
+| `--color-border`                                     | separadores decorativos                 | `#E8DDCB`                                     |
+| `--color-border-strong`                              | borde de inputs y botones secundarios   | `#8C7F6E`                                     |
+| `--color-primary`                                    | buganvilla: CTA compra individual       | `#B0155A`                                     |
+| `--color-wholesale`                                  | ladrillo: todo lo mayorista             | `#B7470D`                                     |
+| `--color-highlight`                                  | mango: destacados, "Más vendido"        | `#FFC21A` (texto en tinta)                    |
+| `--color-inverse`                                    | selva: bloques de cierre y footer       | `#12372A` (texto crema)                       |
+| `--color-success` / `-warning` / `-danger` / `-info` | estados (con variante `-soft` de fondo) | `#1E6B45` / `#8A5800` / `#B3261E` / `#1F5FA8` |
 
-Regla visual: **azul = compra individual, cobre = mayorista**. Así la home y las cards comunican las dos propuestas.
+Paleta de marca "mercado colombiano" en las primitivas `--brand-*`; los componentes usan solo los roles `--color-*`. Los colores de estado no se usan como decoración.
+
+Regla visual: **buganvilla = compra individual, ladrillo = mayorista**. Así la home y las cards comunican las dos propuestas. Sobre un fondo de color, el texto secundario se tiñe de ese fondo (`--color-on-primary-muted`, `--color-on-wholesale-muted`, `--color-inverse-muted`), nunca gris.
 
 ### Tipografía
 
-- Fuente: **Inter** (self-hosted con `@fontsource-variable/inter`, sin dependencias externas), fallback `system-ui`.
-- Escala (rem): `xs 0.75 · sm 0.875 · md 1 · lg 1.125 · xl 1.25 · 2xl 1.5 · 3xl 1.875 · 4xl 2.25`. Títulos con `clamp()` en hero.
+- Texto y UI: **Inter** (self-hosted con `@fontsource-variable/inter`), fallback `system-ui`.
+- Display: **Archivo** variable con eje de ancho (`@fontsource-variable/archivo/wdth.css`, de Omnibus-Type), angosta (`font-stretch: 82%`) y en peso 800, como los letreros pintados del mercado. Se usa en h1, h2, precios grandes (`lg`, `xl`) y en el logo, que va ancho (118%) y en peso 900. Mixin: `display-type($stretch)`. h3 y h4 siguen en Inter.
+- Escala (rem): `xs 0.75 · sm 0.875 · md 1 · lg 1.125 · xl 1.25 · 2xl 1.5 · 3xl 1.875 · 4xl 2.25`. Fluidas: `--font-size-section` (1.75 → 2.25, títulos de sección) y `--font-size-display` (2.75 → 5.5, hero y landing).
 - Precios con `font-variant-numeric: tabular-nums`.
 
 ### Espaciado, forma, profundidad

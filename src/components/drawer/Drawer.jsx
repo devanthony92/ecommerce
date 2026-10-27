@@ -57,14 +57,15 @@ export function Drawer({
         aria-labelledby={titleId}
         tabIndex={-1}
       >
-        <header className="drawer__header">
+        {/* div y no header/footer: en un portal serían landmarks duplicados del sitio. */}
+        <div className="drawer__header">
           <h2 className="drawer__title" id={titleId}>
             {title}
           </h2>
           <IconButton icon="close" label="Cerrar" onClick={onClose} />
-        </header>
+        </div>
         <div className="drawer__body">{children}</div>
-        {footer && <footer className="drawer__footer">{footer}</footer>}
+        {footer && <div className="drawer__footer">{footer}</div>}
       </div>
     </div>,
     document.body,

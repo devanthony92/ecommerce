@@ -2,7 +2,7 @@ import { lazy } from 'react'
 import { Route, Routes } from 'react-router'
 import { AccountLayout, MainLayout, WholesaleLayout } from '@/app/layout'
 import { PERMISSIONS } from '@/constants/permissions'
-import { RequireAuth } from './RequireAuth'
+import { ProtectedRoute } from './ProtectedRoute'
 import { RequirePermission } from './RequirePermission'
 import { paths } from '@/constants/paths'
 
@@ -21,8 +21,7 @@ const OrderDetailPage = lazy(() => import('@/features/orders/pages/OrderDetailPa
 const QuickOrderPage = lazy(() => import('@/features/wholesale/pages/QuickOrderPage'))
 const FrequentProductsPage = lazy(() => import('@/features/wholesale/pages/FrequentProductsPage'))
 const OrderConfirmationPage = lazy(() => import('@/features/orders/pages/OrderConfirmationPage'))
-const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
-const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
+const AuthEntryPage = lazy(() => import('@/features/auth/pages/AuthEntryPage'))
 const ForgotPasswordPage = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPasswordPage'))
 const BuyerDashboardPage = lazy(() => import('@/features/users/pages/BuyerDashboardPage'))
@@ -37,6 +36,9 @@ const WholesaleDashboardPage = lazy(
 )
 const PromotionsPage = lazy(() => import('@/features/promotions/pages/PromotionsPage'))
 const InspirationPage = lazy(() => import('@/features/inspiration/pages/InspirationPage'))
+const SavedInspirationsPage = lazy(
+  () => import('@/features/inspiration/pages/SavedInspirationsPage'),
+)
 const NotFoundPage = lazy(() => import('./NotFoundPage'))
 
 // Catálogo de componentes: solo en desarrollo, no entra al build de producción.
@@ -58,13 +60,14 @@ export function AppRoutes() {
         <Route path={paths.inspiration} element={<InspirationPage />} />
         <Route path={paths.wholesaleLanding} element={<WholesaleLandingPage />} />
         <Route path={paths.cart} element={<CartPage />} />
-        <Route path={paths.login} element={<LoginPage />} />
-        <Route path={paths.register} element={<RegisterPage />} />
+        <Route path={paths.login} element={<AuthEntryPage mode="login" />} />
+        <Route path={paths.register} element={<AuthEntryPage mode="register" />} />
         <Route path={paths.forgotPassword} element={<ForgotPasswordPage />} />
         <Route path={paths.resetPassword} element={<ResetPasswordPage />} />
 
-        <Route element={<RequireAuth />}>
+        <Route element={<ProtectedRoute />}>
           <Route path={paths.checkout} element={<CheckoutPage />} />
+          <Route path={paths.savedInspirations} element={<SavedInspirationsPage />} />
           <Route path={paths.orderConfirmation(':orderId')} element={<OrderConfirmationPage />} />
 
           {/* Comprador */}

@@ -16,14 +16,18 @@ export function ToastProvider({ children }) {
   }, [])
 
   // tone: info | success | warning | danger. duration: ms, o null para no cerrar solo.
-  const show = useCallback(({ title, description, tone = 'info', duration = DEFAULT_DURATION }) => {
-    nextId.current += 1
-    const id = nextId.current
-    setToasts((current) =>
-      [...current, { id, title, description, tone, duration }].slice(-MAX_VISIBLE),
-    )
-    return id
-  }, [])
+  // action: { label, to } muestra un enlace en el toast (p. ej. "Ver carrito").
+  const show = useCallback(
+    ({ title, description, action, tone = 'info', duration = DEFAULT_DURATION }) => {
+      nextId.current += 1
+      const id = nextId.current
+      setToasts((current) =>
+        [...current, { id, title, description, action, tone, duration }].slice(-MAX_VISIBLE),
+      )
+      return id
+    },
+    [],
+  )
 
   const value = useMemo(() => ({ show, dismiss }), [show, dismiss])
 
