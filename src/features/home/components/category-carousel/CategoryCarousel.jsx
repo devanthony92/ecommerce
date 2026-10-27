@@ -193,6 +193,9 @@ function Carousel({ categories, labelledBy }) {
       event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
     if (!document.startViewTransition || reducedMotion || !plainClick) return
     event.preventDefault()
+    // Una tarjeta lateral está girada por el coverflow: sin esto la transición
+    // captura el nombre girado y lo endereza en el vuelo, distinto a la central.
+    event.currentTarget.style.animation = 'none'
     const name = event.currentTarget.querySelector('.category-carousel__name')
     name.style.viewTransitionName = CATEGORY_TITLE_TRANSITION
     document.startViewTransition(async () => {
@@ -243,9 +246,11 @@ function Carousel({ categories, labelledBy }) {
                   'category-carousel__slide',
                   `category-carousel__slide--tone-${index % 4}`,
                 )}
-                // Las copias solo completan el giro: ni se leen ni reciben foco.
+                // Las copias completan el giro: no se leen ni reciben foco con teclado,
+                // pero sí se pueden tocar (al cargar, las de la izquierda son copias).
+                // Sin `inert`, que también bloquearía el clic.
                 {...(clone
-                  ? { 'aria-hidden': true, inert: true }
+                  ? { 'aria-hidden': true }
                   : {
                       role: 'group',
                       'aria-roledescription': 'diapositiva',
@@ -255,6 +260,7 @@ function Carousel({ categories, labelledBy }) {
                 <Link
                   className="category-carousel__link"
                   to={paths.category(category.slug)}
+                  tabIndex={clone ? -1 : undefined}
                   onClick={(event) => openCategory(event, category.slug)}
                 >
                   <ResponsiveImage
